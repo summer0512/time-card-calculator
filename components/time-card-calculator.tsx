@@ -510,7 +510,7 @@ export default function TimeCardCalculator() {
                       <Checkbox
                         id="includePayment"
                         checked={includePayment}
-                        onCheckedChange={setIncludePayment}
+                        onCheckedChange={(checked) => setIncludePayment(checked === true)}
                       />
                       <Label htmlFor="includePayment" className="text-blue-600 font-semibold">Include payment information</Label>
                     </div>
@@ -576,7 +576,7 @@ export default function TimeCardCalculator() {
                       <Checkbox
                         id="biweekly"
                         checked={isBiweekly}
-                        onCheckedChange={setIsBiweekly}
+                        onCheckedChange={(checked) => setIsBiweekly(checked === true)}
                       />
                       <Label htmlFor="biweekly" className="text-blue-600 font-semibold">Biweekly</Label>
                     </div>
