@@ -1,11 +1,4 @@
-import { Metadata } from 'next';
 import HeadInfo from '@/components/head-info';
-
-export const metadata: Metadata = {
-  title: 'Biweekly Time Card Calculator | 2 Week Time Card Calculator | Guides',
-  description: 'Complete guide to using biweekly time card calculator and 2 week time card calculator. Learn how to calculate hours for two-week pay periods with accurate overtime and break tracking.',
-  keywords: 'biweekly time card calculator, 2 week time card calculator, time card calculator 2 weeks, two week pay period, payroll calculator, time tracking, biweekly hours',
-};
 
 export default function BiweeklyTimeCardCalculatorGuide() {
   return (
@@ -14,8 +7,8 @@ export default function BiweeklyTimeCardCalculatorGuide() {
         locale="en" 
         page="guides/biweekly-time-card-calculator" 
         title="Biweekly Time Card Calculator | 2 Week Time Card Calculator Guide"
-        description="Complete guide to using biweekly time card calculator and 2 week time card calculator"
-        keywords="biweekly time card calculator, 2 week time card calculator, time card calculator 2 weeks, two week pay period, payroll calculator, time tracking, biweekly hours"
+        description="Guide to using biweekly time card calculator and 2 week time card calculator"
+        keywords="biweekly time card calculator, 2 week time card calculator, time tracking, payroll calculator"
       />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-4xl mx-auto px-4 py-12">

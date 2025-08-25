@@ -1,11 +1,4 @@
-import { Metadata } from 'next';
 import HeadInfo from '@/components/head-info';
-
-export const metadata: Metadata = {
-  title: 'Time Card Calculator with Breaks | Guides',
-  description: 'Complete guide to using time card calculator with break tracking. Learn how to accurately calculate work hours including various break periods.',
-  keywords: 'time card calculator, breaks, work hours, time tracking, payroll calculator, break periods',
-};
 
 export default function TimeCardCalculatorWithBreaksGuide() {
   return (
@@ -14,8 +7,8 @@ export default function TimeCardCalculatorWithBreaksGuide() {
         locale="en" 
         page="guides/time-card-calculator-with-breaks" 
         title="Time Card Calculator with Breaks Guide"
-        description="Complete guide to using time card calculator with break tracking"
-        keywords="time card calculator, breaks, work hours, time tracking, payroll calculator, break periods"
+        description="Guide to using time card calculator with break tracking"
+        keywords="time card calculator, breaks, work hours, time tracking"
       />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-4xl mx-auto px-4 py-12">

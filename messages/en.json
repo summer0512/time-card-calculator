@@ -1,15 +1,15 @@
 {
     "HomePage": {
       "title": "Time Card Calculator",
-      "description": "Free Time Card Calculator with lunch breaks, multiple break periods, and biweekly pay periods. Calculate work hours accurately with our time card calculator free online tool. Perfect for payroll processing and time tracking.",
-      "keywords": "time card calculator, free time card calculator, time card calculator free, time card calculator with lunch, time card calculator with breaks, biweekly time card calculator, time tracking, payroll calculator, work hours calculator, decimal time card calculator, military time card calculator"
+      "description": "Free Online Time Card Calculator with multiple lunch breaks and biweekly pay periods.",
+      "keywords": "time card calculator, free time card calculator, time card calculator with lunch or break, biweekly time card calculator"
     },
     "Header": {
       "title": "Time Card Calculator"
     },
     "ContactPage": {
       "title": "Contact Us - Time Card Calculator Support",
-      "description": "Get help with our time card calculator, report bugs, request features, or ask questions about time tracking and payroll calculations. Contact our support team for assistance.",
-      "keywords": "time card calculator support, contact time card calculator, time tracking help, payroll calculator assistance, time card calculator customer service, time tracking software support"
+      "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+      "keywords": "time card calculator support, contact time card calculator, time tracking help"
     }
   }
