@@ -9,8 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Mail, MessageSquare, Send, CheckCircle, Clock, Users, Zap } from "lucide-react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 
 export default function ContactPage(props: {params: Promise<{locale: string}>}) {
   const params = use(props.params);
@@ -53,19 +51,30 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
     setIsSubmitting(true);
     
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // In a real implementation, you would send the data to your backend
-      console.log("Form submitted:", {
-        ...formData,
-        to: "info@time-card-calculator.work"
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message
+        }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      const data = await response.json();
+      console.log('Form submitted successfully:', data);
       
       setIsSubmitted(true);
       setFormData({ email: "", subject: "", message: "" });
     } catch (error) {
       console.error("Error submitting form:", error);
+      // You could add error handling here, like showing an error message to the user
     } finally {
       setIsSubmitting(false);
     }
@@ -80,7 +89,7 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white">
+      <div className="flex flex-col bg-gradient-to-br from-gray-50 to-white">
         <HeadInfo 
           locale={params.locale} 
           page="contact" 
@@ -88,8 +97,7 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
           description={t('description')}
           keywords={t('keywords')}
         />
-        <Header />
-        <main className="flex-1 py-12">
+        <main className="flex-1 py-20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <Card className="shadow-lg border-0 bg-gradient-to-br from-green-50 to-blue-50">
               <CardContent className="p-12 text-center">
@@ -100,19 +108,18 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
                   Thank You!
                 </h1>
                 <p className="text-lg text-gray-600 mb-8">
-                  Your message has been sent successfully. We'll get back to you within 24 hours.
+                  Your message has been sent successfully. We'll get back to you within 72 hours.
                 </p>
                 <Button
-                  onClick={() => setIsSubmitted(false)}
+                  onClick={() => window.location.href = '/'}
                   className="bg-blue-600 hover:bg-blue-700"
                 >
-                  Send Another Message
+                  Return to Home
                 </Button>
               </CardContent>
             </Card>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
