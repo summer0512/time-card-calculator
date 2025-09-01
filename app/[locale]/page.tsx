@@ -2,6 +2,7 @@ import { use } from "react";
 import {useTranslations} from 'next-intl';
 import HeadInfo from '@/components/head-info';
 import TimeCardCalculator from "@/components/time-card-calculator";
+import Link from "next/link";
 
 export default function Home(props: {params: Promise<{locale: string}>}) {
   const params = use(props.params);
@@ -136,6 +137,49 @@ export default function Home(props: {params: Promise<{locale: string}>}) {
                     <li>Professional printable report generation</li>
                     <li>Copy functionality for quick data entry</li>
                   </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Q&A Section */}
+          <div className="mt-16 mb-16">
+            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+              Frequently Asked Questions
+            </h2>
+            <div className="bg-white rounded-lg shadow-sm border p-8">
+              <div className="space-y-8">
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">What is a time card calculator?</h3>
+                  <p className="text-gray-600">A time card calculator is a tool that helps you track work hours, calculate total time worked, and manage payroll calculations. Our free time card calculator supports multiple time formats and includes features for lunch breaks and additional breaks.</p>
+                </div>
+                
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">How do I use the time card calculator with lunch breaks?</h3>
+                  <p className="text-gray-600">Simply enter your start and end times for each work day, and the calculator will automatically deduct your lunch break (default 1 hour) from your total hours. You can also customize the lunch break duration or turn off the lunch break feature if needed.</p>
+                </div>
+                
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Can I calculate biweekly hours with this tool?</h3>
+                  <p className="text-gray-600">Yes! Our biweekly time card calculator allows you to track hours for two-week pay periods. Simply enter your work hours for all days in the two-week period, and the calculator will provide you with total hours, overtime calculations, and a professional printable report.</p>
+                </div>
+                
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">What time formats are supported?</h3>
+                  <p className="text-gray-600">Our time card calculator supports 12-hour format (8:30 AM, 5:00 PM), 24-hour military time (08:30, 17:00), and decimal time format (8.5, 17.0). The calculator automatically converts between formats, making it perfect for any time tracking needs.</p>
+                </div>
+                
+                <div className="border-b border-gray-200 pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">How many break periods can I track?</h3>
+                  <p className="text-gray-600">Our time card calculator with breaks supports up to 3 break columns, allowing you to track multiple break periods throughout the day. You can add or remove break columns as needed for flexible time tracking.</p>
+                </div>
+                
+                <div className="pb-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">What if the current features don't meet my specific needs?</h3>
+                  <p className="text-gray-600 mb-4">We're always looking to improve our time card calculator to better serve our users' needs. If you have specific requirements or suggestions for new features, we'd love to hear from you!</p>
+                  <Link href="/contact" className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Contact Us to Submit Your Requirements
+                  </Link>
                 </div>
               </div>
             </div>
