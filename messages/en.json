@@ -1,15 +1,229 @@
 {
-    "HomePage": {
-      "title": "Time Card Calculator",
-      "description": "Free Online Time Card Calculator with multiple lunch breaks and biweekly pay periods.",
-      "keywords": "time card calculator, free online time card calculator with breaks and biweekly support"
-    },
-    "Header": {
-      "title": "Time Card Calculator"
-    },
-    "ContactPage": {
-      "title": "Contact Us - Time Card Calculator Support",
-      "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
-      "keywords": "time card calculator support, contact time card calculator, time tracking help"
+  "HomePage": {
+    "title": "Time Card Calculator",
+    "description": "Free Online Time Card Calculator with multiple lunch breaks and biweekly pay periods.",
+    "keywords": "time card calculator, free online time card calculator with breaks and biweekly support"
+  },
+  "Header": {
+    "title": "Time Card Calculator"
+  },
+  "ContactPage": {
+    "title": "Contact Us - Time Card Calculator Support",
+    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "keywords": "time card calculator support, contact time card calculator, time tracking help"
+  },
+  "PrivacyPage": {
+    "title": "Privacy Policy - Time Card Calculator",
+    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
+    "heading": "Privacy Policy",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdatedValue": "October 8, 2025",
+    "intro": [
+      "This Privacy Policy explains how Time Card Calculator (\"we,\" \"us,\" or \"our\") collects, uses, and safeguards information when you access https://time-card-calculator.work or any related services (collectively, the \"Service\").",
+      "By using the Service, you acknowledge that you have read and understood this policy. If you do not agree with the practices described below, please discontinue use of the Service."
+    ],
+    "sections": [
+      {
+        "id": "information-we-collect",
+        "heading": "Information We Collect",
+        "paragraphs": [
+          "We design Time Card Calculator to operate with minimal personal data. The information we collect falls into the categories described below."
+        ],
+        "items": [
+          "Usage data: pages visited, calculator configurations, time stamps, and referring URLs recorded through server logs and analytics tools.",
+          "Device and technical data: browser type, operating system, language preference, and approximate location derived from IP address for security and analytics.",
+          "Cookies and similar technologies: small files stored on your device to remember preferences, maintain sessions, and support advertising features.",
+          "Contact details: information you voluntarily submit through the contact form, such as your name, email address, and message content."
+        ]
+      },
+      {
+        "id": "how-we-use-information",
+        "heading": "How We Use Information",
+        "paragraphs": [
+          "We use collected information to provide, maintain, and improve the Service."
+        ],
+        "items": [
+          "Deliver core functionality of the time card calculator, including saved preferences and accessibility features.",
+          "Monitor performance, fix bugs, and optimize the user interface across devices.",
+          "Understand aggregated usage trends to guide product improvements and prioritize new features.",
+          "Respond to inquiries, support requests, and feedback submitted through the contact form.",
+          "Comply with legal obligations, enforce our Terms of Service, and protect the Service from misuse."
+        ]
+      },
+      {
+        "id": "adsense-and-third-parties",
+        "heading": "Google AdSense and Third-Party Advertising",
+        "paragraphs": [
+          "We display advertising through Google AdSense and similar ad networks. These partners may use cookies, web beacons, or similar technologies to serve relevant ads based on your previous visits to this and other websites.",
+          "Google uses the DoubleClick cookie (also known as the DART cookie) to enable interest-based advertising. You can opt out of personalized advertising by visiting Google Ads Settings at https://adssettings.google.com/ or by reviewing Google's Advertising Privacy & Terms at https://policies.google.com/technologies/ads.",
+          "Advertising partners receive usage data such as IP address, browser type, device identifiers, and referring URLs. We do not share contact form submissions or other voluntarily provided personal details with advertisers."
+        ]
+      },
+      {
+        "id": "cookies-and-tracking",
+        "heading": "Cookies and Tracking Technologies",
+        "paragraphs": [
+          "Cookies help us remember your calculator preferences, measure traffic patterns, and support advertising delivery. You can manage cookies through your browser settings or device controls; disabling cookies may limit certain features.",
+          "We may also use local storage, scripts, or pixel tags to understand how visitors interact with the Service and to troubleshoot performance issues."
+        ]
+      },
+      {
+        "id": "data-retention-and-security",
+        "heading": "Data Retention and Security",
+        "paragraphs": [
+          "We retain usage analytics for as long as necessary to achieve the purposes outlined in this policy. Contact form submissions are stored only as long as needed to address your inquiry and maintain records of our communications.",
+          "We implement administrative, technical, and physical safeguards designed to protect information against unauthorized access, alteration, or disclosure. However, no method of transmission or storage is completely secure, and we cannot guarantee absolute security."
+        ]
+      },
+      {
+        "id": "your-rights",
+        "heading": "Your Rights and Choices",
+        "paragraphs": [
+          "Depending on your location, you may have rights related to the personal information we hold about you."
+        ],
+        "items": [
+          "Request access to, correction of, or deletion of personal information you have provided.",
+          "Opt out of marketing or personalized advertising by adjusting cookie preferences or visiting third-party opt-out portals.",
+          "Withdraw consent where we rely on consent for processing, without affecting the lawfulness of processing before withdrawal."
+        ]
+      },
+      {
+        "id": "international-users",
+        "heading": "International Users",
+        "paragraphs": [
+          "Time Card Calculator is operated from the United States. By using the Service outside the United States, you consent to the transfer, storage, and processing of your information in the United States or other jurisdictions, where privacy laws may differ from those in your home country."
+        ]
+      },
+      {
+        "id": "children",
+        "heading": "Children's Privacy",
+        "paragraphs": [
+          "The Service is intended for individuals who are at least 16 years old. We do not knowingly collect personal information from children under 16. If you believe a child has provided us with personal data, please contact us so we can take appropriate action."
+        ]
+      },
+      {
+        "id": "changes",
+        "heading": "Changes to This Policy",
+        "paragraphs": [
+          "We may update this Privacy Policy to reflect changes in our practices or applicable laws. When we make material changes, we will revise the date at the top of this policy and, when appropriate, provide additional notice within the Service."
+        ]
+      }
+    ],
+    "contact": {
+      "heading": "Contact Us",
+      "description": "If you have questions about this Privacy Policy or our data practices, please contact us at info@time-card-calculator.work or submit a message through our contact form.",
+      "linkLabel": "Go to the contact page"
+    }
+  },
+  "TermsPage": {
+    "title": "Terms of Service - Time Card Calculator",
+    "description": "Review the Terms of Service governing your use of the Time Card Calculator website and tools.",
+    "keywords": "terms of service, time card calculator terms, legal, acceptable use policy",
+    "heading": "Terms of Service",
+    "lastUpdatedLabel": "Effective as of",
+    "lastUpdatedValue": "October 8, 2025",
+    "intro": [
+      "These Terms of Service (\"Terms\") govern your access to and use of Time Card Calculator, including any content, functionality, and services offered on or through https://time-card-calculator.work (collectively, the \"Service\").",
+      "By using the Service, you agree to these Terms and to our Privacy Policy. If you do not agree, do not access or use the Service."
+    ],
+    "sections": [
+      {
+        "id": "use-of-service",
+        "heading": "1. Use of the Service",
+        "paragraphs": [
+          "Time Card Calculator provides time tracking tools and related resources for personal or business use.",
+          "You may use the Service only for lawful purposes and in accordance with these Terms."
+        ],
+        "items": [
+          "Maintain accurate information when you interact with the Service, including submissions through our contact form.",
+          "Comply with all applicable laws, regulations, and industry standards while using the Service.",
+          "Ensure that any information you download, export, or copy from the Service is handled responsibly within your organization."
+        ]
+      },
+      {
+        "id": "user-responsibilities",
+        "heading": "2. User Responsibilities",
+        "paragraphs": [
+          "You are responsible for your conduct while using the Service and for any content you submit."
+        ],
+        "items": [
+          "Do not upload malicious code, attempt to gain unauthorized access, or interfere with the Service's integrity or performance.",
+          "Do not misrepresent your affiliation with any person or entity or impersonate another individual.",
+          "Do not attempt to reverse engineer, decompile, or extract the source code of the Service."
+        ]
+      },
+      {
+        "id": "prohibited-uses",
+        "heading": "3. Prohibited Uses",
+        "paragraphs": [
+          "You agree not to use the Service in any manner that could disable, overburden, damage, or impair it or interfere with any other party's use of the Service."
+        ],
+        "items": [
+          "Using automated systems or software to extract data (scraping) without our permission.",
+          "Attempting to bypass any measures in place to prevent or restrict access to the Service.",
+          "Using the Service for any unlawful, harmful, fraudulent, or malicious purpose."
+        ]
+      },
+      {
+        "id": "intellectual-property",
+        "heading": "4. Intellectual Property",
+        "paragraphs": [
+          "The Service and its entire contents, features, and functionality are owned by Time Card Calculator and are protected by intellectual property laws. You may not copy, redistribute, or create derivative works without our prior written consent.",
+          "You retain any rights that you hold in content you submit to us but grant us a license to use that content to operate and improve the Service."
+        ]
+      },
+      {
+        "id": "ads-and-third-parties",
+        "heading": "5. Third-Party Services and Advertising",
+        "paragraphs": [
+          "The Service may include links to third-party websites or display advertisements from partners such as Google AdSense. We do not control these third parties and are not responsible for their content or practices.",
+          "Interactions with third-party services are solely between you and the third party. We encourage you to review the applicable terms and policies of each third-party service."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "heading": "6. Disclaimer of Warranties",
+        "paragraphs": [
+          "THE SERVICE IS PROVIDED ON AN \"AS IS\" AND \"AS AVAILABLE\" BASIS WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS OR IMPLIED. WE DISCLAIM ALL WARRANTIES, INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.",
+          "We do not guarantee that the Service will be uninterrupted, secure, or error-free, or that any results obtained from the Service will be accurate or reliable."
+        ]
+      },
+      {
+        "id": "limitation-of-liability",
+        "heading": "7. Limitation of Liability",
+        "paragraphs": [
+          "TO THE MAXIMUM EXTENT PERMITTED BY LAW, TIME CARD CALCULATOR AND ITS AFFILIATES WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM OR RELATED TO YOUR USE OF THE SERVICE.",
+          "Our total liability for any claim arising out of or relating to the Service is limited to the amount you paid us, if any, for access to the Service during the twelve (12) months preceding the claim."
+        ]
+      },
+      {
+        "id": "indemnification",
+        "heading": "8. Indemnification",
+        "paragraphs": [
+          "You agree to defend, indemnify, and hold harmless Time Card Calculator, its affiliates, and their respective officers, directors, employees, and agents from and against any claims, liabilities, damages, judgments, awards, losses, costs, expenses, or fees arising out of or relating to your violation of these Terms or your use of the Service."
+        ]
+      },
+      {
+        "id": "changes-and-termination",
+        "heading": "9. Changes and Termination",
+        "paragraphs": [
+          "We may modify or discontinue any part of the Service at any time, with or without notice. We may also terminate or suspend your access immediately if we believe you have violated these Terms.",
+          "When we make material revisions to these Terms, we will update the date at the top of this page and may provide additional notice within the Service."
+        ]
+      },
+      {
+        "id": "governing-law",
+        "heading": "10. Governing Law",
+        "paragraphs": [
+          "These Terms are governed by the laws of the United States and the State of California, without regard to conflict-of-law principles. Any legal action or proceeding arising under these Terms will be brought exclusively in the federal or state courts located in California."
+        ]
+      }
+    ],
+    "contact": {
+      "heading": "Contact Us",
+      "description": "If you have questions about these Terms or need assistance, please email info@time-card-calculator.work or reach out through our contact form.",
+      "linkLabel": "Reach our support team"
     }
   }
+}

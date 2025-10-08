@@ -31,6 +31,8 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><a href="/" className="text-gray-400 hover:text-white transition-colors">Home</a></li>
               <li><a href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</a></li>
+              <li><a href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a></li>
             </ul>
           </div>
 
@@ -47,7 +49,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8">
             <p className="text-gray-400 text-sm text-center">
-              © 2025 Time Card Calculator Calculator. All rights reserved.
+              Copyright 2025 Time Card Calculator Calculator. All rights reserved.
             </p>
         </div>
       </div>
