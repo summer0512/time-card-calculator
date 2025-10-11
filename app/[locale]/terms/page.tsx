@@ -25,6 +25,8 @@ export default function TermsPage(props: { params: Promise<{ locale: string }> }
         title={t("title")}
         description={t("description")}
         keywords={t("keywords")}
+        ogType="article"
+        ogImageAlt="Time Card Calculator terms of use overview"
       />
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16">
         <article className="bg-white shadow-sm border border-gray-100 rounded-2xl p-8 sm:p-12">

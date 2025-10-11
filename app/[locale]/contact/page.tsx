@@ -90,12 +90,13 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
   if (isSubmitted) {
     return (
       <div className="flex flex-col bg-gradient-to-br from-gray-50 to-white">
-        <HeadInfo 
-          locale={params.locale} 
-          page="contact" 
-          title={t('title')} 
+        <HeadInfo
+          locale={params.locale}
+          page="contact"
+          title={t('title')}
           description={t('description')}
           keywords={t('keywords')}
+          ogImageAlt="Contact Time Card Calculator support team"
         />
         <main className="flex-1 py-20">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,12 +127,13 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-white">
-      <HeadInfo 
-        locale={params.locale} 
-        page="contact" 
-        title={t('title')} 
+      <HeadInfo
+        locale={params.locale}
+        page="contact"
+        title={t('title')}
         description={t('description')}
         keywords={t('keywords')}
+        ogImageAlt="Contact Time Card Calculator support team"
       />
       <main className="flex-1 py-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

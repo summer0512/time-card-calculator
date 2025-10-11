@@ -9,12 +9,13 @@ export default function Home(props: {params: Promise<{locale: string}>}) {
   const t = useTranslations('HomePage');
   return (
     <div>
-      <HeadInfo 
-        locale={params.locale} 
-        page={''} 
-        title={t('title')} 
+      <HeadInfo
+        locale={params.locale}
+        page=""
+        title={t('title')}
         description={t('description')}
         keywords={t('keywords')}
+        ogImageAlt="Time card calculator dashboard preview"
       />
       <main className="flex-1 py-1">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 2xl:px-8">
