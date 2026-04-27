@@ -61,7 +61,9 @@ const HeadInfo = ({
   noindex,
   structuredData,
 }: HeadInfoProps) => {
-  const normalizedBase = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "") ?? "";
+  const normalizedBase =
+    process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "") ||
+    "https://time-card-calculator.work";
   const sanitizedPage = sanitizePageSegment(page);
 
   const buildPath = (targetLocale: string) => {

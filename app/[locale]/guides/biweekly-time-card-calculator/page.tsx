@@ -6,8 +6,8 @@ export default function BiweeklyTimeCardCalculatorGuide() {
       <HeadInfo
         locale="en"
         page="guides/biweekly-time-card-calculator"
-        title="Biweekly Time Card Calculator | 2 Week Time Card Calculator Guide"
-        description="Guide to using biweekly time card calculator and 2 week time card calculator"
+        title="How to Calculate a Biweekly Time Card"
+        description="Tutorial for calculating two-week pay periods with lunch and overtime rules, with a direct link to the free biweekly calculator tool."
         keywords="biweekly time card calculator, 2 week time card calculator, time tracking, payroll calculator"
         ogType="article"
         ogImageAlt="Biweekly time card calculator guide cover"
@@ -17,7 +17,7 @@ export default function BiweeklyTimeCardCalculatorGuide() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Biweekly Time Card Calculator
+              How to Calculate a Biweekly Time Card
             </h1>
             <h2 className="text-2xl font-semibold text-blue-600 mb-4">
               2 Week Time Card Calculator
@@ -26,10 +26,10 @@ export default function BiweeklyTimeCardCalculatorGuide() {
               Master the art of calculating hours for two-week pay periods with our comprehensive biweekly time card calculator guide. Also known as 2 week time card calculator or time card calculator 2 weeks.
             </p>
             <a 
-              href="/" 
+              href="/biweekly-time-card-calculator" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Try the Calculator Now
+              Use the free Biweekly Time Card Calculator
             </a>
           </div>
 
@@ -46,6 +46,12 @@ export default function BiweeklyTimeCardCalculatorGuide() {
                 <strong>Key Feature:</strong> Automatically calculates overtime based on weekly totals (40 hours per week) and provides comprehensive biweekly summaries for your 2 week pay period.
               </p>
             </div>
+            <a
+              href="/biweekly-time-card-calculator"
+              className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Use the free Biweekly Time Card Calculator
+            </a>
           </div>
 
           {/* Getting Started */}

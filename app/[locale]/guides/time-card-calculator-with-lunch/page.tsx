@@ -6,8 +6,8 @@ export default function TimeCardCalculatorWithLunchGuide() {
       <HeadInfo
         locale="en"
         page="guides/time-card-calculator-with-lunch"
-        title="Time Card Calculator with Lunch Breaks Guide"
-        description="Guide to using time card calculator with lunch break tracking"
+        title="How to Calculate Time Cards with Lunch Breaks"
+        description="Step-by-step tutorial for calculating time cards with lunch breaks, with direct access to the free calculator tool."
         keywords="time card calculator, lunch break, work hours, time tracking"
         ogType="article"
         ogImageAlt="Time card calculator with lunch breaks guide cover"
@@ -17,16 +17,16 @@ export default function TimeCardCalculatorWithLunchGuide() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Time Card Calculator with Lunch Breaks
+              How to Calculate Time Cards with Lunch Breaks
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
               Master the art of accurate time tracking with our comprehensive guide to using lunch breaks in your time card calculations.
             </p>
             <a 
-              href="/" 
+              href="/time-card-calculator-with-lunch" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Try the Calculator Now
+              Use the free Time Card Calculator with Lunch Breaks
             </a>
           </div>
 
@@ -43,6 +43,12 @@ export default function TimeCardCalculatorWithLunchGuide() {
                 <strong>Key Feature:</strong> The lunch break column can be easily added or removed based on your specific time tracking needs.
               </p>
             </div>
+            <a
+              href="/time-card-calculator-with-lunch"
+              className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Use the free Time Card Calculator with Lunch Breaks
+            </a>
           </div>
 
           {/* Getting Started */}

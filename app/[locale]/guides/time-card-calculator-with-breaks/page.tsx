@@ -6,8 +6,8 @@ export default function TimeCardCalculatorWithBreaksGuide() {
       <HeadInfo
         locale="en"
         page="guides/time-card-calculator-with-breaks"
-        title="Time Card Calculator with Breaks Guide"
-        description="Guide to using time card calculator with break tracking"
+        title="How to Calculate Time Cards with Multiple Breaks"
+        description="Tutorial for subtracting lunch and multiple breaks from work hours, with direct access to the free calculator tool."
         keywords="time card calculator, breaks, work hours, time tracking"
         ogType="article"
         ogImageAlt="Time card calculator with breaks guide cover"
@@ -17,16 +17,16 @@ export default function TimeCardCalculatorWithBreaksGuide() {
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Time Card Calculator with Breaks
+              How to Calculate Time Cards with Multiple Breaks
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
               Master the art of accurate time tracking with our comprehensive guide to using break periods in your time card calculations.
             </p>
             <a 
-              href="/" 
+              href="/time-card-calculator-with-breaks" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Try the Calculator Now
+              Use the free Time Card Calculator with Breaks
             </a>
           </div>
 
@@ -43,6 +43,12 @@ export default function TimeCardCalculatorWithBreaksGuide() {
                 <strong>Key Feature:</strong> Support for up to 3 break columns with customizable durations for each break period.
               </p>
             </div>
+            <a
+              href="/time-card-calculator-with-breaks"
+              className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Use the free Time Card Calculator with Breaks
+            </a>
           </div>
 
           {/* Getting Started */}
