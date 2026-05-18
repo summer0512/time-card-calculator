@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/routing";
 import { Clock, ChevronDown } from "lucide-react";
 import MobileMenuButton from "./mobile-menu-button";
+import { useLocale, useTranslations } from "next-intl";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,20 +12,23 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { toolCalculators } from "@/lib/tool-calculators";
-
-const menuItems = [
-  { name: "Home", href: "/" },
-  { name: "Contact", href: "/contact" }
-];
-
-const guideItems = [
-  { name: "How to Calculate Time Cards with Lunch Breaks", href: "/guides/time-card-calculator-with-lunch" },
-  { name: "How to Calculate Time Card Breaks", href: "/guides/time-card-calculator-with-breaks" },
-  { name: "Biweekly Time Card Guide", href: "/guides/biweekly-time-card-calculator" }
-];
+import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolView } from "@/lib/localized-tool-content";
+import { LanguageToggle } from "@/components/language-toggle";
 
 export default function Header() {
+  const locale = useLocale();
+  const t = useTranslations("Nav");
   const pathname = usePathname();
+  const menuItems = [
+    { name: t("home"), href: "/" },
+    { name: t("contact"), href: "/contact" }
+  ];
+  const guideItems = [
+    { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
+    { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
+    { name: t("guideBiweekly"), href: "/guides/biweekly-time-card-calculator" }
+  ];
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -33,7 +37,9 @@ export default function Header() {
     return pathname.includes(href);
   };
 
-  const isToolsActive = toolCalculators.some((item) => pathname.includes(`/${item.slug}`));
+  const isToolsActive = toolCalculators.some((item) =>
+    pathname.includes(`/${getLocalizedToolSlug(locale, item.slug)}`) || pathname.includes(`/${item.slug}`)
+  );
   const isGuidesActive = guideItems.some((item) => pathname.includes(item.href));
 
   return (
@@ -69,26 +75,30 @@ export default function Header() {
                     isToolsActive ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:text-blue-600"
                   )}
                 >
-                  Calculators
+                  {t("calculators")}
                   <ChevronDown className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-72 max-h-96 overflow-auto">
-                {toolCalculators.map((item) => (
+                {toolCalculators.map((item) => {
+                  const localizedSlug = getLocalizedToolSlug(locale, item.slug);
+                  const localizedView = getLocalizedToolView(locale, item, localizedSlug);
+                  return (
                   <DropdownMenuItem key={item.slug} asChild>
                     <Link
-                      href={`/${item.slug}`}
+                      href={`/${localizedSlug}`}
                       className={cn(
                         "w-full px-2 py-2 text-sm cursor-pointer",
-                        isActive(`/${item.slug}`)
+                        isActive(`/${localizedSlug}`)
                           ? "text-blue-600 bg-blue-50"
                           : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                       )}
                     >
-                      {item.title}
+                      {localizedView.title}
                     </Link>
                   </DropdownMenuItem>
-                ))}
+                  );
+                })}
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -100,7 +110,7 @@ export default function Header() {
                     isGuidesActive ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:text-blue-600"
                   )}
                 >
-                  Guides
+                  {t("guides")}
                   <ChevronDown className="h-4 w-4" />
                 </button>
               </DropdownMenuTrigger>
@@ -124,7 +134,12 @@ export default function Header() {
             </DropdownMenu>
           </nav>
 
-          <MobileMenuButton />
+          <div className="flex items-center gap-3">
+            <div className="hidden md:block">
+              <LanguageToggle />
+            </div>
+            <MobileMenuButton />
+          </div>
         </div>
       </div>
     </header>

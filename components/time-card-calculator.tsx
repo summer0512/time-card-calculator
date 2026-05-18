@@ -8,6 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useTranslations } from "next-intl";
 
 interface DayEntry {
   date: string;
@@ -18,7 +19,7 @@ interface DayEntry {
   breaks: string[];
 }
 
-interface CalculatorLabels {
+export interface CalculatorLabels {
   start: string;
   end: string;
   break: string;
@@ -37,6 +38,54 @@ interface TimeCardCalculatorProps {
   timeFormat?: "auto" | "12h" | "24h" | "military";
   copyVariant?: "time-card" | "timesheet" | "time-clock" | "punch";
   labels?: CalculatorLabels;
+  defaultCurrency?: string;
+  defaultHourlyRate?: string;
+  hourlyRateUnitLabel?: string;
+  uiText?: Partial<CalculatorUiText>;
+}
+
+export interface CalculatorUiText {
+  weekDays: string[];
+  shiftLabel: string;
+  weekLabel: string;
+  clearAll: string;
+  print: string;
+  copyFirstRow: string;
+  withLunch: string;
+  withBreak: string;
+  payment: string;
+  includePaymentInformation: string;
+  hourlyPayRate: string;
+  settings: string;
+  biweeklyToggle: string;
+  reportHeaderPlaceholder: string;
+  notesPlaceholder: string;
+  removeColumnTitle: string;
+  dailyTotal: string;
+  action: string;
+  clearRowTitle: string;
+  totalPaidHours: string;
+  totalBreakTime: string;
+  averageDailyPaidTime: string;
+  weeklyTotals: string;
+  overtimeSummary: string;
+  hidden: string;
+  printReportTitles: {
+    "time-card": string;
+    timesheet: string;
+    "time-clock": string;
+    punch: string;
+  };
+  generatedOn: string;
+  header: string;
+  total: string;
+  totalHours: string;
+  overtime: string;
+  totalPay: string;
+  notes: string;
+  defaultCurrency: string;
+  defaultHourlyRate: string;
+  hourlyRateUnitLabel: string;
 }
 
 const DEFAULT_LABELS: CalculatorLabels = {
@@ -47,7 +96,49 @@ const DEFAULT_LABELS: CalculatorLabels = {
   day: "Date"
 };
 
-const WEEK_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const DEFAULT_UI_TEXT: CalculatorUiText = {
+  weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  shiftLabel: "Shift",
+  weekLabel: "Week",
+  clearAll: "Clear All",
+  print: "Print",
+  copyFirstRow: "Copy First Row",
+  withLunch: "With Lunch",
+  withBreak: "With Break",
+  payment: "Payment",
+  includePaymentInformation: "Include payment information",
+  hourlyPayRate: "Hourly Pay Rate",
+  settings: "Settings",
+  biweeklyToggle: "Biweekly (14 days)",
+  reportHeaderPlaceholder: "Report header (employee name / date range)",
+  notesPlaceholder: "Notes or signature details",
+  removeColumnTitle: "Remove column",
+  dailyTotal: "Daily Total",
+  action: "Action",
+  clearRowTitle: "Clear row",
+  totalPaidHours: "Total Paid Hours",
+  totalBreakTime: "Total Break Time",
+  averageDailyPaidTime: "Average Daily Paid Time",
+  weeklyTotals: "Weekly Total(s)",
+  overtimeSummary: "Overtime Summary",
+  hidden: "Hidden",
+  printReportTitles: {
+    "time-card": "Time Card Report",
+    timesheet: "Timesheet Report",
+    "time-clock": "Time Clock Report",
+    punch: "Time Punch Report"
+  },
+  generatedOn: "Generated on",
+  header: "Header",
+  total: "Total",
+  totalHours: "Total Hours",
+  overtime: "Overtime",
+  totalPay: "Total Pay",
+  notes: "Notes",
+  defaultCurrency: "$",
+  defaultHourlyRate: "35",
+  hourlyRateUnitLabel: "/hr"
+};
 
 const toBreakString = (minutes: number) => {
   const hours = Math.floor(minutes / 60);
@@ -132,10 +223,15 @@ const calculateRawShiftMinutes = (day: DayEntry): number => {
   return totalMinutes;
 };
 
-const getFirstDay = (timeFormat: TimeCardCalculatorProps["timeFormat"], breakDefault: string, includeLunch: boolean): DayEntry => {
+const getFirstDay = (
+  timeFormat: TimeCardCalculatorProps["timeFormat"],
+  breakDefault: string,
+  includeLunch: boolean,
+  firstDayLabel: string
+): DayEntry => {
   if (timeFormat === "24h" || timeFormat === "military") {
     return {
-      date: "Monday",
+      date: firstDayLabel,
       from: "08:00",
       to: "17:00",
       breakDeduction: breakDefault,
@@ -145,7 +241,7 @@ const getFirstDay = (timeFormat: TimeCardCalculatorProps["timeFormat"], breakDef
   }
 
   return {
-    date: "Monday",
+    date: firstDayLabel,
     from: "8:00AM",
     to: "5:00PM",
     breakDeduction: breakDefault,
@@ -160,20 +256,23 @@ const createDays = (
   breakColumns: number,
   includeLunch: boolean,
   breakDefault: string,
-  timeFormat: TimeCardCalculatorProps["timeFormat"]
+  timeFormat: TimeCardCalculatorProps["timeFormat"],
+  weekDays: string[],
+  weekLabel: string,
+  shiftLabel: string
 ): DayEntry[] => {
   if (mode === "hours") {
-    const first = getFirstDay(timeFormat, breakDefault, includeLunch);
-    return [{ ...first, date: "Shift" }];
+    const first = getFirstDay(timeFormat, breakDefault, includeLunch, weekDays[0] || "Monday");
+    return [{ ...first, date: shiftLabel }];
   }
 
   if (biweekly) {
     const days: DayEntry[] = [];
     for (let week = 1; week <= 2; week += 1) {
-      WEEK_DAYS.forEach((day, index) => {
-        const first = getFirstDay(timeFormat, breakDefault, includeLunch);
+      weekDays.forEach((day, index) => {
+        const first = getFirstDay(timeFormat, breakDefault, includeLunch, weekDays[0] || "Monday");
         days.push({
-          date: `Week ${week} - ${day}`,
+          date: `${weekLabel} ${week} - ${day}`,
           from: week === 1 && index === 0 ? first.from : "",
           to: week === 1 && index === 0 ? first.to : "",
           breakDeduction: week === 1 && index === 0 ? first.breakDeduction : "",
@@ -187,8 +286,8 @@ const createDays = (
     return days;
   }
 
-  const first = getFirstDay(timeFormat, breakDefault, includeLunch);
-  return WEEK_DAYS.map((day, index) => ({
+  const first = getFirstDay(timeFormat, breakDefault, includeLunch, weekDays[0] || "Monday");
+  return weekDays.map((day, index) => ({
     date: day,
     from: index === 0 ? first.from : "",
     to: index === 0 ? first.to : "",
@@ -210,8 +309,73 @@ export default function TimeCardCalculator({
   showPrintableTimesheet = true,
   timeFormat = "auto",
   copyVariant = "time-card",
-  labels = DEFAULT_LABELS
+  labels = DEFAULT_LABELS,
+  defaultCurrency,
+  defaultHourlyRate,
+  hourlyRateUnitLabel,
+  uiText,
 }: TimeCardCalculatorProps) {
+  const tCalculator = useTranslations("Calculator");
+  const localizedUiText: Partial<CalculatorUiText> = {
+    weekDays: (tCalculator.raw("weekDays") as string[]) || DEFAULT_UI_TEXT.weekDays,
+    shiftLabel: tCalculator("shiftLabel"),
+    weekLabel: tCalculator("weekLabel"),
+    clearAll: tCalculator("clearAll"),
+    print: tCalculator("print"),
+    copyFirstRow: tCalculator("copyFirstRow"),
+    withLunch: tCalculator("withLunch"),
+    withBreak: tCalculator("withBreak"),
+    payment: tCalculator("payment"),
+    includePaymentInformation: tCalculator("includePaymentInformation"),
+    hourlyPayRate: tCalculator("hourlyPayRate"),
+    settings: tCalculator("settings"),
+    biweeklyToggle: tCalculator("biweeklyToggle"),
+    reportHeaderPlaceholder: tCalculator("reportHeaderPlaceholder"),
+    notesPlaceholder: tCalculator("notesPlaceholder"),
+    removeColumnTitle: tCalculator("removeColumnTitle"),
+    dailyTotal: tCalculator("dailyTotal"),
+    action: tCalculator("action"),
+    clearRowTitle: tCalculator("clearRowTitle"),
+    totalPaidHours: tCalculator("totalPaidHours"),
+    totalBreakTime: tCalculator("totalBreakTime"),
+    averageDailyPaidTime: tCalculator("averageDailyPaidTime"),
+    weeklyTotals: tCalculator("weeklyTotals"),
+    overtimeSummary: tCalculator("overtimeSummary"),
+    hidden: tCalculator("hidden"),
+    generatedOn: tCalculator("generatedOn"),
+    header: tCalculator("header"),
+    total: tCalculator("total"),
+    totalHours: tCalculator("totalHours"),
+    overtime: tCalculator("overtime"),
+    totalPay: tCalculator("totalPay"),
+    notes: tCalculator("notes"),
+    defaultCurrency: tCalculator("defaultCurrency"),
+    defaultHourlyRate: tCalculator("defaultHourlyRate"),
+    hourlyRateUnitLabel: tCalculator("hourlyRateUnitLabel"),
+    printReportTitles: {
+      "time-card": tCalculator("printReportTitles.time-card"),
+      timesheet: tCalculator("printReportTitles.timesheet"),
+      "time-clock": tCalculator("printReportTitles.time-clock"),
+      punch: tCalculator("printReportTitles.punch"),
+    }
+  };
+  const t: CalculatorUiText = {
+    ...DEFAULT_UI_TEXT,
+    ...localizedUiText,
+    ...uiText,
+    printReportTitles: {
+      ...DEFAULT_UI_TEXT.printReportTitles,
+      ...(uiText?.printReportTitles || {})
+    }
+  };
+  const baseLabels: CalculatorLabels = {
+    start: tCalculator("labels.start"),
+    end: tCalculator("labels.end"),
+    break: tCalculator("labels.break"),
+    lunch: tCalculator("labels.lunch"),
+    day: tCalculator("labels.day")
+  };
+  const mergedLabels: CalculatorLabels = labels ? { ...labels, ...baseLabels } : baseLabels;
   const breakDefault = toBreakString(defaultBreakMinutes);
   const initialBreakColumns = showMultipleBreaks ? 2 : 1;
 
@@ -222,23 +386,28 @@ export default function TimeCardCalculator({
   const [reportHeader, setReportHeader] = useState("");
   const [reportNotes, setReportNotes] = useState("");
   const [includePayment, setIncludePayment] = useState(true);
-  const [basePay, setBasePay] = useState("35");
-  const [currency, setCurrency] = useState("$");
+  const [basePay, setBasePay] = useState(defaultHourlyRate ?? t.defaultHourlyRate);
+  const [currency, setCurrency] = useState(defaultCurrency ?? t.defaultCurrency);
 
   const [days, setDays] = useState<DayEntry[]>(
-    createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat)
+    createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
   );
 
   useEffect(() => {
     setShowLunchColumn(showLunchBreak);
     setBreakColumns(initialBreakColumns);
     setIsBiweekly(mode === "time-card" && showBiweekly);
-    setDays(createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat));
-  }, [mode, showLunchBreak, showBiweekly, showMultipleBreaks, defaultBreakMinutes, timeFormat]);
+    setDays(createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+  }, [mode, showLunchBreak, showBiweekly, showMultipleBreaks, defaultBreakMinutes, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   useEffect(() => {
-    setDays(createDays(mode, isBiweekly, breakColumns, showLunchColumn, breakDefault, timeFormat));
-  }, [isBiweekly]);
+    setBasePay(defaultHourlyRate ?? t.defaultHourlyRate);
+    setCurrency(defaultCurrency ?? t.defaultCurrency);
+  }, [defaultHourlyRate, defaultCurrency, t.defaultHourlyRate, t.defaultCurrency]);
+
+  useEffect(() => {
+    setDays(createDays(mode, isBiweekly, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+  }, [isBiweekly, mode, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   const totals = useMemo(() => {
     const dayTotals = days.map((day) => calculateDayTotal(day, showLunchColumn, breakColumns));
@@ -388,14 +557,7 @@ export default function TimeCardCalculator({
   const printReport = () => {
     if (typeof window === "undefined") return;
 
-    const titleByVariant: Record<string, string> = {
-      "time-card": "Time Card Report",
-      timesheet: "Timesheet Report",
-      "time-clock": "Time Clock Report",
-      punch: "Time Punch Report"
-    };
-
-    const reportTitle = titleByVariant[copyVariant] ?? "Time Card Report";
+    const reportTitle = t.printReportTitles[copyVariant] ?? t.printReportTitles["time-card"];
     const totalColumns = 4 + (showLunchColumn ? 1 : 0) + Math.max(0, breakColumns - 1);
 
     const rowsHtml = days
@@ -433,29 +595,29 @@ export default function TimeCardCalculator({
       </head>
       <body>
         <h1>${reportTitle}</h1>
-        <div class="sub">Generated on ${new Date().toLocaleDateString()}</div>
-        ${reportHeader ? `<div><strong>Header:</strong> ${reportHeader}</div>` : ""}
+        <div class="sub">${t.generatedOn} ${new Date().toLocaleDateString()}</div>
+        ${reportHeader ? `<div><strong>${t.header}:</strong> ${reportHeader}</div>` : ""}
         <table>
           <thead>
             <tr>
-              <th>${labels.day}</th>
-              <th>${labels.start}</th>
-              <th>${labels.end}</th>
-              <th>${labels.break}</th>
-              ${showLunchColumn ? `<th>${labels.lunch}</th>` : ""}
-              ${Array.from({ length: breakColumns - 1 }, (_, i) => `<th>${labels.break} ${i + 2}</th>`).join("")}
-              <th>Total</th>
+              <th>${mergedLabels.day}</th>
+              <th>${mergedLabels.start}</th>
+              <th>${mergedLabels.end}</th>
+              <th>${mergedLabels.break}</th>
+              ${showLunchColumn ? `<th>${mergedLabels.lunch}</th>` : ""}
+              ${Array.from({ length: breakColumns - 1 }, (_, i) => `<th>${mergedLabels.break} ${i + 2}</th>`).join("")}
+              <th>${t.total}</th>
             </tr>
           </thead>
           <tbody>
             ${rowsHtml}
           </tbody>
         </table>
-        <div class="total">Total Hours: ${totals.totalHours.toFixed(2)} (${minutesToHours(totals.totalMinutes)})</div>
-        <div class="total">Total Break Time: ${minutesToHours(totals.breakMinutes)}</div>
-        ${showOvertime ? `<div class="total">Overtime: ${minutesToHours(totals.totalOvertimeMinutes)}</div>` : ""}
-        ${includePayment ? `<div class="total">Total Pay: ${currency}${totalPay.toFixed(2)}</div>` : ""}
-        ${reportNotes ? `<div class="notes"><strong>Notes:</strong><br/>${reportNotes.replace(/\n/g, "<br/>")}</div>` : ""}
+        <div class="total">${t.totalHours}: ${totals.totalHours.toFixed(2)} (${minutesToHours(totals.totalMinutes)})</div>
+        <div class="total">${t.totalBreakTime}: ${minutesToHours(totals.breakMinutes)}</div>
+        ${showOvertime ? `<div class="total">${t.overtime}: ${minutesToHours(totals.totalOvertimeMinutes)}</div>` : ""}
+        ${includePayment ? `<div class="total">${t.totalPay}: ${currency}${totalPay.toFixed(2)}</div>` : ""}
+        ${reportNotes ? `<div class="notes"><strong>${t.notes}:</strong><br/>${reportNotes.replace(/\n/g, "<br/>")}</div>` : ""}
       </body>
       </html>
     `;
@@ -501,34 +663,34 @@ export default function TimeCardCalculator({
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={clearAll} size="sm">
                 <RotateCcw className="h-4 w-4 mr-1" />
-                Clear All
+                {t.clearAll}
               </Button>
 
               {showPrintableTimesheet && (
                 <Button variant="outline" onClick={printReport} size="sm">
                   <Printer className="h-4 w-4 mr-1" />
-                  Print
+                  {t.print}
                 </Button>
               )}
 
               {mode !== "hours" && (
                 <Button variant="outline" onClick={copyFirstRowDown} size="sm">
                   <Copy className="h-4 w-4 mr-1" />
-                  Copy First Row
+                  {t.copyFirstRow}
                 </Button>
               )}
 
               {!showLunchColumn && (
                 <Button variant="outline" onClick={addLunchColumn} size="sm">
                   <Plus className="h-4 w-4 mr-1" />
-                  With Lunch
+                  {t.withLunch}
                 </Button>
               )}
 
               {mode !== "hours" && (
                 <Button variant="outline" onClick={addBreakColumn} size="sm" disabled={breakColumns >= 3}>
                   <Plus className="h-4 w-4 mr-1" />
-                  With Break
+                  {t.withBreak}
                 </Button>
               )}
 
@@ -536,7 +698,7 @@ export default function TimeCardCalculator({
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
                     <CreditCard className="h-4 w-4 mr-1" />
-                    Payment ({currency}{basePay}/hr)
+                    {t.payment} ({currency}{basePay}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80" align="end">
@@ -548,12 +710,12 @@ export default function TimeCardCalculator({
                         onCheckedChange={(checked) => setIncludePayment(checked === true)}
                       />
                       <Label htmlFor="includePayment" className="text-blue-600 font-semibold">
-                        Include payment information
+                        {t.includePaymentInformation}
                       </Label>
                     </div>
 
                     <div>
-                      <Label htmlFor="basePay">Hourly Pay Rate</Label>
+                      <Label htmlFor="basePay">{t.hourlyPayRate}</Label>
                       <div className="flex items-center mt-1">
                         <Input
                           id="currency"
@@ -578,7 +740,7 @@ export default function TimeCardCalculator({
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
-                      Settings
+                      {t.settings}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80" align="end">
@@ -590,7 +752,7 @@ export default function TimeCardCalculator({
                           onCheckedChange={(checked) => setIsBiweekly(checked === true)}
                         />
                         <Label htmlFor="biweekly" className="text-blue-600 font-semibold">
-                          Biweekly (14 days)
+                          {t.biweeklyToggle}
                         </Label>
                       </div>
                     </div>
@@ -604,12 +766,12 @@ export default function TimeCardCalculator({
                 <Input
                   value={reportHeader}
                   onChange={(e) => setReportHeader(e.target.value)}
-                  placeholder="Report header (employee name / date range)"
+                  placeholder={t.reportHeaderPlaceholder}
                 />
                 <Input
                   value={reportNotes}
                   onChange={(e) => setReportNotes(e.target.value)}
-                  placeholder="Notes or signature details"
+                  placeholder={t.notesPlaceholder}
                 />
               </div>
             )}
@@ -621,20 +783,20 @@ export default function TimeCardCalculator({
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="bg-gradient-to-r from-green-100 to-blue-100">
-                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[110px]">{labels.day}</th>
-                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{labels.start}</th>
-                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{labels.end}</th>
+                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[110px]">{mergedLabels.day}</th>
+                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{mergedLabels.start}</th>
+                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{mergedLabels.end}</th>
 
                   <th className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
                     <div className="flex items-center gap-1">
-                      <span>{labels.break}</span>
+                      <span>{mergedLabels.break}</span>
                       {breakColumns > 1 && (
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => removeBreakColumn(0)}
                           className="text-gray-500 hover:text-red-600 hover:bg-red-50"
-                          title="Remove column"
+                          title={t.removeColumnTitle}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -645,13 +807,13 @@ export default function TimeCardCalculator({
                   {showLunchColumn && (
                     <th className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
                       <div className="flex items-center gap-1">
-                        <span>{labels.lunch}</span>
+                        <span>{mergedLabels.lunch}</span>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={removeLunchColumn}
                           className="text-gray-500 hover:text-red-600 hover:bg-red-50"
-                          title="Remove column"
+                          title={t.removeColumnTitle}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -662,13 +824,13 @@ export default function TimeCardCalculator({
                   {Array.from({ length: breakColumns - 1 }, (_, i) => (
                     <th key={`break-${i + 1}`} className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
                       <div className="flex items-center gap-1">
-                        <span>{labels.break} {i + 2}</span>
+                        <span>{mergedLabels.break} {i + 2}</span>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => removeBreakColumn(i + 1)}
                           className="text-gray-500 hover:text-red-600 hover:bg-red-50"
-                          title="Remove column"
+                          title={t.removeColumnTitle}
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -676,8 +838,8 @@ export default function TimeCardCalculator({
                     </th>
                   ))}
 
-                  <th className="border border-gray-300 p-1 text-center font-semibold min-w-[90px]">Daily Total</th>
-                  <th className="border border-gray-300 p-1 text-center font-semibold min-w-[70px]">Action</th>
+                  <th className="border border-gray-300 p-1 text-center font-semibold min-w-[90px]">{t.dailyTotal}</th>
+                  <th className="border border-gray-300 p-1 text-center font-semibold min-w-[70px]">{t.action}</th>
                 </tr>
               </thead>
 
@@ -747,7 +909,7 @@ export default function TimeCardCalculator({
                         size="sm"
                         onClick={() => removeDayData(index)}
                         className="text-gray-500 hover:text-red-600 hover:bg-red-50"
-                        title="Clear row"
+                        title={t.clearRowTitle}
                       >
                         <Eraser className="h-4 w-4" />
                       </Button>
@@ -757,7 +919,7 @@ export default function TimeCardCalculator({
 
                 <tr className="bg-gradient-to-r from-blue-100 to-green-100 font-semibold">
                   <td className="border border-gray-300 p-2 text-right" colSpan={4 + (showLunchColumn ? 1 : 0) + (breakColumns - 1)}>
-                    Total Paid Hours
+                    {t.totalPaidHours}
                   </td>
                   <td className="border border-gray-300 p-2 text-center font-mono text-green-700">
                     {totals.totalHours.toFixed(2)}h / {minutesToHours(totals.totalMinutes)}
@@ -772,23 +934,23 @@ export default function TimeCardCalculator({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
             <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">Total Break Time</p>
+              <p className="text-xs text-gray-500">{t.totalBreakTime}</p>
               <p className="text-lg font-semibold text-gray-900">{minutesToHours(totals.breakMinutes)}</p>
             </div>
             <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">Average Daily Paid Time</p>
+              <p className="text-xs text-gray-500">{t.averageDailyPaidTime}</p>
               <p className="text-lg font-semibold text-gray-900">{minutesToHours(totals.averageDayMinutes)}</p>
             </div>
             <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">Weekly Total(s)</p>
+              <p className="text-xs text-gray-500">{t.weeklyTotals}</p>
               <p className="text-lg font-semibold text-gray-900">
                 {totals.weeklyMinuteTotals.map((value) => minutesToHours(value)).join(" / ")}
               </p>
             </div>
             <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">Overtime Summary</p>
+              <p className="text-xs text-gray-500">{t.overtimeSummary}</p>
               <p className="text-lg font-semibold text-gray-900">
-                {showOvertime ? `${minutesToHours(totals.totalOvertimeMinutes)} (${(totals.totalOvertimeMinutes / 60).toFixed(2)}h)` : "Hidden"}
+                {showOvertime ? `${minutesToHours(totals.totalOvertimeMinutes)} (${(totals.totalOvertimeMinutes / 60).toFixed(2)}h)` : t.hidden}
               </p>
             </div>
           </div>

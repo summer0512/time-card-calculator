@@ -1,19 +1,11 @@
+"use client";
+
 import { Clock, Github, Mail } from "lucide-react";
-import Link from "next/link";
-
-const popularTools = [
-  { name: "Time Card Calculator with Lunch Breaks", href: "/time-card-calculator-with-lunch" },
-  { name: "Biweekly Time Card Calculator", href: "/biweekly-time-card-calculator" },
-  { name: "Timesheet Calculator with Lunch", href: "/timesheet-calculator-with-lunch" },
-  { name: "Lunch Break Calculator", href: "/lunch-break-calculator" },
-  { name: "Time Punch Calculator", href: "/time-punch-calculator" }
-];
-
-const guideLinks = [
-  { name: "How to Calculate Time Cards with Lunch Breaks", href: "/guides/time-card-calculator-with-lunch" },
-  { name: "How to Calculate Time Card Breaks", href: "/guides/time-card-calculator-with-breaks" },
-  { name: "Biweekly Time Card Guide", href: "/guides/biweekly-time-card-calculator" }
-];
+import { Link } from "@/i18n/routing";
+import { useLocale, useTranslations } from "next-intl";
+import { toolCalculatorMap } from "@/lib/tool-calculators";
+import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolView } from "@/lib/localized-tool-content";
 
 const friendLinks = [
   { name: "Morse Code Kit", href: "https://morsecodekit.com/", follow: true },
@@ -23,6 +15,26 @@ const friendLinks = [
 ];
 
 export default function Footer() {
+  const locale = useLocale();
+  const t = useTranslations("Footer");
+  const popularTools = [
+    "time-card-calculator-with-lunch",
+    "biweekly-time-card-calculator",
+    "timesheet-calculator-with-lunch",
+    "lunch-break-calculator",
+    "time-punch-calculator"
+  ].map((slug) => {
+    const canonicalSlug = slug as keyof typeof toolCalculatorMap;
+    const localizedSlug = getLocalizedToolSlug(locale, canonicalSlug);
+    const localized = getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug);
+    return { name: localized.title, href: `/${localizedSlug}` };
+  });
+  const guideLinks = [
+    { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
+    { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
+    { name: t("guideBiweekly"), href: "/guides/biweekly-time-card-calculator" }
+  ];
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -39,31 +51,31 @@ export default function Footer() {
               info@time-card-calculator.work
             </div>
             <p className="text-sm text-gray-400 max-w-xl">
-              Free online calculators for time cards, lunch breaks, time punches, and biweekly payroll hour summaries.
+              {t("description")}
             </p>
           </div>
 
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("quickLinks")}</h3>
             <ul className="space-y-2">
               <li>
                 <Link href="/" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Home
+                  {t("home")}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Contact
+                  {t("contact")}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Privacy Policy
+                  {t("privacy")}
                 </Link>
               </li>
               <li>
                 <Link href="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
-                  Terms of Service
+                  {t("terms")}
                 </Link>
               </li>
               <li>
@@ -78,7 +90,7 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h3 className="text-lg font-semibold mb-4">Popular Tools</h3>
+            <h3 className="text-lg font-semibold mb-4">{t("popularTools")}</h3>
             <ul className="space-y-2">
               {popularTools.map((tool) => (
                 <li key={tool.href}>
@@ -91,7 +103,7 @@ export default function Footer() {
           </div>
 
           <div className="col-span-1 md:col-span-3">
-            <h4 className="text-sm font-semibold text-white mb-2">Guides</h4>
+            <h4 className="text-sm font-semibold text-white mb-2">{t("guides")}</h4>
             <div className="flex flex-wrap gap-3">
               {guideLinks.map((guide) => (
                 <Link key={guide.href} href={guide.href} className="text-xs text-gray-400 hover:text-white transition-colors">
@@ -101,7 +113,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="col-span-1 md:col-span-2">
-            <h4 className="text-sm font-semibold text-white mb-2">Friend Links</h4>
+            <h4 className="text-sm font-semibold text-white mb-2">{t("friendLinks")}</h4>
             <div className="flex flex-wrap gap-3">
               {friendLinks.map((link) => (
                 <a
@@ -119,7 +131,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-800">
-          <p className="text-gray-400 text-sm text-center">Copyright 2026 Time Card Calculator. All rights reserved.</p>
+          <p className="text-gray-400 text-sm text-center">{t("copyright")}</p>
         </div>
       </div>
     </footer>

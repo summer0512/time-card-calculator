@@ -1,0 +1,256 @@
+{
+  "time-card-calculator-with-lunch": {
+    "slug": "stundenrechner",
+    "title": "Stundenrechner",
+    "metaTitle": "Stundenrechner: Arbeitszeit einfach online berechnen",
+    "metaDescription": "Kostenloser Stundenrechner für tägliche und wöchentliche Arbeitszeit mit Pausenabzug und Überstunden.",
+    "h1": "Stundenrechner",
+    "subtitle": "Arbeitszeit online berechnen mit Startzeit, Endzeit, Pause und Wochenübersicht.",
+    "intro": "Berechne deine Arbeitszeit schnell und korrekt für Alltag, Schichtarbeit und Zeiterfassung.",
+    "keywords": "stundenrechner, stundenrechner arbeit, stundenrechner arbeitszeit, arbeitszeit stundenrechner, stundenrechner online",
+    "howToSteps": [
+      "Gib für jeden Arbeitstag deine Start- und Endzeit ein.",
+      "Lass die Mittagspause aktiv und trage die jeweilige Dauer ein.",
+      "Prüfe Tagessummen, Wochenstunden und Überstunden.",
+      "Drucke den Stundenzettel für Abrechnung oder Nachweis aus."
+    ],
+    "example": {
+      "title": "Beispiel für Pausenabzug",
+      "calculation": "08:00 bis 17:00 Uhr mit 30 Minuten Mittagspause",
+      "result": "Bezahlte Zeit = 8,5 Stunden (8:30)."
+    },
+    "faqs": [
+      {
+        "question": "Wie berechne ich Arbeitszeit mit Mittagspause?",
+        "answer": "Trage Kommen- und Gehen-Zeiten ein und hinterlege die Mittagspause. Der Rechner zieht die Pause automatisch ab."
+      },
+      {
+        "question": "Ist die Mittagspause bezahlt oder unbezahlt?",
+        "answer": "In vielen Betrieben ist die Mittagspause unbezahlt. Richte die Eingabe nach deiner Unternehmensregel aus."
+      },
+      {
+        "question": "Kann ich 30 Minuten oder 1 Stunde Mittagspause nutzen?",
+        "answer": "Ja. Du kannst pro Tag beliebige Werte wie 0:30, 1:00 oder eigene Zeiten eingeben."
+      },
+      {
+        "question": "Kann der Rechner mehrere Pausen pro Tag verarbeiten?",
+        "answer": "Ja. Du kannst weitere Pausenspalten hinzufügen, z. B. für geteilte Pausen."
+      }
+    ]
+  },
+  "time-card-calculator-with-breaks": {
+    "slug": "stundenrechner-mit-pause",
+    "title": "Stundenrechner mit Pause",
+    "metaTitle": "Stundenrechner mit Pause - Arbeitszeit korrekt berechnen",
+    "metaDescription": "Berechne Netto-Arbeitszeit mit automatischem Pausenabzug, inkl. mehreren Pausen pro Tag.",
+    "h1": "Stundenrechner mit Pause",
+    "subtitle": "Ziehe Pausen automatisch von deiner Arbeitszeit ab.",
+    "intro": "Ideal für Arbeitszeitmodelle mit Mittagspause und zusätzlichen kurzen Pausen.",
+    "keywords": "stundenrechner mit pause, arbeitszeit stundenrechner",
+    "howToSteps": [
+      "Gib für jeden Arbeitstag Start- und Endzeit ein.",
+      "Nutze die erste Pausenspalte und füge bei Bedarf weitere hinzu.",
+      "Trage jede Pause im Format Stunden:Minuten ein.",
+      "Prüfe gesamte Pausenzeit, Tagesstunden und Wochenwerte."
+    ],
+    "example": {
+      "title": "Beispiel mit mehreren Pausen",
+      "calculation": "09:00 bis 17:30 Uhr, mit 0:30 Mittagspause und 0:15 Pause",
+      "result": "Bezahlte Zeit = 7,75 Stunden (7:45)."
+    },
+    "faqs": [
+      {
+        "question": "Wie ziehe ich Pausen von der Arbeitszeit ab?",
+        "answer": "Trage alle Pausenzeiten ein. Der Rechner zieht die Summe der Pausen automatisch von der Schichtdauer ab."
+      },
+      {
+        "question": "Kann ich mehr als eine Pause pro Tag erfassen?",
+        "answer": "Ja. Du kannst weitere Pausenspalten hinzufügen und getrennt pflegen."
+      },
+      {
+        "question": "Sind Pausen bezahlt oder unbezahlt?",
+        "answer": "Das hängt von deiner Regelung ab. Trage nur unbezahlte Pausen ein, wenn du bezahlte Stunden berechnen willst."
+      },
+      {
+        "question": "Was ist der Unterschied zwischen Mittagspause und Kurzpause?",
+        "answer": "Die Mittagspause ist meist länger, Kurzpausen sind kürzer. Beide lassen sich getrennt erfassen."
+      }
+    ]
+  },
+  "hours-calculator-with-lunch": {
+    "slug": "stundenrechner-dezimal",
+    "title": "Stundenrechner Dezimal",
+    "metaTitle": "Stundenrechner Dezimal - Stunden in Dezimal umrechnen",
+    "metaDescription": "Wandle Uhrzeiten in Dezimalstunden um und berechne Arbeitszeit für Lohnabrechnung.",
+    "h1": "Stundenrechner Dezimal",
+    "subtitle": "Zeitspannen als Dezimalstunden und hh:mm anzeigen.",
+    "intro": "Praktisch für Lohn, Gehalt und Auswertungen in Tabellen.",
+    "keywords": "stundenrechner dezimal",
+    "howToSteps": [
+      "Gib den Schichtbeginn ein.",
+      "Gib das Schichtende ein.",
+      "Trage die Dauer der Mittagspause ein.",
+      "Lies das Ergebnis als Dezimalstunden und hh:mm ab."
+    ],
+    "example": {
+      "title": "Beispiel Einzelschicht",
+      "calculation": "08:00 bis 17:00 Uhr mit 0:30 Mittagspause",
+      "result": "Bezahlte Zeit = 8,5 Stunden (8:30)."
+    },
+    "faqs": [
+      {
+        "question": "Wie berechne ich Stunden mit Mittagspause?",
+        "answer": "Ziehe die Mittagspause von der Differenz zwischen Schichtbeginn und Schichtende ab."
+      },
+      {
+        "question": "Wie viel ist 8 bis 17 Uhr mit 30 Minuten Mittagspause?",
+        "answer": "Das ergibt 8,5 Stunden beziehungsweise 8:30."
+      },
+      {
+        "question": "Wie wandle ich Arbeitszeit in Dezimalstunden um?",
+        "answer": "Minuten werden durch 60 geteilt. 30 Minuten sind 0,5 und 45 Minuten sind 0,75."
+      },
+      {
+        "question": "Ist der Rechner für eine einzelne Schicht geeignet?",
+        "answer": "Ja. Diese Seite ist speziell für Einzelschicht-Berechnungen gedacht."
+      }
+    ]
+  },
+  "time-clock-calculator-with-lunch": {
+    "slug": "stundenrechner-uhrzeit",
+    "title": "Stundenrechner Uhrzeit",
+    "metaTitle": "Stundenrechner Uhrzeit - Start und Endzeit berechnen",
+    "metaDescription": "Berechne Arbeitsstunden aus Start- und Endzeit inklusive Pausen und Schichtwechsel über Mitternacht.",
+    "h1": "Stundenrechner für Uhrzeiten",
+    "subtitle": "Arbeitsstunden aus Uhrzeiten in Sekunden berechnen.",
+    "intro": "Für Zeiterfassung mit Uhrzeit-Eingaben im 12h- oder 24h-Format.",
+    "keywords": "stundenrechner uhrzeit",
+    "howToSteps": [
+      "Gib für jeden Tag Kommen- und Gehen-Zeit ein.",
+      "Trage unbezahlte Mittagspausen ein.",
+      "Füge bei Bedarf weitere Pausenspalten hinzu.",
+      "Prüfe Tages- und Wochenwerte für bezahlte Stunden."
+    ],
+    "example": {
+      "title": "Beispiel mit Stempeluhrzeiten",
+      "calculation": "Kommen 07:30, Gehen 16:30, Mittagspause 0:30",
+      "result": "Bezahlte Zeit = 8,5 Stunden (8:30)."
+    },
+    "faqs": [
+      {
+        "question": "Wie berechne ich Stunden aus Kommen- und Gehen-Zeit?",
+        "answer": "Bilde die Zeitdifferenz und ziehe danach unbezahlte Pausen ab."
+      },
+      {
+        "question": "Wie ziehe ich Mittagspause bei Stempeluhrzeiten ab?",
+        "answer": "Trage die unbezahlte Mittagspause je Tag ein. Der Rechner zieht sie automatisch ab."
+      },
+      {
+        "question": "Kann ich mehrere Zeitblöcke pro Tag erfassen?",
+        "answer": "Ja. Mit zusätzlichen Pausenspalten kannst du geteilte Zeiten abbilden."
+      },
+      {
+        "question": "Ist das für Lohnabrechnung geeignet?",
+        "answer": "Ja, für die Vorprüfung von Arbeitszeit und Wochenwerten ist es gut geeignet."
+      }
+    ]
+  },
+  "timesheet-calculator-with-lunch": {
+    "slug": "stundenrechner-woche",
+    "title": "Wochen-Stundenrechner",
+    "metaTitle": "Stundenrechner Woche - Wochenarbeitszeit berechnen",
+    "metaDescription": "Summiere tägliche Arbeitszeiten zur Wochenarbeitszeit und prüfe Überstunden auf einen Blick.",
+    "h1": "Wochen-Stundenrechner",
+    "subtitle": "Wochenstunden mit Pausen und Überstunden berechnen.",
+    "intro": "Geeignet für Wochenplanung, Stundenzettel und Team-Auswertungen.",
+    "keywords": "stundenrechner woche, stundenrechner arbeitszeit woche",
+    "howToSteps": [
+      "Trage tägliche Kommen- und Gehen-Zeiten ein.",
+      "Ergänze Mittagspausen pro Tag.",
+      "Fülle den Berichtskopf mit Name oder Zeitraum aus.",
+      "Drucke den fertigen Stundenzettel mit Summen und Notizen."
+    ],
+    "example": {
+      "title": "Beispiel Wochen-Stundenzettel",
+      "calculation": "Fünf Tage von 08:00 bis 17:00 mit 1:00 Mittagspause",
+      "result": "Pro Tag 8:00 bezahlte Stunden, Wochensumme = 40:00."
+    },
+    "faqs": [
+      {
+        "question": "Wie erstelle ich einen Stundenzettel mit Mittagspause?",
+        "answer": "Trage tägliche Zeiten und Mittagspausen ein und nutze die Summen- sowie Druckansicht."
+      },
+      {
+        "question": "Kann ich den Stundenzettel drucken?",
+        "answer": "Ja. Die Seite hat eine druckfreundliche Ausgabe."
+      },
+      {
+        "question": "Kann ich das für die Lohnabrechnung nutzen?",
+        "answer": "Ja, für die Vorbereitung. Beachte dabei immer eure internen Regeln zu Pausen und Überstunden."
+      },
+      {
+        "question": "Wird die Mittagspause automatisch abgezogen?",
+        "answer": "Ja. Die Mittagspause wird pro Zeile vor der Summenbildung abgezogen."
+      }
+    ]
+  },
+  "biweekly-time-card-calculator": {
+    "slug": "stundenrechner-monat",
+    "title": "Monats-Stundenrechner",
+    "metaTitle": "Stundenrechner Monat - Monatsarbeitszeit berechnen",
+    "metaDescription": "Berechne die gesamte Arbeitszeit pro Monat auf Basis täglicher oder wöchentlicher Eingaben.",
+    "h1": "Monats-Stundenrechner",
+    "subtitle": "Monatliche Arbeitszeit strukturiert erfassen und vergleichen.",
+    "intro": "Für Monatsauswertungen mit klaren Summen je Zeitraum.",
+    "keywords": "stundenrechner monat, monats stundenrechner, stundenrechner arbeitszeit monat",
+    "howToSteps": [
+      "Aktiviere zweiwöchig, um 14 Tage (Woche 1 + Woche 2) zu sehen.",
+      "Trage tägliche Arbeitszeiten und Mittagspausen ein.",
+      "Prüfe die Summen von Woche 1 und Woche 2 getrennt.",
+      "Nutze Gesamtzeitraum und Überstunden für die Abrechnung."
+    ],
+    "example": {
+      "title": "Beispiel für 2-Wochen-Zeitraum",
+      "calculation": "Woche 1 = 42:00, Woche 2 = 38:00",
+      "result": "Gesamtzeitraum = 80:00. Überstunden fallen nur in Woche 1 mit 2:00 an."
+    },
+    "faqs": [
+      {
+        "question": "Wie berechne ich einen 2-Wochen-Stundenzettel?",
+        "answer": "Trage alle 14 Tage ein und nutze Wochen-Teilsummen sowie die Gesamtsumme für den Zeitraum."
+      },
+      {
+        "question": "Werden Überstunden wöchentlich oder zweiwöchig berechnet?",
+        "answer": "Dieser Rechner weist Überstunden wöchentlich aus (über 40 Stunden/Woche)."
+      },
+      {
+        "question": "Kann ich Mittagspausen im 2-Wochen-Modell erfassen?",
+        "answer": "Ja. Mittagspausen lassen sich für beide Wochen pro Tag bearbeiten."
+      },
+      {
+        "question": "Kann ich einen 2-Wochen-Nachweis drucken?",
+        "answer": "Ja. Nutze die Druckfunktion für einen sauberen 2-Wochen-Ausdruck."
+      }
+    ]
+  },
+  "lunch-break-calculator": {
+    "title": "Pausenrechner",
+    "metaDescription": "Berechne bezahlte Arbeitszeit nach Abzug von Mittagspause oder anderen unbezahlten Pausen."
+  },
+  "30-minute-lunch-break-calculator": {
+    "title": "30-Minuten-Pausenrechner",
+    "metaDescription": "Berechne Arbeitszeit mit voreingestellter 30-Minuten-Mittagspause."
+  },
+  "time-punch-calculator": {
+    "title": "Stempelzeit-Rechner",
+    "metaDescription": "Berechne Arbeitsstunden aus Kommen-/Gehen-Stempelzeiten mit Pausenabzug."
+  },
+  "punch-clock-calculator": {
+    "title": "Stempeluhr-Rechner",
+    "metaDescription": "Summiere Stempeluhrzeiten und ziehe Pausen für Tages- oder Wochenstunden ab."
+  },
+  "military-time-card-calculator": {
+    "title": "24h-Arbeitszeit-Rechner",
+    "metaDescription": "Berechne Arbeitszeit im 24-Stunden-Format mit Pausenabzug und Summen."
+  }
+}
