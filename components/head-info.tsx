@@ -5,6 +5,7 @@ const SITE_NAME = "Time Card Calculator";
 const ogLocaleMap: Record<string, string> = {
   en: "en_US",
   de: "de_DE",
+  "pt-br": "pt_BR",
 };
 
 const sanitizePageSegment = (value?: string) => {

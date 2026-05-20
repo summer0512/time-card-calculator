@@ -1,0 +1,235 @@
+{
+  "time-card-calculator-with-lunch": {
+    "slug": "calculadora-de-horas",
+    "title": "Calculadora de Horas",
+    "metaTitle": "Calculadora de Horas Online Grátis | Somar e Calcular Horas",
+    "metaDescription": "Calcule horas trabalhadas online grátis. Some e subtraia horas e minutos, calcule jornada diária e total semanal com resultado instantâneo.",
+    "h1": "Calculadora de Horas",
+    "subtitle": "Some e subtraia horas com intervalo, total diário e total semanal em um só lugar.",
+    "intro": "Use esta calculadora de horas para calcular jornada de trabalho com precisão, incluindo pausas, totais e conferência rápida para folha.",
+    "keywords": "calculadora de horas, calcular horas, calculo de horas, calculadora de horas online",
+    "howToSteps": [
+      "Informe os horários de entrada e saída de cada dia.",
+      "Mantenha o almoço/intervalo ativo e ajuste a duração.",
+      "Confira o total diário e o acumulado semanal.",
+      "Imprima o espelho para conferência ou registro."
+    ],
+    "example": {
+      "title": "Exemplo de cálculo",
+      "calculation": "08:00 às 17:00 com 30 minutos de almoço",
+      "result": "Total pago = 8,5 horas (8:30)."
+    },
+    "faqs": [
+      {
+        "question": "Como calcular horas trabalhadas?",
+        "answer": "Informe entrada e saída, desconte as pausas e some os períodos para obter o total líquido."
+      },
+      {
+        "question": "A calculadora soma horas e minutos automaticamente?",
+        "answer": "Sim. Você pode inserir horários em HH:MM e o total é calculado automaticamente."
+      },
+      {
+        "question": "Posso usar para cálculo semanal?",
+        "answer": "Sim. A ferramenta consolida os totais por dia e por semana."
+      },
+      {
+        "question": "Funciona no celular?",
+        "answer": "Sim. A calculadora funciona em celular, tablet e desktop."
+      }
+    ]
+  },
+  "biweekly-time-card-calculator": {
+    "slug": "calculadora-de-horas-quinzenais",
+    "title": "Calculadora de Horas Quinzenais",
+    "metaTitle": "Calculadora de Horas Quinzenais | Período de 14 Dias",
+    "metaDescription": "Calcule horas de um período quinzenal (14 dias) com totais por semana, pausas e horas extras.",
+    "h1": "Calculadora de Horas Quinzenais"
+  },
+  "time-card-calculator-with-breaks": {
+    "slug": "calculadora-de-horas-trabalhadas",
+    "title": "Calculadora de Horas Trabalhadas",
+    "metaTitle": "Calculadora de Horas Trabalhadas | Jornada Diária e Semanal",
+    "metaDescription": "Calcule horas trabalhadas por dia e por semana. Desconte intervalo, compare jornada prevista e acompanhe o total de horas com precisão.",
+    "h1": "Calculadora de Horas Trabalhadas",
+    "subtitle": "Calcule jornada líquida com pausas e acompanhe totais diários e semanais.",
+    "intro": "Ideal para quem precisa conferir horas trabalhadas com detalhamento de pausas e consistência para fechamento de ponto.",
+    "keywords": "calculadora de horas trabalhadas, horas trabalhadas, calcular horas de trabalho",
+    "howToSteps": [
+      "Preencha entrada e saída para cada dia.",
+      "Adicione pausas e intervalos quando necessário.",
+      "Valide as horas líquidas por dia.",
+      "Use o total semanal para conferência de folha."
+    ],
+    "example": {
+      "title": "Exemplo com intervalo",
+      "calculation": "09:00 às 18:00 com 1:00 de intervalo",
+      "result": "Total líquido = 8:00 por dia."
+    },
+    "faqs": [
+      {
+        "question": "Como descontar intervalo no cálculo?",
+        "answer": "Informe a pausa (por exemplo, almoço) para obter o total líquido de horas trabalhadas."
+      },
+      {
+        "question": "Posso calcular vários dias de uma vez?",
+        "answer": "Sim. Você pode preencher vários dias e ver o total acumulado."
+      },
+      {
+        "question": "Qual formato de hora devo usar?",
+        "answer": "Use HH:MM no formato 24h para evitar ambiguidades."
+      },
+      {
+        "question": "Serve para conferência de folha?",
+        "answer": "Sim. É útil para validar horas antes do fechamento da folha de pagamento."
+      }
+    ]
+  },
+  "timesheet-calculator-with-lunch": {
+    "slug": "calculadora-de-banco-de-horas",
+    "title": "Calculadora de Banco de Horas",
+    "metaTitle": "Calculadora de Banco de Horas | Saldo, Débito e Compensação",
+    "metaDescription": "Calcule saldo de banco de horas com facilidade. Registre créditos e débitos, acompanhe compensações e veja o total atualizado por período.",
+    "h1": "Calculadora de Banco de Horas",
+    "subtitle": "Controle saldo de banco de horas com visão clara de créditos, débitos e compensações.",
+    "intro": "Ideal para acompanhar saldo de banco de horas por período e validar compensações antes do fechamento com RH.",
+    "keywords": "calculadora de banco de horas, banco de horas, saldo de banco de horas",
+    "howToSteps": [
+      "Lance os horários trabalhados por dia.",
+      "Defina a jornada padrão de referência.",
+      "Acompanhe o saldo acumulado por período.",
+      "Use o relatório para conferência de compensações."
+    ],
+    "example": {
+      "title": "Exemplo de saldo",
+      "calculation": "Créditos de 6:00 e débitos de 2:30 no mês",
+      "result": "Saldo = +3:30."
+    },
+    "faqs": [
+      {
+        "question": "Como calcular saldo de banco de horas?",
+        "answer": "Some horas creditadas e subtraia horas devidas ou compensadas para obter o saldo."
+      },
+      {
+        "question": "Posso controlar saldo mensal?",
+        "answer": "Sim. A calculadora permite acompanhar entradas e saídas ao longo do mês."
+      },
+      {
+        "question": "Qual a diferença entre hora extra e banco de horas?",
+        "answer": "Hora extra é excedente de jornada; banco de horas é o sistema de compensação desse excedente."
+      },
+      {
+        "question": "Posso usar para conferência com o RH?",
+        "answer": "Sim. O relatório ajuda a validar o saldo antes do fechamento."
+      }
+    ]
+  },
+  "time-clock-calculator-with-lunch": {
+    "slug": "calculadora-de-horas-extras",
+    "title": "Calculadora de Horas Extras",
+    "metaTitle": "Calculadora de Horas Extras | Cálculo Rápido e Preciso",
+    "metaDescription": "Calcule horas extras de forma simples. Compare horas trabalhadas com a jornada contratual e veja o total excedente no dia ou na semana.",
+    "h1": "Calculadora de Horas Extras",
+    "subtitle": "Compare jornada prevista e realizada para apurar horas excedentes.",
+    "intro": "Use esta calculadora para identificar horas extras diárias e semanais com base na jornada contratual.",
+    "keywords": "calculadora de horas extras, hora extra, calculo de horas extras, calculo de hora extra",
+    "howToSteps": [
+      "Informe os horários de entrada e saída.",
+      "Desconte pausas e intervalos não pagos.",
+      "Compare o total com a jornada padrão.",
+      "Confira o excedente diário e semanal."
+    ],
+    "example": {
+      "title": "Exemplo de hora extra",
+      "calculation": "Trabalhou 9:30 no dia com jornada padrão de 8:00",
+      "result": "Horas extras = 1:30."
+    },
+    "faqs": [
+      {
+        "question": "Como calcular horas extras?",
+        "answer": "Subtraia a jornada contratual das horas efetivamente trabalhadas após descontar pausas."
+      },
+      {
+        "question": "Posso calcular horas extras semanais?",
+        "answer": "Sim. Some os dias da semana e compare com a carga horária semanal."
+      },
+      {
+        "question": "A calculadora separa horas normais e extras?",
+        "answer": "Sim. O resultado mostra horas totais e horas excedentes."
+      },
+      {
+        "question": "Posso usar para validar holerite?",
+        "answer": "Sim. Ela ajuda a conferir se o total de horas extras está correto."
+      }
+    ]
+  },
+  "hours-calculator-with-lunch": {
+    "slug": "calculadora-de-minutos-para-horas",
+    "title": "Calculadora de Minutos para Horas",
+    "metaTitle": "Calculadora de Minutos para Horas | Converter Minutos em Horas",
+    "metaDescription": "Converta minutos em horas e horas decimais rapidamente. Ideal para jornada de trabalho, banco de horas e conferência de tempo.",
+    "h1": "Calculadora de Minutos para Horas",
+    "subtitle": "Converta tempo em minutos para horas no formato HH:MM e decimal.",
+    "intro": "Página focada em conversão de minutos para horas para facilitar relatórios de jornada e conferências de banco de horas.",
+    "keywords": "calculadora de minutos para horas, minutos a horas, calculadora de minutos em horas",
+    "howToSteps": [
+      "Insira o total de minutos no cálculo.",
+      "Veja o equivalente em HH:MM.",
+      "Confira também em hora decimal.",
+      "Use o resultado para folha, ponto ou banco de horas."
+    ],
+    "example": {
+      "title": "Exemplo de conversão",
+      "calculation": "510 minutos",
+      "result": "8:30 (8,5 horas)."
+    },
+    "faqs": [
+      {
+        "question": "Como converter minutos em horas?",
+        "answer": "Divida os minutos por 60. Você pode visualizar em formato decimal ou HH:MM."
+      },
+      {
+        "question": "A ferramenta converte para hora decimal?",
+        "answer": "Sim. Você pode ver o resultado em horas decimais para relatórios."
+      },
+      {
+        "question": "Posso converter grandes volumes de minutos?",
+        "answer": "Sim. A calculadora aceita valores altos para fechamento semanal ou mensal."
+      },
+      {
+        "question": "Serve para banco de horas?",
+        "answer": "Sim. Ajuda a padronizar lançamentos e conferências."
+      }
+    ]
+  },
+  "lunch-break-calculator": {
+    "slug": "calculadora-de-intervalo",
+    "title": "Calculadora de Intervalo",
+    "metaTitle": "Calculadora de Intervalo | Desconto de Almoço e Pausas",
+    "metaDescription": "Calcule horas pagas após descontar almoço e pausas não remuneradas da jornada."
+  },
+  "30-minute-lunch-break-calculator": {
+    "slug": "calculadora-de-intervalo-de-30-minutos",
+    "title": "Calculadora de Intervalo de 30 Minutos",
+    "metaTitle": "Calculadora de Intervalo de 30 Minutos",
+    "metaDescription": "Calcule horas trabalhadas com desconto automático de 30 minutos de almoço."
+  },
+  "time-punch-calculator": {
+    "slug": "calculadora-de-ponto",
+    "title": "Calculadora de Ponto",
+    "metaTitle": "Calculadora de Ponto | Entrada, Saída e Total de Horas",
+    "metaDescription": "Calcule horas por marcações de ponto (entrada/saída), com desconto de pausas e total diário ou semanal."
+  },
+  "punch-clock-calculator": {
+    "slug": "calculadora-cartao-de-ponto",
+    "title": "Calculadora de Cartão de Ponto",
+    "metaTitle": "Calculadora de Cartão de Ponto",
+    "metaDescription": "Some horas do cartão de ponto com pausas e veja totais de jornada para conferência."
+  },
+  "military-time-card-calculator": {
+    "slug": "calculadora-de-horas-formato-24h",
+    "title": "Calculadora de Horas em Formato 24h",
+    "metaTitle": "Calculadora de Horas em Formato 24h",
+    "metaDescription": "Calcule horas trabalhadas usando formato 24 horas (hora militar), com pausas e totais.",
+    "h1": "Calculadora de Horas em Formato 24h"
+  }
+}
