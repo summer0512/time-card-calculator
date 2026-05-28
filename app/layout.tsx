@@ -18,7 +18,7 @@ export default function RootLayout({children}: Props) {
         crossOrigin="anonymous"
       /> } */}
       {children}
-      {/* {isProduction && (
+      {isProduction && (
         <>
           <Script
             strategy="lazyOnload"
@@ -36,7 +36,7 @@ export default function RootLayout({children}: Props) {
               `,
             }}
           />
-      </>)} */}
+      </>)}
     </>
     )
 }
