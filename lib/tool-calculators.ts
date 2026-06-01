@@ -2,7 +2,9 @@ export type ToolSlug =
   | "time-card-calculator-with-lunch"
   | "biweekly-time-card-calculator"
   | "time-card-calculator-with-breaks"
+  | "time-card-calculator-with-multiple-in-and-out"
   | "timesheet-calculator-with-lunch"
+  | "timesheet-calculator-with-breaks"
   | "time-clock-calculator-with-lunch"
   | "hours-calculator-with-lunch"
   | "lunch-break-calculator"
@@ -58,15 +60,15 @@ export interface ToolCalculatorConfig {
 export const toolCalculators: ToolCalculatorConfig[] = [
   {
     slug: "time-card-calculator-with-lunch",
-    title: "Time Card Calculator with Lunch Breaks",
-    metaTitle: "Time Card Calculator with Lunch Breaks",
+    title: "Free Time Card Calculator with Lunch Breaks",
+    metaTitle: "Free Time Card Calculator with Lunch Breaks",
     metaDescription:
-      "Calculate work hours after lunch breaks with this free time card calculator. Enter clock in/out times, lunch breaks, overtime, and weekly totals.",
-    h1: "Time Card Calculator with Lunch Breaks",
+      "Free online time card calculator with lunch breaks. Enter clock in/out times, deduct 30-minute or 1-hour lunch, and total weekly overtime.",
+    h1: "Free Time Card Calculator with Lunch Breaks",
     subtitle:
-      "Subtract unpaid lunch breaks automatically and keep daily, weekly, and overtime totals in one view.",
+      "Deduct unpaid lunch breaks automatically and see daily, weekly, and overtime totals in one printable view.",
     intro:
-      "This time card calculator with lunch break support is built for employees and managers who need accurate paid-hour totals when lunch is unpaid.",
+      "This free time card calculator with lunch break support is built for employees and managers who need accurate paid-hour totals when lunch is unpaid.",
     howToSteps: [
       "Enter your start and end time for each workday.",
       "Keep lunch enabled and set the lunch duration for each day.",
@@ -80,9 +82,9 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How do I calculate a time card with lunch?",
+        question: "How do I calculate a time card with lunch break?",
         answer:
-          "Enter your in and out times, then enter lunch minutes. The calculator subtracts lunch from each shift automatically."
+          "Enter your clock in and clock out times, then add the unpaid lunch duration. The calculator subtracts lunch from each shift automatically."
       },
       {
         question: "Is lunch break paid or unpaid?",
@@ -91,7 +93,15 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       },
       {
         question: "Can I use a 30-minute or 1-hour lunch break?",
-        answer: "Yes. You can set each day to 0:30, 1:00, or any custom value."
+        answer: "Yes. You can set each day to 0:30, 1:00, or any custom lunch value."
+      },
+      {
+        question: "What is 8 AM to 5 PM with a 30-minute lunch?",
+        answer: "The paid time is 8.5 hours, or 8:30, after subtracting the 30-minute lunch break."
+      },
+      {
+        question: "Can I print a time card with lunch breaks?",
+        answer: "Yes. Use the print option to create a clean weekly time card with lunch deductions and totals."
       },
       {
         question: "Can this calculator handle multiple lunch breaks?",
@@ -101,9 +111,10 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     ],
     relatedSlugs: [
       "time-card-calculator-with-breaks",
+      "time-card-calculator-with-multiple-in-and-out",
       "time-clock-calculator-with-lunch",
       "timesheet-calculator-with-lunch",
-      "lunch-break-calculator"
+      "timesheet-calculator-with-breaks"
     ],
     guideSlug: "time-card-calculator-with-lunch",
     calculatorProps: {
@@ -127,15 +138,15 @@ export const toolCalculators: ToolCalculatorConfig[] = [
   },
   {
     slug: "biweekly-time-card-calculator",
-    title: "Biweekly Time Card Calculator",
-    metaTitle: "Biweekly Time Card Calculator",
+    title: "Biweekly Time Card Calculator with Lunch Breaks",
+    metaTitle: "Biweekly Time Card Calculator with Lunch Breaks",
     metaDescription:
-      "Calculate hours for a two-week pay period with this free biweekly time card calculator. Add lunch breaks, daily punches, weekly totals, and overtime.",
-    h1: "Biweekly Time Card Calculator",
+      "Free biweekly time card calculator with lunch breaks. Calculate a two-week pay period with daily punches, weekly totals, overtime, and print-ready results.",
+    h1: "Biweekly Time Card Calculator with Lunch Breaks",
     subtitle:
-      "Track Week 1 and Week 2 in a single 14-day calculator with weekly subtotals and pay-period totals.",
+      "Track Week 1 and Week 2 in a 14-day calculator with lunch deductions, weekly subtotals, and pay-period totals.",
     intro:
-      "Use this biweekly time card calculator when your payroll runs every two weeks and you need daily, weekly, and full pay-period hour totals.",
+      "Use this biweekly time card calculator with lunch breaks when payroll runs every two weeks and you need daily, weekly, and full pay-period hour totals.",
     howToSteps: [
       "Turn on biweekly mode to display 14 days (Week 1 + Week 2).",
       "Enter daily work times and lunch deductions.",
@@ -151,7 +162,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       {
         question: "How do I calculate a biweekly time card?",
         answer:
-          "Enter all 14 days, then use the weekly subtotals and final pay-period total for the complete biweekly record."
+          "Enter all 14 days, add any lunch deductions, then use the weekly subtotals and final pay-period total for the complete biweekly record."
       },
       {
         question: "Is overtime calculated weekly or biweekly?",
@@ -160,7 +171,15 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       },
       {
         question: "Can I add lunch breaks to a biweekly timesheet?",
-        answer: "Yes. Lunch can be enabled and edited per day in both weeks."
+        answer: "Yes. Lunch can be enabled and edited per day across both weeks of the two-week pay period."
+      },
+      {
+        question: "Is this the same as a 2 week time card calculator?",
+        answer: "Yes. A biweekly time card covers two weeks, or 14 days, in one pay-period view."
+      },
+      {
+        question: "Can I calculate biweekly hours with lunch and overtime?",
+        answer: "Yes. The calculator subtracts lunch, totals each week, and reports overtime based on weekly totals."
       },
       {
         question: "Can I print a two-week time card?",
@@ -238,9 +257,10 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     ],
     relatedSlugs: [
       "time-card-calculator-with-lunch",
+      "time-card-calculator-with-multiple-in-and-out",
+      "timesheet-calculator-with-breaks",
       "lunch-break-calculator",
-      "time-punch-calculator",
-      "punch-clock-calculator"
+      "time-punch-calculator"
     ],
     guideSlug: "time-card-calculator-with-breaks",
     calculatorProps: {
@@ -259,6 +279,82 @@ export const toolCalculators: ToolCalculatorConfig[] = [
         break: "Break",
         lunch: "Lunch",
         day: "Day"
+      }
+    }
+  },
+  {
+    slug: "time-card-calculator-with-multiple-in-and-out",
+    title: "Time Card Calculator with Multiple In and Out Times",
+    metaTitle: "Time Card Calculator with Multiple In/Out Times",
+    metaDescription:
+      "Calculate work hours with multiple in and out times, lunch breaks, split shifts, and daily totals using this free time card calculator.",
+    h1: "Time Card Calculator with Multiple In and Out Times",
+    subtitle:
+      "Total split shifts, multiple punch periods, lunch breaks, and extra unpaid breaks in one printable time card.",
+    intro:
+      "Use this time card calculator with multiple in and out times when a day includes lunch punches, split shifts, or more than one unpaid break period.",
+    howToSteps: [
+      "Enter the first punch in and final punch out time for each day.",
+      "Use lunch and extra break columns to subtract time away between work periods.",
+      "Add another break column when a day has multiple unpaid gaps.",
+      "Review daily paid hours, weekly totals, overtime, and print-ready results."
+    ],
+    example: {
+      title: "Multiple in/out example",
+      calculation: "8:00 AM to 5:30 PM with 0:30 lunch and 0:15 extra break",
+      result: "Paid time = 8.75 hours (8:45)."
+    },
+    faqs: [
+      {
+        question: "How do I calculate multiple clock in and out times?",
+        answer:
+          "Enter the first in time and final out time, then subtract lunch or unpaid gaps using the break columns to get paid hours."
+      },
+      {
+        question: "Can I enter two shifts in one day?",
+        answer:
+          "Yes. Use the extra break columns for the unpaid gap between shifts so the daily total reflects only paid working time."
+      },
+      {
+        question: "How do I calculate lunch punches?",
+        answer:
+          "Add the lunch punch duration in the lunch field. The calculator subtracts that unpaid lunch time from the day total."
+      },
+      {
+        question: "Can I add multiple breaks or multiple lunch breaks?",
+        answer:
+          "Yes. Add extra break columns to subtract more than one unpaid break, lunch, or split-shift gap."
+      },
+      {
+        question: "Is this a multiple punch time card calculator?",
+        answer:
+          "Yes. It is designed for punch-style time cards where multiple in/out periods are represented by lunch and break deductions."
+      }
+    ],
+    relatedSlugs: [
+      "time-punch-calculator",
+      "time-clock-calculator-with-lunch",
+      "time-card-calculator-with-breaks",
+      "time-card-calculator-with-lunch",
+      "timesheet-calculator-with-breaks"
+    ],
+    guideSlug: "time-card-calculator-with-breaks",
+    calculatorProps: {
+      mode: "time-card",
+      defaultBreakMinutes: 15,
+      showLunchBreak: true,
+      showMultipleBreaks: true,
+      showBiweekly: false,
+      showOvertime: true,
+      showPrintableTimesheet: true,
+      timeFormat: "auto",
+      copyVariant: "punch",
+      labels: {
+        start: "First In",
+        end: "Final Out",
+        break: "Break",
+        lunch: "Lunch",
+        day: "Date"
       }
     }
   },
@@ -305,6 +401,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       }
     ],
     relatedSlugs: [
+      "timesheet-calculator-with-breaks",
       "time-card-calculator-with-lunch",
       "biweekly-time-card-calculator",
       "time-clock-calculator-with-lunch",
@@ -330,14 +427,90 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     }
   },
   {
-    slug: "time-clock-calculator-with-lunch",
-    title: "Time Clock Calculator with Lunch Breaks",
-    metaTitle: "Time Clock Calculator with Lunch Breaks",
+    slug: "timesheet-calculator-with-breaks",
+    title: "Free Timesheet Calculator with Breaks",
+    metaTitle: "Free Timesheet Calculator with Breaks and Lunch",
     metaDescription:
-      "Enter clock in and clock out times, subtract lunch breaks, and calculate daily or weekly hours with this free time clock calculator.",
-    h1: "Time Clock Calculator with Lunch Breaks",
+      "Create a printable weekly timesheet with breaks, lunch deductions, daily hours, weekly totals, and overtime using this free online calculator.",
+    h1: "Free Timesheet Calculator with Breaks",
     subtitle:
-      "Use clock-in and clock-out language for fast payroll-friendly hour calculations.",
+      "Build a payroll-ready weekly timesheet that subtracts lunch, rest breaks, and multiple unpaid breaks from each day.",
+    intro:
+      "Use this timesheet calculator with breaks when you need a printable weekly timesheet that handles lunch, rest breaks, split shifts, and payroll-ready totals.",
+    howToSteps: [
+      "Enter the start and end time for each workday.",
+      "Add lunch and any additional unpaid break durations.",
+      "Review daily paid hours, weekly totals, and overtime.",
+      "Print the completed timesheet for payroll or employee records."
+    ],
+    example: {
+      title: "Weekly timesheet with breaks example",
+      calculation: "Monday 8:00 AM to 5:00 PM, with 0:30 lunch and 0:15 rest break",
+      result: "Paid time = 8.25 hours (8:15) for that day."
+    },
+    faqs: [
+      {
+        question: "How do I calculate a timesheet with breaks?",
+        answer:
+          "Enter each day's start and end time, then add lunch or unpaid break durations. The calculator subtracts breaks before totaling paid hours."
+      },
+      {
+        question: "Can I include lunch and other breaks on the same timesheet?",
+        answer:
+          "Yes. Use the lunch field for meal breaks and add extra break columns for rest breaks, split shifts, or other unpaid time."
+      },
+      {
+        question: "Is this a weekly timesheet calculator with breaks?",
+        answer:
+          "Yes. It is designed for weekly timesheets with daily rows, break deductions, weekly totals, overtime, and print support."
+      },
+      {
+        question: "Can I print a timesheet with breaks for payroll?",
+        answer:
+          "Yes. Use the print option to create a payroll-ready timesheet that shows daily hours, break deductions, and totals."
+      },
+      {
+        question: "Is this an Excel timesheet template?",
+        answer:
+          "No. This is an online timesheet calculator, but you can print the result or copy the calculated daily totals into a spreadsheet."
+      }
+    ],
+    relatedSlugs: [
+      "time-card-calculator-with-multiple-in-and-out",
+      "timesheet-calculator-with-lunch",
+      "time-card-calculator-with-breaks",
+      "time-card-calculator-with-lunch",
+      "time-punch-calculator"
+    ],
+    guideSlug: "time-card-calculator-with-breaks",
+    calculatorProps: {
+      mode: "time-card",
+      defaultBreakMinutes: 15,
+      showLunchBreak: true,
+      showMultipleBreaks: true,
+      showBiweekly: false,
+      showOvertime: true,
+      showPrintableTimesheet: true,
+      timeFormat: "auto",
+      copyVariant: "timesheet",
+      labels: {
+        start: "Start Time",
+        end: "End Time",
+        break: "Break",
+        lunch: "Lunch",
+        day: "Date"
+      }
+    }
+  },
+  {
+    slug: "time-clock-calculator-with-lunch",
+    title: "Free Time Clock Calculator with Lunch Breaks",
+    metaTitle: "Free Time Clock Calculator with Lunch Breaks",
+    metaDescription:
+      "Free time clock calculator with lunch breaks. Enter clock in and clock out times, subtract lunch or breaks, and calculate daily or weekly hours.",
+    h1: "Free Time Clock Calculator with Lunch Breaks",
+    subtitle:
+      "Use clock-in and clock-out entries to calculate work hours after lunch, breaks, and weekly overtime.",
     intro:
       "This time clock calculator with lunch is designed for shift logs and time-clock style records where users track clock in and clock out entries.",
     howToSteps: [
@@ -353,13 +526,17 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How do I calculate hours from clock in and clock out times?",
+        question: "How do I calculate clock in and clock out with lunch?",
         answer:
-          "Enter each clock pair by day. The calculator computes worked time and subtracts break deductions."
+          "Enter each clock in and clock out pair by day, then add lunch. The calculator computes worked time and subtracts break deductions."
       },
       {
         question: "How do I subtract lunch from time clock hours?",
         answer: "Use the lunch column to enter the unpaid lunch amount for each day."
+      },
+      {
+        question: "Can this time clock calculator handle breaks?",
+        answer: "Yes. Use the lunch field and extra break columns to subtract unpaid breaks from worked time."
       },
       {
         question: "Can I enter multiple punches in one day?",
@@ -371,6 +548,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       }
     ],
     relatedSlugs: [
+      "time-card-calculator-with-multiple-in-and-out",
       "time-punch-calculator",
       "punch-clock-calculator",
       "time-card-calculator-with-lunch",
@@ -598,15 +776,15 @@ export const toolCalculators: ToolCalculatorConfig[] = [
   },
   {
     slug: "time-punch-calculator",
-    title: "Time Punch Calculator",
-    metaTitle: "Time Punch Calculator",
+    title: "Free Time Punch Calculator",
+    metaTitle: "Free Time Punch Calculator - Punch In/Out Hours with Lunch",
     metaDescription:
-      "Calculate work hours from punch in and punch out times. Add breaks, lunch, multiple punches, and get daily or weekly totals.",
-    h1: "Time Punch Calculator",
+      "Free time punch calculator for punch in and punch out hours. Add lunch breaks, multiple punches, daily totals, weekly totals, and overtime.",
+    h1: "Free Time Punch Calculator",
     subtitle:
-      "Track manual punch in and punch out records with break and lunch deduction support.",
+      "Calculate punch in and punch out hours with lunch deductions, multiple punch periods, and weekly totals.",
     intro:
-      "Use this time punch calculator to total punch-based shifts and generate clean daily or weekly numbers for payroll review.",
+      "Use this free time punch calculator to total punch-based shifts and generate clean daily or weekly numbers for payroll review.",
     howToSteps: [
       "Enter Punch In and Punch Out by day.",
       "Add lunch and break deductions.",
@@ -620,9 +798,9 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     },
     faqs: [
       {
-        question: "How do I calculate punch in and punch out times?",
+        question: "How do I calculate punch in and punch out hours?",
         answer:
-          "Subtract punch in from punch out and then subtract unpaid lunch or breaks."
+          "Subtract punch in from punch out, then subtract unpaid lunch or breaks to get paid hours."
       },
       {
         question: "What is a time punch calculator?",
@@ -636,9 +814,14 @@ export const toolCalculators: ToolCalculatorConfig[] = [
       {
         question: "Can I enter multiple punch periods?",
         answer: "Yes. Use multiple break columns to capture segmented punch periods."
+      },
+      {
+        question: "What is the difference between a time punch calculator and a punch clock calculator?",
+        answer: "A time punch calculator focuses on punch in and punch out entries, while a punch clock calculator uses similar totals for punch clock or punch card records."
       }
     ],
     relatedSlugs: [
+      "time-card-calculator-with-multiple-in-and-out",
       "punch-clock-calculator",
       "time-clock-calculator-with-lunch",
       "time-card-calculator-with-breaks",
@@ -734,12 +917,12 @@ export const toolCalculators: ToolCalculatorConfig[] = [
   {
     slug: "military-time-card-calculator",
     title: "Military Time Card Calculator",
-    metaTitle: "Military Time Card Calculator",
+    metaTitle: "Military Time Card Calculator | 24 Hour Timesheet Calculator",
     metaDescription:
-      "Calculate work hours using military time or 24-hour time format. Enter start, end, lunch breaks, and get daily or weekly totals.",
+      "Calculate work hours using military time or 24-hour time format. Enter start, end, lunch breaks, and get printable daily or weekly totals.",
     h1: "Military Time Card Calculator",
     subtitle:
-      "Use 24-hour clock entries like 08:00 and 17:00 with automatic decimal-hour conversion.",
+      "Use 24-hour clock entries like 08:00 and 17:00 with lunch deductions and automatic decimal-hour conversion.",
     intro:
       "This military time card calculator supports 24-hour time entry without AM/PM, which is useful for operations, healthcare, logistics, and shift work.",
     howToSteps: [
@@ -764,12 +947,20 @@ export const toolCalculators: ToolCalculatorConfig[] = [
         answer: "The result is 8.5 hours, or 8:30."
       },
       {
+        question: "Is military time the same as 24-hour time?",
+        answer: "Yes. Military time commonly uses the same 24-hour clock format without AM/PM labels."
+      },
+      {
         question: "Can I enter 24-hour time without AM/PM?",
         answer: "Yes. This page is optimized for 24-hour military time entry."
       },
       {
         question: "Does the calculator convert military time to decimal hours?",
         answer: "Yes. Results are shown in both decimal hours and HH:MM format."
+      },
+      {
+        question: "Can I subtract lunch from military time hours?",
+        answer: "Yes. Enter the lunch or break duration and the calculator subtracts it from the 24-hour time range."
       }
     ],
     relatedSlugs: [
