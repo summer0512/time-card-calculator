@@ -1,1 +1,119 @@
-{}
+{
+  "time-card-calculator-with-lunch": {
+    "slug": "calcul-temps-de-travail",
+    "title": "Calcul du temps de travail",
+    "metaTitle": "Calcul du temps de travail avec pause déjeuner",
+    "metaDescription": "Calculez gratuitement vos heures de travail avec pause déjeuner, totaux journaliers et heures supplémentaires.",
+    "h1": "Calcul du temps de travail",
+    "subtitle": "Calculez vos heures de travail en ligne avec heure de début, heure de fin, pause déjeuner et total hebdomadaire.",
+    "intro": "Cette page est idéale pour calculer des heures de travail avec pause déjeuner, que ce soit pour une journée, une semaine ou une feuille de temps.",
+    "keywords": "calcul temps de travail, calcul heure de travail, calcul heure de travail avec pause déjeuner, heures de travail, temps de travail",
+    "howToSteps": [
+      "Saisissez l'heure de début et l'heure de fin pour chaque journée.",
+      "Activez la pause déjeuner et indiquez sa durée.",
+      "Vérifiez les totaux journaliers, hebdomadaires et les heures supplémentaires.",
+      "Imprimez la feuille de temps si vous avez besoin d'un justificatif."
+    ],
+    "example": {
+      "title": "Exemple de calcul avec pause déjeuner",
+      "calculation": "08:00 à 17:00 avec 30 minutes de pause déjeuner",
+      "result": "Temps payé = 8,5 heures (8h30)."
+    },
+    "faqs": [
+      {
+        "question": "Comment calculer les heures de travail avec pause déjeuner ?",
+        "answer": "Saisissez l'heure de début et de fin, puis indiquez la pause déjeuner. Le calculateur soustrait automatiquement la pause du total."
+      },
+      {
+        "question": "La pause déjeuner est-elle payée ?",
+        "answer": "Dans de nombreuses entreprises, la pause déjeuner n'est pas payée. Vérifiez la règle interne de votre employeur."
+      },
+      {
+        "question": "Puis-je utiliser 30 minutes ou 1 heure de pause déjeuner ?",
+        "answer": "Oui. Vous pouvez saisir 0:30, 1:00 ou toute autre durée personnalisée."
+      },
+      {
+        "question": "Le calculateur peut-il gérer plusieurs pauses ?",
+        "answer": "Oui. Vous pouvez ajouter des colonnes supplémentaires pour suivre plusieurs pauses non payées."
+      }
+    ]
+  },
+  "time-card-calculator-with-breaks": {
+    "slug": "calcul-temps-de-travail-avec-pause",
+    "title": "Calcul du temps de travail avec pause",
+    "metaTitle": "Calcul du temps de travail avec pause",
+    "metaDescription": "Calculez le temps de travail net avec pause déjeuner ou pauses multiples, pour des totaux précis au jour et à la semaine.",
+    "h1": "Calcul du temps de travail avec pause",
+    "subtitle": "Déduisez automatiquement les pauses de vos heures de travail.",
+    "intro": "Cette page convient aux situations où vous devez retirer une ou plusieurs pauses de la durée totale du service.",
+    "keywords": "calcul temps de travail avec pause, calcul heure de travail pause, pause travail calcul",
+    "howToSteps": [
+      "Saisissez l'heure de début et l'heure de fin pour chaque journée.",
+      "Ajoutez une pause déjeuner ou des pauses supplémentaires si nécessaire.",
+      "Renseignez chaque pause au format heures:minutes.",
+      "Contrôlez le temps de pause total, les heures payées et les totaux hebdomadaires."
+    ],
+    "example": {
+      "title": "Exemple avec plusieurs pauses",
+      "calculation": "09:00 à 17:30 avec 0:30 de déjeuner et 0:15 de pause",
+      "result": "Temps payé = 7,75 heures (7h45)."
+    },
+    "faqs": [
+      {
+        "question": "Comment retirer les pauses du temps de travail ?",
+        "answer": "Ajoutez la durée de chaque pause et le calculateur les soustrait automatiquement du temps total."
+      },
+      {
+        "question": "Puis-je ajouter plusieurs pauses par jour ?",
+        "answer": "Oui. Vous pouvez ajouter plusieurs colonnes de pause pour suivre différents types de coupures."
+      },
+      {
+        "question": "Les pauses sont-elles payées ?",
+        "answer": "Cela dépend de votre politique interne. Saisissez uniquement les pauses non payées si vous voulez un total net."
+      },
+      {
+        "question": "Quelle différence entre pause déjeuner et courte pause ?",
+        "answer": "La pause déjeuner est généralement plus longue, alors qu'une courte pause est plus brève ; les deux peuvent être suivies séparément."
+      }
+    ]
+  },
+  "biweekly-time-card-calculator": {
+    "slug": "calcul-temps-de-travail-par-mois",
+    "title": "Calcul du temps de travail par mois",
+    "metaTitle": "Calcul du temps de travail par mois",
+    "metaDescription": "Suivez vos heures de travail par semaine et par mois avec pauses, totaux de période et calcul des heures supplémentaires.",
+    "h1": "Calcul du temps de travail par mois",
+    "subtitle": "Visualisez vos heures de travail mensuelles avec un suivi simple des semaines et du total de période.",
+    "intro": "Idéal pour calculer combien d'heures de travail vous effectuez par mois, avec une vue claire des totaux hebdomadaires et du cumul mensuel.",
+    "keywords": "heure de travail par mois, combien d'heures de travail par mois, nombre d'heure de travail par mois, calcul heure de travail par semaine, temps de travail mensuel",
+    "howToSteps": [
+      "Activez le mode de période pour afficher vos jours de travail sur 14 jours.",
+      "Saisissez vos heures de début, de fin et vos pauses si besoin.",
+      "Comparez les totaux hebdomadaires pour voir votre rythme de travail.",
+      "Utilisez le total de période pour estimer votre volume mensuel."
+    ],
+    "example": {
+      "title": "Exemple de total mensuel",
+      "calculation": "Semaine 1 = 42:00, Semaine 2 = 38:00",
+      "result": "Total de période = 80:00. Projection mensuelle = environ 160:00 sur 4 semaines."
+    },
+    "faqs": [
+      {
+        "question": "Comment calculer mes heures de travail par mois ?",
+        "answer": "Additionnez vos heures hebdomadaires ou vos périodes de paie, puis projetez le total sur le mois pour obtenir une estimation mensuelle."
+      },
+      {
+        "question": "Combien d'heures de travail par mois pour un temps plein ?",
+        "answer": "Le total dépend de votre contrat, mais beaucoup de postes à temps plein se situent autour de 151 à 160 heures par mois."
+      },
+      {
+        "question": "Puis-je comparer mes heures par semaine et par mois ?",
+        "answer": "Oui. Cette page met en évidence les totaux hebdomadaires pour faciliter le calcul mensuel."
+      },
+      {
+        "question": "Cette page sert-elle aussi pour le suivi des heures supplémentaires ?",
+        "answer": "Oui. Vous pouvez suivre les heures supplémentaires en parallèle du total mensuel pour votre paie ou votre planning."
+      }
+    ]
+  }
+}

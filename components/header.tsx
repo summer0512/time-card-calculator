@@ -19,6 +19,7 @@ import { LanguageToggle } from "@/components/language-toggle";
 export default function Header() {
   const locale = useLocale();
   const t = useTranslations("Nav");
+  const brand = useTranslations("Header");
   const pathname = usePathname();
   const menuItems = [
     { name: t("home"), href: "/" },
@@ -50,7 +51,7 @@ export default function Header() {
             <div className="bg-blue-600 p-2 rounded-lg">
               <Clock className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">Time Card Calculator</span>
+            <span className="text-xl font-bold text-gray-900">{brand("title")}</span>
           </Link>
 
           <nav className="hidden md:flex space-x-3">

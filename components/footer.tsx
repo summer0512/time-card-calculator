@@ -17,6 +17,7 @@ const friendLinks = [
 export default function Footer() {
   const locale = useLocale();
   const t = useTranslations("Footer");
+  const brand = useTranslations("Header");
   const popularTools = [
     "time-card-calculator-with-lunch",
     "biweekly-time-card-calculator",
@@ -44,7 +45,7 @@ export default function Footer() {
               <div className="bg-blue-600 p-2 rounded-lg">
                 <Clock className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold">Time Card Calculator</span>
+              <span className="text-xl font-bold">{brand("title")}</span>
             </div>
             <div className="flex items-center text-sm text-gray-400 mb-4">
               <Mail className="h-4 w-4 mr-2" />

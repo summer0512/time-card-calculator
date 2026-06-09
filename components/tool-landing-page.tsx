@@ -25,6 +25,12 @@ const deGuideTitleMap: Record<string, string> = {
   "biweekly-time-card-calculator": "2-Wochen-Arbeitszeit Guide"
 };
 
+const frGuideTitleMap: Record<string, string> = {
+  "time-card-calculator-with-lunch": "Comment calculer le temps de travail avec pause déjeuner",
+  "time-card-calculator-with-breaks": "Comment calculer le temps de travail avec pause",
+  "biweekly-time-card-calculator": "Guide du calculateur bimensuel"
+};
+
 export default function ToolLandingPage({ locale, config }: ToolLandingPageProps) {
   const t = useTranslations("ToolPage");
   const localizedSlug = getLocalizedToolSlug(locale, config.slug);
@@ -117,7 +123,7 @@ export default function ToolLandingPage({ locale, config }: ToolLandingPageProps
 
           <TimeCardCalculator
             {...config.calculatorProps}
-            timeFormat={locale === "de" || locale === "pt-br" ? "24h" : (config.calculatorProps.timeFormat ?? "auto")}
+            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" ? "24h" : (config.calculatorProps.timeFormat ?? "auto")}
             defaultCurrency={locale === "pt-br" ? "R$" : undefined}
           />
 
@@ -181,7 +187,7 @@ export default function ToolLandingPage({ locale, config }: ToolLandingPageProps
               </Link>
               {guideHref && (
                 <Link href={guideHref} className="text-blue-600 hover:text-blue-700 font-medium">
-                  {t("readRelatedGuide")}: {locale === "de" ? deGuideTitleMap[config.guideSlug || ""] : toTitleCase(config.guideSlug || "")}
+                  {t("readRelatedGuide")}: {locale === "de" ? deGuideTitleMap[config.guideSlug || ""] : locale === "fr" ? frGuideTitleMap[config.guideSlug || ""] : toTitleCase(config.guideSlug || "")}
                 </Link>
               )}
             </div>

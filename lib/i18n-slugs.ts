@@ -40,10 +40,27 @@ const ptBrMap: Record<ToolSlug, string> = {
   "military-time-card-calculator": "calculadora-de-horas-formato-24h"
 };
 
+const frMap: Record<ToolSlug, string> = {
+  "time-card-calculator-with-lunch": "calcul-temps-de-travail",
+  "biweekly-time-card-calculator": "calcul-temps-de-travail-par-mois",
+  "time-card-calculator-with-breaks": "calcul-temps-de-travail-avec-pause",
+  "time-card-calculator-with-multiple-in-and-out": "time-card-calculator-with-multiple-in-and-out",
+  "timesheet-calculator-with-lunch": "timesheet-calculator-with-lunch",
+  "timesheet-calculator-with-breaks": "timesheet-calculator-with-breaks",
+  "time-clock-calculator-with-lunch": "time-clock-calculator-with-lunch",
+  "hours-calculator-with-lunch": "hours-calculator-with-lunch",
+  "lunch-break-calculator": "lunch-break-calculator",
+  "30-minute-lunch-break-calculator": "30-minute-lunch-break-calculator",
+  "time-punch-calculator": "time-punch-calculator",
+  "punch-clock-calculator": "punch-clock-calculator",
+  "military-time-card-calculator": "military-time-card-calculator"
+};
+
 const localeToolSlugMap: LocaleToolSlugMap = {
   en: enMap,
   de: deMap,
   "pt-br": ptBrMap,
+  fr: frMap,
 };
 
 export const getLocalizedToolSlug = (locale: string, canonicalSlug: ToolSlug): string => {
