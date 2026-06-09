@@ -1,5 +1,6 @@
 import deCalculatorContent from "@/content/calculators/de.json";
 import ptBrCalculatorContent from "@/content/calculators/pt-br.json";
+import frCalculatorContent from "@/content/calculators/fr.json";
 import { ToolCalculatorConfig, ToolSlug } from "@/lib/tool-calculators";
 
 interface LocalizedToolOverrides {
@@ -24,10 +25,12 @@ type LocalizedContentMap = Partial<Record<ToolSlug, LocalizedToolOverrides>>;
 
 const deContent = deCalculatorContent as LocalizedContentMap;
 const ptBrContent = ptBrCalculatorContent as LocalizedContentMap;
+const frContent = frCalculatorContent as LocalizedContentMap;
 
 const localeContent: Record<string, LocalizedContentMap> = {
   de: deContent,
   "pt-br": ptBrContent,
+  fr: frContent,
 };
 
 export interface LocalizedToolView {

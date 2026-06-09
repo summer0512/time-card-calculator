@@ -51,7 +51,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             showBiweekly={false}
             showOvertime
             showPrintableTimesheet
-            timeFormat={locale === "de" || locale === "pt-br" ? "24h" : "auto"}
+            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" ? "24h" : "auto"}
             defaultCurrency={locale === "pt-br" ? "R$" : undefined}
           />
 

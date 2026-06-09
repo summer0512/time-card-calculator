@@ -6,6 +6,7 @@ const ogLocaleMap: Record<string, string> = {
   en: "en_US",
   de: "de_DE",
   "pt-br": "pt_BR",
+  fr: "fr_FR",
 };
 
 const sanitizePageSegment = (value?: string) => {
