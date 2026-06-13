@@ -8,6 +8,7 @@ import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 
 const friendLinks = [
+  { name: "Time Card Calculator", href: "https://link.zhihu.com/?target=https://time-card-calculator.work", follow: true },
   { name: "Morse Code Kit", href: "https://morsecodekit.com/", follow: true },
   { name: "PrintableGen", href: "https://printablegen.com/", follow: true },
   { name: "Generate Org Chart", href: "https://generateorgchart.com/", follow: true },
