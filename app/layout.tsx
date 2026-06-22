@@ -12,11 +12,11 @@ export default function RootLayout({children}: Props) {
 
   return(
     <>
-      {/* { isProduction && <Script
+      { isProduction && <Script
         strategy="afterInteractive"
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2623631636848395"
         crossOrigin="anonymous"
-      /> } */}
+      /> }
       {children}
       {isProduction && (
         <>
