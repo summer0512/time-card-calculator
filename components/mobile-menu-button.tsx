@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { toolCalculatorMap } from "@/lib/tool-calculators";
-import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -18,12 +18,20 @@ export default function MobileMenuButton() {
   const biweeklySlug = getLocalizedToolSlug(locale, "biweekly-time-card-calculator");
   const timesheetSlug = getLocalizedToolSlug(locale, "timesheet-calculator-with-lunch");
   const punchSlug = getLocalizedToolSlug(locale, "time-punch-calculator");
+  const toolMenuItems = [
+    ["time-card-calculator-with-lunch", lunchSlug],
+    ["biweekly-time-card-calculator", biweeklySlug],
+    ["timesheet-calculator-with-lunch", timesheetSlug],
+    ["time-punch-calculator", punchSlug],
+  ] as const;
   const menuItems = [
     { name: t("home"), href: "/" },
-    { name: getLocalizedToolView(locale, toolCalculatorMap["time-card-calculator-with-lunch"], lunchSlug).title, href: `/${lunchSlug}` },
-    { name: getLocalizedToolView(locale, toolCalculatorMap["biweekly-time-card-calculator"], biweeklySlug).title, href: `/${biweeklySlug}` },
-    { name: getLocalizedToolView(locale, toolCalculatorMap["timesheet-calculator-with-lunch"], timesheetSlug).title, href: `/${timesheetSlug}` },
-    { name: getLocalizedToolView(locale, toolCalculatorMap["time-punch-calculator"], punchSlug).title, href: `/${punchSlug}` },
+    ...toolMenuItems
+      .filter(([canonicalSlug]) => isLocalizedToolEnabled(locale, canonicalSlug))
+      .map(([canonicalSlug, localizedSlug]) => ({
+        name: getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug).title,
+        href: `/${localizedSlug}`,
+      })),
     { name: t("guides"), href: "/guides/time-card-calculator-with-lunch" },
     { name: t("contact"), href: "/contact" }
   ];
