@@ -4,7 +4,7 @@ import { Clock, Github, Mail } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
 import { toolCalculatorMap } from "@/lib/tool-calculators";
-import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 
 const friendLinks = [
@@ -32,7 +32,7 @@ export default function Footer() {
     "timesheet-calculator-with-lunch",
     "lunch-break-calculator",
     "time-punch-calculator"
-  ].map((slug) => {
+  ].filter((slug) => isLocalizedToolEnabled(locale, slug as keyof typeof toolCalculatorMap)).map((slug) => {
     const canonicalSlug = slug as keyof typeof toolCalculatorMap;
     const localizedSlug = getLocalizedToolSlug(locale, canonicalSlug);
     const localized = getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug);

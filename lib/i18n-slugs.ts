@@ -63,6 +63,19 @@ const localeToolSlugMap: LocaleToolSlugMap = {
   fr: frMap,
 };
 
+const enabledToolSlugsByLocale: Partial<Record<SupportedLocale, ReadonlySet<ToolSlug>>> = {
+  fr: new Set<ToolSlug>([
+    "time-card-calculator-with-lunch",
+    "time-card-calculator-with-breaks",
+    "biweekly-time-card-calculator",
+  ]),
+};
+
+export const isLocalizedToolEnabled = (locale: string, canonicalSlug: ToolSlug): boolean => {
+  const normalized = (locale in localeToolSlugMap ? locale : "en") as SupportedLocale;
+  return enabledToolSlugsByLocale[normalized]?.has(canonicalSlug) ?? true;
+};
+
 export const getLocalizedToolSlug = (locale: string, canonicalSlug: ToolSlug): string => {
   const normalized = (locale in localeToolSlugMap ? locale : "en") as SupportedLocale;
   return localeToolSlugMap[normalized][canonicalSlug] ?? canonicalSlug;
@@ -71,10 +84,18 @@ export const getLocalizedToolSlug = (locale: string, canonicalSlug: ToolSlug): s
 export const resolveLocalizedToolSlug = (locale: string, localizedSlug: string): ToolSlug | null => {
   const normalized = (locale in localeToolSlugMap ? locale : "en") as SupportedLocale;
   const entry = Object.entries(localeToolSlugMap[normalized]).find(([, value]) => value === localizedSlug);
-  return (entry?.[0] as ToolSlug | undefined) ?? null;
+  const canonicalSlug = entry?.[0] as ToolSlug | undefined;
+
+  if (!canonicalSlug || !isLocalizedToolEnabled(normalized, canonicalSlug)) {
+    return null;
+  }
+
+  return canonicalSlug;
 };
 
 export const getAllLocalizedToolSlugs = (locale: string): string[] => {
   const normalized = (locale in localeToolSlugMap ? locale : "en") as SupportedLocale;
-  return Object.values(localeToolSlugMap[normalized]);
+  return Object.entries(localeToolSlugMap[normalized])
+    .filter(([canonicalSlug]) => isLocalizedToolEnabled(normalized, canonicalSlug as ToolSlug))
+    .map(([, localizedSlug]) => localizedSlug);
 };

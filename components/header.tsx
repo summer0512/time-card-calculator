@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { toolCalculators } from "@/lib/tool-calculators";
-import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
 
@@ -81,7 +81,7 @@ export default function Header() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-72 max-h-96 overflow-auto">
-                {toolCalculators.map((item) => {
+                {toolCalculators.filter((item) => isLocalizedToolEnabled(locale, item.slug)).map((item) => {
                   const localizedSlug = getLocalizedToolSlug(locale, item.slug);
                   const localizedView = getLocalizedToolView(locale, item, localizedSlug);
                   return (
