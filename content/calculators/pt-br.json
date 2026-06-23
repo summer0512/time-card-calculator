@@ -205,7 +205,7 @@
     "slug": "calculadora-de-intervalo",
     "title": "Calculadora de Intervalo",
     "metaTitle": "Calculadora de Intervalo | Desconto de Almoço e Pausas",
-    "metaDescription": "Calcule horas pagas após descontar almoço e pausas não remuneradas da jornada. Veja o total líquido diário ou semanal com resultado instantâneo."
+    "metaDescription": "Calcule horas pagas após descontar almoço e pausas não remuneradas. Veja o total líquido diário ou semanal para conferir jornadas e folha com precisão."
   },
   "30-minute-lunch-break-calculator": {
     "slug": "calculadora-de-intervalo-de-30-minutos",
@@ -223,7 +223,7 @@
     "slug": "calculadora-cartao-de-ponto",
     "title": "Calculadora de Cartão de Ponto",
     "metaTitle": "Calculadora de Cartão de Ponto | Total de Horas e Pausas",
-    "metaDescription": "Some horas do cartão de ponto com entradas, saídas e pausas. Veja totais de jornada, horas extras e um resumo pronto para conferência."
+    "metaDescription": "Some horas do cartão de ponto com entradas, saídas, pausas e horas extras. Veja totais diários e semanais para conferir sua folha com segurança online."
   },
   "military-time-card-calculator": {
     "slug": "calculadora-de-horas-formato-24h",
