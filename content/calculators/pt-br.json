@@ -42,7 +42,7 @@
     "slug": "calculadora-de-horas-quinzenais",
     "title": "Calculadora de Horas Quinzenais",
     "metaTitle": "Calculadora de Horas Quinzenais | Período de 14 Dias",
-    "metaDescription": "Calcule horas de um período quinzenal (14 dias) com totais por semana, pausas e horas extras.",
+    "metaDescription": "Calcule horas de um período quinzenal de 14 dias com totais por semana, descontos de pausas, horas extras e espelho de ponto para conferência da folha.",
     "h1": "Calculadora de Horas Quinzenais"
   },
   "time-card-calculator-with-breaks": {
@@ -205,7 +205,7 @@
     "slug": "calculadora-de-intervalo",
     "title": "Calculadora de Intervalo",
     "metaTitle": "Calculadora de Intervalo | Desconto de Almoço e Pausas",
-    "metaDescription": "Calcule horas pagas após descontar almoço e pausas não remuneradas da jornada."
+    "metaDescription": "Calcule horas pagas após descontar almoço e pausas não remuneradas. Veja o total líquido diário ou semanal para conferir jornadas e folha com precisão."
   },
   "30-minute-lunch-break-calculator": {
     "slug": "calculadora-de-intervalo-de-30-minutos",
@@ -222,8 +222,8 @@
   "punch-clock-calculator": {
     "slug": "calculadora-cartao-de-ponto",
     "title": "Calculadora de Cartão de Ponto",
-    "metaTitle": "Calculadora de Cartão de Ponto",
-    "metaDescription": "Some horas do cartão de ponto com pausas e veja totais de jornada para conferência."
+    "metaTitle": "Calculadora de Cartão de Ponto | Total de Horas e Pausas",
+    "metaDescription": "Some horas do cartão de ponto com entradas, saídas, pausas e horas extras. Veja totais diários e semanais para conferir sua folha com segurança online."
   },
   "military-time-card-calculator": {
     "slug": "calculadora-de-horas-formato-24h",
