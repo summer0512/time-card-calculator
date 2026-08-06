@@ -19,7 +19,8 @@ const friendLinks = [
   { name: "Subnautica Hub", href: "https://subnauticahub.com/", follow: true },
   { name: "Test Score Hub", href: "https://testscorehub.com/", follow: true },
   { name: "EasyPdfNow", href: "https://easypdfnow.com/", follow: true },
-  { name: "Solarpunk Hub", href: "https://solarpunkhub.com/", follow: true }
+  { name: "Solarpunk Hub", href: "https://solarpunkhub.com/", follow: true },
+  { name: "GAG2Hub", href: "https://gag2hub.com/", follow: true },
 ];
 
 export default function Footer() {
