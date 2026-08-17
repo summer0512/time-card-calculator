@@ -7,6 +7,7 @@ import {routing} from '@/i18n/routing';
 import { ThemeProvider } from "@/components/theme-provider";
 import "../globals.css";
 import Footer from "@/components/footer";
+import DesktopAdsterraAd from '@/components/desktop-adsterra-ad';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -57,6 +58,7 @@ export default async function RootLayout(
             <Header />
             {children}
             <Footer />
+            <DesktopAdsterraAd />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
