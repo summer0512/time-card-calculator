@@ -56,11 +56,28 @@ const frMap: Record<ToolSlug, string> = {
   "military-time-card-calculator": "military-time-card-calculator"
 };
 
+const esMap: Record<ToolSlug, string> = {
+  "time-card-calculator-with-lunch": "calculadora-de-horas",
+  "biweekly-time-card-calculator": "biweekly-time-card-calculator",
+  "time-card-calculator-with-breaks": "time-card-calculator-with-breaks",
+  "time-card-calculator-with-multiple-in-and-out": "calcular-horas-jornada-partida",
+  "timesheet-calculator-with-lunch": "timesheet-calculator-with-lunch",
+  "timesheet-calculator-with-breaks": "timesheet-calculator-with-breaks",
+  "time-clock-calculator-with-lunch": "time-clock-calculator-with-lunch",
+  "hours-calculator-with-lunch": "hours-calculator-with-lunch",
+  "lunch-break-calculator": "lunch-break-calculator",
+  "30-minute-lunch-break-calculator": "30-minute-lunch-break-calculator",
+  "time-punch-calculator": "time-punch-calculator",
+  "punch-clock-calculator": "punch-clock-calculator",
+  "military-time-card-calculator": "military-time-card-calculator"
+};
+
 const localeToolSlugMap: LocaleToolSlugMap = {
   en: enMap,
   de: deMap,
   "pt-br": ptBrMap,
   fr: frMap,
+  es: esMap,
 };
 
 const enabledToolSlugsByLocale: Partial<Record<SupportedLocale, ReadonlySet<ToolSlug>>> = {
@@ -68,6 +85,10 @@ const enabledToolSlugsByLocale: Partial<Record<SupportedLocale, ReadonlySet<Tool
     "time-card-calculator-with-lunch",
     "time-card-calculator-with-breaks",
     "biweekly-time-card-calculator",
+  ]),
+  es: new Set<ToolSlug>([
+    "time-card-calculator-with-lunch",
+    "time-card-calculator-with-multiple-in-and-out",
   ]),
 };
 

@@ -1,3 +1,5 @@
+import type { OvertimeBasis, OvertimeTier } from "@/lib/payment";
+
 export type ToolSlug =
   | "time-card-calculator-with-lunch"
   | "biweekly-time-card-calculator"
@@ -13,18 +15,32 @@ export type ToolSlug =
   | "punch-clock-calculator"
   | "military-time-card-calculator";
 
-export type CalculatorMode = "time-card" | "hours";
+export type CalculatorMode = "time-card" | "hours" | "split-shift";
 
 export interface CalculatorPropsConfig {
   mode?: CalculatorMode;
   defaultBreakMinutes?: number;
   showLunchBreak?: boolean;
   showMultipleBreaks?: boolean;
+  showBreakDeduction?: boolean;
   showBiweekly?: boolean;
   showOvertime?: boolean;
   showPrintableTimesheet?: boolean;
   timeFormat?: "auto" | "12h" | "24h" | "military";
   copyVariant?: "time-card" | "timesheet" | "time-clock" | "punch";
+  defaultCurrency?: string;
+  defaultHourlyRate?: string;
+  paymentDefaults?: {
+    enabled?: boolean;
+    currency?: string;
+    hourlyRate?: string | number;
+    overtime?: {
+      enabled?: boolean;
+      basis?: OvertimeBasis;
+      tiers?: OvertimeTier[];
+    };
+  };
+  paymentPresentation?: "popover" | "prominent";
   labels?: {
     start: string;
     end: string;

@@ -32,6 +32,7 @@ export default function MobileMenuButton() {
         name: getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug).title,
         href: `/${localizedSlug}`,
       })),
+    ...(locale === "es" ? [{ name: "Calculadora de Horas Extras", href: "/calculadora-de-horas-extras" }] : []),
     { name: t("guides"), href: "/guides/time-card-calculator-with-lunch" },
     { name: t("contact"), href: "/contact" }
   ];

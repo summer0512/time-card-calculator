@@ -123,8 +123,8 @@ export default function ToolLandingPage({ locale, config }: ToolLandingPageProps
 
           <TimeCardCalculator
             {...config.calculatorProps}
-            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" ? "24h" : (config.calculatorProps.timeFormat ?? "auto")}
-            defaultCurrency={locale === "pt-br" ? "R$" : undefined}
+            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" || locale === "es" ? "24h" : (config.calculatorProps.timeFormat ?? "auto")}
+            defaultCurrency={locale === "pt-br" ? "R$" : locale === "es" ? "EUR" : undefined}
           />
 
           <section className="mt-8 bg-white rounded-lg border p-6">

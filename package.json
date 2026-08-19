@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "lint": "next lint",
     "screenshots": "node scripts/capture-screenshots.mjs",
     "indexnow:submit": "node --experimental-strip-types scripts/submit-indexnow.ts"

@@ -3,7 +3,7 @@ import TimeCardCalculator from "@/components/time-card-calculator";
 import { Link } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { toolCalculators } from "@/lib/tool-calculators";
-import { getLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 
 const relatedGuides = [
@@ -51,14 +51,14 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             showBiweekly={false}
             showOvertime
             showPrintableTimesheet
-            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" ? "24h" : "auto"}
-            defaultCurrency={locale === "pt-br" ? "R$" : undefined}
+            timeFormat={locale === "de" || locale === "pt-br" || locale === "fr" || locale === "es" ? "24h" : "auto"}
+            defaultCurrency={locale === "pt-br" ? "R$" : locale === "es" ? "EUR" : undefined}
           />
 
           <section className="mt-8 bg-white rounded-lg border p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t("popularTitle")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {toolCalculators.map((tool) => {
+              {toolCalculators.filter((tool) => isLocalizedToolEnabled(locale, tool.slug)).map((tool) => {
                 const localizedSlug = getLocalizedToolSlug(locale, tool.slug);
                 const localizedView = getLocalizedToolView(locale, tool, localizedSlug);
                 return (
@@ -71,6 +71,15 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   </article>
                 );
               })}
+              {locale === "es" && (
+                <article className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
+                  <h3 className="text-lg font-semibold text-gray-900">Calculadora de Horas Extras</h3>
+                  <p className="text-sm text-gray-600 mt-2">Configura reglas diarias o semanales y calcula el pago ordinario y extra.</p>
+                  <Link href="/calculadora-de-horas-extras" className="inline-block mt-3 text-blue-600 hover:text-blue-700 font-medium">
+                    {t("openCalculator")}
+                  </Link>
+                </article>
+              )}
             </div>
           </section>
 
