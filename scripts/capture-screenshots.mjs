@@ -6,12 +6,26 @@ import sharp from 'sharp';
 
 const DEFAULT_BASE_URL = 'http://localhost:3000';
 const DEFAULT_URL_PATHS = [
-  '/de/stundenrechner',
-  '/de/stundenrechner-mit-pause',
-  '/de/stundenrechner-dezimal',
-  '/de/stundenrechner-uhrzeit',
-  '/de/stundenrechner-woche',
-  '/de/stundenrechner-monat'
+  // '/de/stundenrechner',
+  // '/de/stundenrechner-mit-pause',
+  // '/de/stundenrechner-dezimal',
+  // '/de/stundenrechner-uhrzeit',
+  // '/de/stundenrechner-woche',
+  // '/de/stundenrechner-monat',
+  // '',
+  // '/time-card-calculator-with-lunch',
+  // '/military-time-card-calculator',
+  // '/biweekly-time-card-calculator',
+  // '/timesheet-calculator-with-lunch',
+  // '/time-card-calculator-with-multiple-in-and-out',
+  // '/time-card-calculator-with-breaks',
+  // '/punch-clock-calculator',
+  // '/30-minute-lunch-break-calculator',
+  // '/time-punch-calculator',
+  // '/time-clock-calculator-with-lunch',
+  // '/lunch-break-calculator',
+  // '/timesheet-calculator-with-breaks',
+  // '/hours-calculator-with-lunch',
 ];
 
 function printUsage() {
