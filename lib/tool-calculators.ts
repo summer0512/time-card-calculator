@@ -41,6 +41,7 @@ export interface CalculatorPropsConfig {
     };
   };
   paymentPresentation?: "popover" | "prominent";
+  paymentSettingsDefaultOpen?: boolean;
   labels?: {
     start: string;
     end: string;

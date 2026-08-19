@@ -68,6 +68,7 @@ interface TimeCardCalculatorProps {
   hourlyRateUnitLabel?: string;
   paymentDefaults?: PaymentDefaults;
   paymentPresentation?: "popover" | "prominent";
+  paymentSettingsDefaultOpen?: boolean;
   uiText?: Partial<CalculatorUiText>;
 }
 
@@ -432,6 +433,7 @@ export default function TimeCardCalculator({
   hourlyRateUnitLabel,
   paymentDefaults,
   paymentPresentation = "popover",
+  paymentSettingsDefaultOpen = false,
   uiText,
 }: TimeCardCalculatorProps) {
   const tCalculator = useTranslations("Calculator");
@@ -966,7 +968,7 @@ export default function TimeCardCalculator({
               )}
 
               {paymentPresentation === "popover" && (
-                <Popover>
+                <Popover defaultOpen={paymentSettingsDefaultOpen}>
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
                       <CreditCard className="mr-1 h-4 w-4" />

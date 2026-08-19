@@ -33,7 +33,8 @@ const calculatorProps = {
     showOvertime: true,
     showPrintableTimesheet: true,
     timeFormat: "24h" as const,
-    paymentPresentation: "prominent" as const,
+    paymentPresentation: "popover" as const,
+    paymentSettingsDefaultOpen: true,
     paymentDefaults: {
       enabled: true,
       currency: "EUR",
