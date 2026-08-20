@@ -970,7 +970,11 @@ export default function TimeCardCalculator({
               {paymentPresentation === "popover" && (
                 <Popover defaultOpen={paymentSettingsDefaultOpen}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                    >
                       <CreditCard className="mr-1 h-4 w-4" />
                       {t.payment} ({currency} {basePay || "—"}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
                     </Button>
@@ -984,7 +988,11 @@ export default function TimeCardCalculator({
               {mode === "time-card" && (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                    >
                       {t.settings}
                     </Button>
                   </PopoverTrigger>
