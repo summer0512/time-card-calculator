@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser } from "lucide-react";
+import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -977,6 +977,7 @@ export default function TimeCardCalculator({
                     >
                       <CreditCard className="mr-1 h-4 w-4" />
                       {t.payment} ({currency} {basePay || "—"}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
+                      <ChevronDown className="ml-1 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="max-h-[80vh] w-[22rem] overflow-y-auto" align="end">
@@ -994,6 +995,7 @@ export default function TimeCardCalculator({
                       className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
                     >
                       {t.settings}
+                      <ChevronDown className="ml-1 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80" align="end">
