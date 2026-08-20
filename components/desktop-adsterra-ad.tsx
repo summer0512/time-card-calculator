@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useRef} from 'react';
+import {useEffect, useState} from 'react';
 import {usePathname} from 'next/navigation';
 
 const MIN_WIDTH = 1600;
@@ -20,6 +20,23 @@ const ALLOWED_PATHS = new Set([
   '/lunch-break-calculator',
 ]);
 
+const ADS = {
+  left: {
+    width: 160,
+    height: 300,
+    keyId: 'eed843932b8aa1280524a74adc1273e2',
+    scriptSrc:
+      'https://www.highperformanceformat.com/eed843932b8aa1280524a74adc1273e2/invoke.js',
+  },
+  right: {
+    width: 160,
+    height: 600,
+    keyId: '6ed16934ce9cc90ef1a0216594862136',
+    scriptSrc:
+      'https://www.highperformanceformat.com/6ed16934ce9cc90ef1a0216594862136/invoke.js',
+  },
+} as const;
+
 function normalizePathname(pathname: string) {
   if (pathname === '/') {
     return '/';
@@ -28,107 +45,27 @@ function normalizePathname(pathname: string) {
   return pathname.replace(/\/+$/, '');
 }
 
-export default function DesktopAdsterraAd() {
-  const pathname = usePathname();
-  const adRef = useRef<HTMLDivElement>(null);
+type AdsterraUnitProps = {
+  width: number;
+  height: number;
+  keyId: string;
+  scriptSrc: string;
+  label: string;
+};
 
-  const normalizedPathname = normalizePathname(pathname);
-  const isAllowedPage = ALLOWED_PATHS.has(normalizedPathname);
-
-  useEffect(() => {
-    const container = adRef.current;
-
-    if (!container || !isAllowedPage) {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia(
-      `(min-width: ${MIN_WIDTH}px)`,
-    );
-
-    const removeAd = () => {
-      container.innerHTML = '';
-      delete container.dataset.loaded;
-    };
-
-    const loadAd = () => {
-      if (!mediaQuery.matches) {
-        return;
-      }
-
-      if (container.dataset.loaded === 'true') {
-        return;
-      }
-
-      container.dataset.loaded = 'true';
-
-      (
-        window as Window & {
-          atOptions?: {
-            key: string;
-            format: string;
-            height: number;
-            width: number;
-            params: Record<string, unknown>;
-          };
-        }
-      ).atOptions = {
-        key: 'eed843932b8aa1280524a74adc1273e2',
-        format: 'iframe',
-        height: 300,
-        width: 160,
-        params: {},
-      };
-
-      const script = document.createElement('script');
-
-      script.src =
-        'https://www.highperformanceformat.com/eed843932b8aa1280524a74adc1273e2/invoke.js';
-
-      script.async = true;
-
-      container.appendChild(script);
-    };
-
-    const handleViewportChange = () => {
-      if (mediaQuery.matches) {
-        loadAd();
-      } else {
-        removeAd();
-      }
-    };
-
-    handleViewportChange();
-
-    mediaQuery.addEventListener(
-      'change',
-      handleViewportChange,
-    );
-
-    return () => {
-      mediaQuery.removeEventListener(
-        'change',
-        handleViewportChange,
-      );
-
-      removeAd();
-    };
-  }, [isAllowedPage, normalizedPathname]);
-
-  if (!isAllowedPage) {
-    return null;
-  }
-
-  return (
-    <aside
-      className="fixed left-[calc(50%+632px)] top-44 z-20 hidden min-[1600px]:block"
-      aria-label="Advertisement"
-    >
-      {process.env.NODE_ENV === 'development' ? (
+function AdsterraUnit({
+  width,
+  height,
+  keyId,
+  scriptSrc,
+  label,
+}: AdsterraUnitProps) {
+  if (process.env.NODE_ENV === 'development') {
+    return (
       <div
         style={{
-          width: 160,
-          height: 300,
+          width,
+          height,
           border: '2px dashed #999',
           background: '#f5f5f5',
           display: 'flex',
@@ -138,17 +75,119 @@ export default function DesktopAdsterraAd() {
           color: '#666',
         }}
       >
-        160 × 300 Ad
+        {label}
+        <br />
+        {width} × {height}
       </div>
-    ) : (
-      <div
-        ref={adRef}
-        style={{
-          width: 160,
-          minHeight: 300,
-        }}
-      />
-    )}
-    </aside>
+    );
+  }
+
+  const srcDoc = `
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: ${width}px;
+        height: ${height}px;
+        overflow: hidden;
+        background: transparent;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      atOptions = {
+        'key': '${keyId}',
+        'format': 'iframe',
+        'height': ${height},
+        'width': ${width},
+        'params': {}
+      };
+    </script>
+
+    <script src="${scriptSrc}"></script>
+  </body>
+</html>
+`;
+
+  return (
+    <iframe
+      title={label}
+      srcDoc={srcDoc}
+      width={width}
+      height={height}
+      scrolling="no"
+      style={{
+        display: 'block',
+        width,
+        height,
+        border: 0,
+        overflow: 'hidden',
+        background: 'transparent',
+      }}
+    />
+  );
+}
+
+export default function DesktopAdsterraAd() {
+  const pathname = usePathname();
+  const [isWideDesktop, setIsWideDesktop] = useState(false);
+
+  const normalizedPathname = normalizePathname(pathname);
+  const isAllowedPage = ALLOWED_PATHS.has(normalizedPathname);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(
+      `(min-width: ${MIN_WIDTH}px)`,
+    );
+
+    const update = () => {
+      setIsWideDesktop(mediaQuery.matches);
+    };
+
+    update();
+
+    mediaQuery.addEventListener('change', update);
+
+    return () => {
+      mediaQuery.removeEventListener('change', update);
+    };
+  }, []);
+
+  if (!isAllowedPage || !isWideDesktop) {
+    return null;
+  }
+
+  return (
+    <>
+      {/* Left rail — 160 × 300 */}
+      <aside
+        className="fixed right-[calc(50%+632px)] top-44 z-20"
+        aria-label="Advertisement"
+      >
+        <AdsterraUnit
+          {...ADS.left}
+          label="Left Advertisement"
+        />
+      </aside>
+
+      {/* Right rail — 160 × 600 */}
+      <aside
+        className="fixed left-[calc(50%+632px)] top-44 z-20"
+        aria-label="Advertisement"
+      >
+        <AdsterraUnit
+          {...ADS.right}
+          label="Right Advertisement"
+        />
+      </aside>
+    </>
   );
 }
