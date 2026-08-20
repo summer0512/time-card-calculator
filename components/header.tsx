@@ -40,7 +40,7 @@ export default function Header() {
 
   const isToolsActive = toolCalculators.some((item) =>
     pathname.includes(`/${getLocalizedToolSlug(locale, item.slug)}`) || pathname.includes(`/${item.slug}`)
-  );
+  ) || pathname.includes("/calculadora-de-horas-extras");
   const isGuidesActive = guideItems.some((item) => pathname.includes(item.href));
 
   return (
@@ -100,6 +100,13 @@ export default function Header() {
                   </DropdownMenuItem>
                   );
                 })}
+                {locale === "es" && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/calculadora-de-horas-extras" className="w-full px-2 py-2 text-sm cursor-pointer text-gray-700 hover:text-blue-600 hover:bg-gray-50">
+                      Calculadora de Horas Extras
+                    </Link>
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

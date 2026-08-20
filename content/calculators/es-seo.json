@@ -1,0 +1,78 @@
+{
+  "calculadora-de-horas": {
+    "title": "Calculadora de Horas – Calcula tus Horas Trabajadas",
+    "description": "Calcula gratis tus horas trabajadas por día y semana. Introduce entrada, salida y descansos en formato de 24 horas y obtén el total y el pago estimado.",
+    "keywords": "calculadora de horas, calcular horas trabajadas, calculadora de horas trabajadas, calculadora horas trabajadas, calcular horas de trabajo, contador de horas trabajadas",
+    "h1": "Calculadora de Horas",
+    "subtitle": "Introduce tus horas de entrada, salida y descanso para obtener las horas trabajadas de cada día y el total semanal.",
+    "intro": "Esta calculadora está pensada para empleados, autónomos y responsables de equipos que necesitan sumar una jornada semanal sin utilizar hojas de cálculo. Los cálculos de tiempo y pago se realizan en el navegador y puedes personalizar la tarifa y las reglas de horas extra.",
+    "howToSteps": [
+      "Introduce la hora de entrada y salida de cada día en formato de 24 horas.",
+      "Añade el tiempo de descanso que no forma parte de la jornada pagada.",
+      "Revisa las horas diarias y el total semanal.",
+      "Configura la tarifa por hora y, si lo necesitas, activa reglas de horas extra personalizadas."
+    ],
+    "example": {
+      "title": "Ejemplo de jornada semanal",
+      "calculation": "De 08:30 a 17:00 con 30 minutos de descanso son 8 horas trabajadas.",
+      "result": "El total semanal se obtiene sumando los resultados precisos de cada día."
+    },
+    "faqs": [
+      { "question": "¿Cómo se calculan las horas trabajadas?", "answer": "La calculadora resta la hora de entrada de la hora de salida y descuenta las pausas indicadas." },
+      { "question": "¿Puedo calcular varios días?", "answer": "Sí. Puedes introducir jornadas de lunes a domingo y consultar el total semanal." },
+      { "question": "¿Admite horarios que terminan después de medianoche?", "answer": "Sí. Cuando la salida es anterior a la entrada, la calculadora interpreta que la jornada termina al día siguiente." },
+      { "question": "¿Puedo calcular el pago estimado?", "answer": "Sí. Introduce una tarifa por hora y selecciona la moneda para ver el pago estimado." }
+    ]
+  },
+  "calculadora-de-horas-extras": {
+    "title": "Calculadora de Horas Extras y Pago Estimado",
+    "description": "Calcula horas ordinarias y extra con reglas personalizadas diarias o semanales, varios tramos, multiplicadores o tarifas fijas y un desglose del pago.",
+    "keywords": "calculadora de horas extras, calcular horas extra, pago horas extras, tarifa hora extra, calculadora nómina horas",
+    "h1": "Calculadora de Horas Extras",
+    "subtitle": "Configura tu tarifa, el límite de horas y uno o varios tramos para calcular las horas ordinarias, las horas extra y el pago total.",
+    "intro": "La calculadora utiliza reglas matemáticas personalizables y no presupone una legislación concreta. Puedes elegir una base diaria o semanal, cambiar todos los límites y combinar multiplicadores con tarifas por hora fijas.",
+    "howToSteps": [
+      "Introduce las horas trabajadas de cada día.",
+      "Indica la tarifa base y selecciona la moneda.",
+      "Elige si los límites se aplican por día o por semana.",
+      "Añade, elimina y edita los tramos de horas extra.",
+      "Consulta el desglose de horas ordinarias, horas extra y pago estimado."
+    ],
+    "example": {
+      "title": "Ejemplo con dos tramos semanales",
+      "calculation": "56 horas, 20 € por hora; después de 40 horas a 1,5× y después de 50 horas a 2×.",
+      "result": "40 horas ordinarias, 10 horas en el primer tramo y 6 horas en el segundo: 1.340 € en total."
+    },
+    "faqs": [
+      { "question": "¿Puedo cambiar el límite de 40 horas?", "answer": "Sí. Todos los límites son editables y puedes introducirlos en cualquier orden." },
+      { "question": "¿Se pueden calcular horas extra diarias?", "answer": "Sí. Selecciona la base diaria para reiniciar los tramos en cada jornada." },
+      { "question": "¿Puedo usar una tarifa fija para las horas extra?", "answer": "Sí. Cada tramo puede usar un multiplicador de la tarifa base o una tarifa por hora fija." },
+      { "question": "¿La calculadora aplica automáticamente la legislación laboral?", "answer": "No. Es una herramienta matemática; debes configurar las reglas que correspondan a tu contrato o jurisdicción." }
+    ]
+  },
+  "calcular-horas-jornada-partida": {
+    "title": "Calcular Horas de una Jornada Partida",
+    "description": "Calcula una jornada partida sumando varios tramos de entrada y salida. Añade períodos de trabajo y obtén las horas totales y el pago estimado.",
+    "keywords": "calcular horas jornada partida, calculadora jornada partida, sumar tramos de trabajo, calcular horario partido, entrada salida trabajo",
+    "h1": "Calcular Horas de una Jornada Partida",
+    "subtitle": "Suma dos o más tramos de trabajo, como una jornada de mañana y tarde, sin contar el intervalo entre ambos.",
+    "intro": "Esta calculadora sirve para horarios con varias entradas y salidas durante el mismo día. Cada tramo válido se calcula por separado y después se suma, por lo que el intervalo entre la mañana y la tarde no cuenta como tiempo trabajado.",
+    "howToSteps": [
+      "Introduce la entrada y salida del primer tramo.",
+      "Introduce la entrada y salida del segundo tramo.",
+      "Usa Añadir tramo si la jornada contiene más períodos de trabajo.",
+      "Consulta el total trabajado y, opcionalmente, el pago estimado."
+    ],
+    "example": {
+      "title": "Ejemplo de jornada de mañana y tarde",
+      "calculation": "De 09:00 a 14:00 son 5 horas y de 16:00 a 19:00 son 3 horas.",
+      "result": "Horas trabajadas: 8:00."
+    },
+    "faqs": [
+      { "question": "¿Qué es una jornada partida?", "answer": "Es una jornada dividida en dos o más períodos de trabajo separados por un intervalo no trabajado." },
+      { "question": "¿Puedo añadir más de dos tramos?", "answer": "Sí. Utiliza el botón Añadir tramo para introducir tantos períodos como necesites." },
+      { "question": "¿El intervalo entre tramos cuenta como trabajo?", "answer": "No. Solo se suman los períodos que tienen una entrada y una salida válidas." },
+      { "question": "¿Puedo activar horas extra?", "answer": "Sí. El módulo de pago permite activar reglas diarias o semanales sobre la suma de los tramos." }
+    ]
+  }
+}

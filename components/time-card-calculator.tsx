@@ -1,14 +1,27 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser } from "lucide-react";
+import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useTranslations } from "next-intl";
+import PaymentBreakdown from "@/components/payment/payment-breakdown";
+import PaymentSettings, { type EditableOvertimeTier } from "@/components/payment/payment-settings";
+import {
+  calculatePayment,
+  formatPaymentAmount,
+  formatPaymentHours,
+  validatePaymentConfig,
+  type OvertimeBasis,
+  type OvertimeTier,
+  type PaymentConfig,
+  type PaymentValidationCode,
+  type WorkPeriod,
+} from "@/lib/payment";
+import { useLocale, useTranslations } from "next-intl";
 
 interface DayEntry {
   date: string;
@@ -27,11 +40,23 @@ export interface CalculatorLabels {
   day: string;
 }
 
+export interface PaymentDefaults {
+  enabled?: boolean;
+  currency?: string;
+  hourlyRate?: string | number;
+  overtime?: {
+    enabled?: boolean;
+    basis?: OvertimeBasis;
+    tiers?: OvertimeTier[];
+  };
+}
+
 interface TimeCardCalculatorProps {
-  mode?: "time-card" | "hours";
+  mode?: "time-card" | "hours" | "split-shift";
   defaultBreakMinutes?: number;
   showLunchBreak?: boolean;
   showMultipleBreaks?: boolean;
+  showBreakDeduction?: boolean;
   showBiweekly?: boolean;
   showOvertime?: boolean;
   showPrintableTimesheet?: boolean;
@@ -41,6 +66,9 @@ interface TimeCardCalculatorProps {
   defaultCurrency?: string;
   defaultHourlyRate?: string;
   hourlyRateUnitLabel?: string;
+  paymentDefaults?: PaymentDefaults;
+  paymentPresentation?: "popover" | "prominent";
+  paymentSettingsDefaultOpen?: boolean;
   uiText?: Partial<CalculatorUiText>;
 }
 
@@ -53,9 +81,31 @@ export interface CalculatorUiText {
   copyFirstRow: string;
   withLunch: string;
   withBreak: string;
+  addWorkSegment: string;
   payment: string;
   includePaymentInformation: string;
   hourlyPayRate: string;
+  currency: string;
+  calculationBasis: string;
+  weekly: string;
+  daily: string;
+  overtimeTiers: string;
+  tier: string;
+  after: string;
+  hours: string;
+  rateType: string;
+  multiplier: string;
+  fixedHourlyRate: string;
+  addOvertimeTier: string;
+  removeOvertimeTier: string;
+  paymentBreakdown: string;
+  regularHours: string;
+  overtimeHours: string;
+  regularPay: string;
+  overtimeTier: string;
+  totalOvertimePay: string;
+  estimatedTotalPay: string;
+  paymentValidation: Record<PaymentValidationCode, string>;
   settings: string;
   biweeklyToggle: string;
   reportHeaderPlaceholder: string;
@@ -105,9 +155,41 @@ const DEFAULT_UI_TEXT: CalculatorUiText = {
   copyFirstRow: "Copy First Row",
   withLunch: "With Lunch",
   withBreak: "With Break",
+  addWorkSegment: "Add work segment",
   payment: "Payment",
   includePaymentInformation: "Include payment information",
   hourlyPayRate: "Hourly Pay Rate",
+  currency: "Currency",
+  calculationBasis: "Calculation basis",
+  weekly: "Weekly",
+  daily: "Daily",
+  overtimeTiers: "Overtime tiers",
+  tier: "Tier",
+  after: "After",
+  hours: "hours",
+  rateType: "Rate type",
+  multiplier: "Multiplier",
+  fixedHourlyRate: "Hourly rate",
+  addOvertimeTier: "Add overtime tier",
+  removeOvertimeTier: "Remove overtime tier",
+  paymentBreakdown: "Payment breakdown",
+  regularHours: "Regular Hours",
+  overtimeHours: "Overtime Hours",
+  regularPay: "Regular Pay",
+  overtimeTier: "Overtime Tier",
+  totalOvertimePay: "Total Overtime Pay",
+  estimatedTotalPay: "Estimated Total Pay",
+  paymentValidation: {
+    HOURLY_RATE_REQUIRED: "Enter an hourly rate.",
+    INVALID_HOURLY_RATE: "Enter a valid non-negative hourly rate.",
+    OVERTIME_TIERS_REQUIRED: "Add at least one overtime tier.",
+    TIER_ID_REQUIRED: "This overtime tier is incomplete.",
+    DUPLICATE_TIER_ID: "Each overtime tier must be unique.",
+    INVALID_THRESHOLD: "Enter a threshold of zero or more.",
+    DUPLICATE_THRESHOLD: "Each threshold must be unique.",
+    INVALID_MULTIPLIER: "Enter a multiplier greater than zero.",
+    INVALID_FIXED_RATE: "Enter a fixed rate of zero or more.",
+  },
   settings: "Settings",
   biweeklyToggle: "Biweekly (14 days)",
   reportHeaderPlaceholder: "Report header (employee name / date range)",
@@ -195,6 +277,34 @@ const parseTimeToMinutes = (timeStr: string): number => {
   return (parseInt(cleanTime, 10) || 0) * 60;
 };
 
+const parseDecimalInput = (value: string): number | null => {
+  if (!value.trim()) return null;
+  const parsed = Number(value.replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : Number.NaN;
+};
+
+const normalizeCurrencyCode = (currency: string): string => {
+  const currencyMap: Record<string, string> = {
+    "$": "USD",
+    "€": "EUR",
+    "£": "GBP",
+    "R$": "BRL",
+  };
+  return currencyMap[currency] ?? currency.toUpperCase();
+};
+
+const toEditableTiers = (tiers?: OvertimeTier[]): EditableOvertimeTier[] =>
+  (tiers?.length ? tiers : [{
+    id: "tier-1",
+    afterHours: 40,
+    rateType: "multiplier" as const,
+    rateValue: 1.5,
+  }]).map((tier) => ({
+    ...tier,
+    afterHours: String(tier.afterHours),
+    rateValue: String(tier.rateValue),
+  }));
+
 const calculateDayTotal = (day: DayEntry, showLunch: boolean, breakColumns: number): number => {
   const fromMinutes = parseTimeToMinutes(day.from);
   const toMinutes = parseTimeToMinutes(day.to);
@@ -251,7 +361,7 @@ const getFirstDay = (
 };
 
 const createDays = (
-  mode: "time-card" | "hours",
+  mode: "time-card" | "hours" | "split-shift",
   biweekly: boolean,
   breakColumns: number,
   includeLunch: boolean,
@@ -261,6 +371,13 @@ const createDays = (
   weekLabel: string,
   shiftLabel: string
 ): DayEntry[] => {
+  if (mode === "split-shift") {
+    return [
+      { date: `${shiftLabel} 1`, from: "09:00", to: "14:00", breakDeduction: "", breaks: [] },
+      { date: `${shiftLabel} 2`, from: "16:00", to: "19:00", breakDeduction: "", breaks: [] },
+    ];
+  }
+
   if (mode === "hours") {
     const first = getFirstDay(timeFormat, breakDefault, includeLunch, weekDays[0] || "Monday");
     return [{ ...first, date: shiftLabel }];
@@ -304,6 +421,7 @@ export default function TimeCardCalculator({
   defaultBreakMinutes = 30,
   showLunchBreak = false,
   showMultipleBreaks = false,
+  showBreakDeduction = true,
   showBiweekly = false,
   showOvertime = true,
   showPrintableTimesheet = true,
@@ -313,9 +431,13 @@ export default function TimeCardCalculator({
   defaultCurrency,
   defaultHourlyRate,
   hourlyRateUnitLabel,
+  paymentDefaults,
+  paymentPresentation = "popover",
+  paymentSettingsDefaultOpen = false,
   uiText,
 }: TimeCardCalculatorProps) {
   const tCalculator = useTranslations("Calculator");
+  const locale = useLocale();
   const localizedUiText: Partial<CalculatorUiText> = {
     weekDays: (tCalculator.raw("weekDays") as string[]) || DEFAULT_UI_TEXT.weekDays,
     shiftLabel: tCalculator("shiftLabel"),
@@ -325,9 +447,41 @@ export default function TimeCardCalculator({
     copyFirstRow: tCalculator("copyFirstRow"),
     withLunch: tCalculator("withLunch"),
     withBreak: tCalculator("withBreak"),
+    addWorkSegment: tCalculator("addWorkSegment"),
     payment: tCalculator("payment"),
     includePaymentInformation: tCalculator("includePaymentInformation"),
     hourlyPayRate: tCalculator("hourlyPayRate"),
+    currency: tCalculator("currency"),
+    calculationBasis: tCalculator("calculationBasis"),
+    weekly: tCalculator("weekly"),
+    daily: tCalculator("daily"),
+    overtimeTiers: tCalculator("overtimeTiers"),
+    tier: tCalculator("tier"),
+    after: tCalculator("after"),
+    hours: tCalculator("hours"),
+    rateType: tCalculator("rateType"),
+    multiplier: tCalculator("multiplier"),
+    fixedHourlyRate: tCalculator("fixedHourlyRate"),
+    addOvertimeTier: tCalculator("addOvertimeTier"),
+    removeOvertimeTier: tCalculator("removeOvertimeTier"),
+    paymentBreakdown: tCalculator("paymentBreakdown"),
+    regularHours: tCalculator("regularHours"),
+    overtimeHours: tCalculator("overtimeHours"),
+    regularPay: tCalculator("regularPay"),
+    overtimeTier: tCalculator("overtimeTier"),
+    totalOvertimePay: tCalculator("totalOvertimePay"),
+    estimatedTotalPay: tCalculator("estimatedTotalPay"),
+    paymentValidation: {
+      HOURLY_RATE_REQUIRED: tCalculator("paymentValidation.HOURLY_RATE_REQUIRED"),
+      INVALID_HOURLY_RATE: tCalculator("paymentValidation.INVALID_HOURLY_RATE"),
+      OVERTIME_TIERS_REQUIRED: tCalculator("paymentValidation.OVERTIME_TIERS_REQUIRED"),
+      TIER_ID_REQUIRED: tCalculator("paymentValidation.TIER_ID_REQUIRED"),
+      DUPLICATE_TIER_ID: tCalculator("paymentValidation.DUPLICATE_TIER_ID"),
+      INVALID_THRESHOLD: tCalculator("paymentValidation.INVALID_THRESHOLD"),
+      DUPLICATE_THRESHOLD: tCalculator("paymentValidation.DUPLICATE_THRESHOLD"),
+      INVALID_MULTIPLIER: tCalculator("paymentValidation.INVALID_MULTIPLIER"),
+      INVALID_FIXED_RATE: tCalculator("paymentValidation.INVALID_FIXED_RATE"),
+    },
     settings: tCalculator("settings"),
     biweeklyToggle: tCalculator("biweeklyToggle"),
     reportHeaderPlaceholder: tCalculator("reportHeaderPlaceholder"),
@@ -385,9 +539,16 @@ export default function TimeCardCalculator({
 
   const [reportHeader, setReportHeader] = useState("");
   const [reportNotes, setReportNotes] = useState("");
-  const [includePayment, setIncludePayment] = useState(true);
-  const [basePay, setBasePay] = useState(defaultHourlyRate ?? t.defaultHourlyRate);
-  const [currency, setCurrency] = useState(defaultCurrency ?? t.defaultCurrency);
+  const configuredHourlyRate = String(paymentDefaults?.hourlyRate ?? defaultHourlyRate ?? t.defaultHourlyRate);
+  const configuredCurrency = normalizeCurrencyCode(paymentDefaults?.currency ?? defaultCurrency ?? t.defaultCurrency);
+  const [includePayment, setIncludePayment] = useState(paymentDefaults?.enabled ?? true);
+  const [basePay, setBasePay] = useState(configuredHourlyRate);
+  const [currency, setCurrency] = useState(configuredCurrency);
+  const [overtimeEnabled, setOvertimeEnabled] = useState(paymentDefaults?.overtime?.enabled ?? false);
+  const [overtimeBasis, setOvertimeBasis] = useState<OvertimeBasis>(paymentDefaults?.overtime?.basis ?? "weekly");
+  const [overtimeTiers, setOvertimeTiers] = useState<EditableOvertimeTier[]>(
+    toEditableTiers(paymentDefaults?.overtime?.tiers),
+  );
 
   const [days, setDays] = useState<DayEntry[]>(
     createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
@@ -401,33 +562,36 @@ export default function TimeCardCalculator({
   }, [mode, showLunchBreak, showBiweekly, showMultipleBreaks, defaultBreakMinutes, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   useEffect(() => {
-    setBasePay(defaultHourlyRate ?? t.defaultHourlyRate);
-    setCurrency(defaultCurrency ?? t.defaultCurrency);
-  }, [defaultHourlyRate, defaultCurrency, t.defaultHourlyRate, t.defaultCurrency]);
+    setBasePay(configuredHourlyRate);
+    setCurrency(configuredCurrency);
+  }, [configuredHourlyRate, configuredCurrency]);
 
   useEffect(() => {
     setDays(createDays(mode, isBiweekly, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
   }, [isBiweekly, mode, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   const totals = useMemo(() => {
-    const dayTotals = days.map((day) => calculateDayTotal(day, showLunchColumn, breakColumns));
+    const dayTotals = days.map((day) => calculateDayTotal(
+      day,
+      showLunchColumn,
+      showBreakDeduction ? breakColumns : 0,
+    ));
     const rawMinutes = days.map((day) => calculateRawShiftMinutes(day));
     const totalMinutes = dayTotals.reduce((sum, value) => sum + value, 0);
     const totalRawMinutes = rawMinutes.reduce((sum, value) => sum + value, 0);
     const breakMinutes = Math.max(0, totalRawMinutes - totalMinutes);
-    const workedDays = dayTotals.filter((value) => value > 0).length;
+    const workedDays = mode === "split-shift"
+      ? (totalMinutes > 0 ? 1 : 0)
+      : dayTotals.filter((value) => value > 0).length;
 
     const weeklyMinuteTotals: number[] = [];
-    if (mode === "hours") {
+    if (mode === "hours" || mode === "split-shift") {
       weeklyMinuteTotals.push(totalMinutes);
     } else {
       for (let i = 0; i < dayTotals.length; i += 7) {
         weeklyMinuteTotals.push(dayTotals.slice(i, i + 7).reduce((sum, value) => sum + value, 0));
       }
     }
-
-    const weeklyOvertimeMinutes = weeklyMinuteTotals.map((value) => Math.max(0, value - 40 * 60));
-    const totalOvertimeMinutes = weeklyOvertimeMinutes.reduce((sum, value) => sum + value, 0);
 
     return {
       dayTotals,
@@ -437,13 +601,86 @@ export default function TimeCardCalculator({
       breakMinutes,
       workedDays,
       averageDayMinutes: workedDays > 0 ? Math.round(totalMinutes / workedDays) : 0,
-      weeklyMinuteTotals,
-      weeklyOvertimeMinutes,
-      totalOvertimeMinutes
+      weeklyMinuteTotals
     };
-  }, [days, breakColumns, showLunchColumn, mode]);
+  }, [days, breakColumns, showBreakDeduction, showLunchColumn, mode]);
 
-  const totalPay = (totals.totalHours || 0) * (Number(basePay) || 0);
+  const workPeriods = useMemo<WorkPeriod[]>(() => totals.dayTotals.map((workedMinutes, index) => ({
+    dayId: mode === "split-shift" ? "split-day" : String(index % 7),
+    weekId: mode === "hours" ? "shift" : mode === "split-shift" ? "week-1" : String(Math.floor(index / 7)),
+    workedHours: workedMinutes / 60,
+  })), [mode, totals.dayTotals]);
+  const paymentConfig = useMemo<PaymentConfig>(() => ({
+    enabled: includePayment,
+    currency,
+    hourlyRate: parseDecimalInput(basePay),
+    overtime: {
+      enabled: includePayment && showOvertime && overtimeEnabled,
+      basis: overtimeBasis,
+      tiers: overtimeTiers.map((tier) => ({
+        id: tier.id,
+        afterHours: parseDecimalInput(tier.afterHours) ?? Number.NaN,
+        rateType: tier.rateType,
+        rateValue: parseDecimalInput(tier.rateValue) ?? Number.NaN,
+      })),
+    },
+  }), [basePay, currency, includePayment, overtimeBasis, overtimeEnabled, overtimeTiers, showOvertime]);
+  const paymentValidationErrors = useMemo(
+    () => validatePaymentConfig(paymentConfig),
+    [paymentConfig],
+  );
+  const paymentResult = useMemo(() => {
+    if (paymentValidationErrors.length === 0) {
+      return calculatePayment(paymentConfig, workPeriods);
+    }
+
+    return calculatePayment({
+      ...paymentConfig,
+      hourlyRate: 0,
+      overtime: { ...paymentConfig.overtime, enabled: false, tiers: [] },
+    }, workPeriods);
+  }, [paymentConfig, paymentValidationErrors.length, workPeriods]);
+  const totalPay = paymentResult.totalPay;
+  const totalOvertimeMinutes = paymentResult.overtimeHours * 60;
+  const formatAmount = (amount: number) => formatPaymentAmount(amount, currency, locale);
+  const formatHours = (hours: number) => formatPaymentHours(hours, locale);
+  const paymentSettings = (
+    <PaymentSettings
+      enabled={includePayment}
+      onEnabledChange={setIncludePayment}
+      hourlyRate={basePay}
+      onHourlyRateChange={setBasePay}
+      currency={currency}
+      onCurrencyChange={setCurrency}
+      overtimeAvailable={showOvertime}
+      overtimeEnabled={overtimeEnabled}
+      onOvertimeEnabledChange={setOvertimeEnabled}
+      basis={overtimeBasis}
+      onBasisChange={setOvertimeBasis}
+      tiers={overtimeTiers}
+      onTiersChange={setOvertimeTiers}
+      errors={paymentValidationErrors}
+      labels={{
+        includePaymentInformation: t.includePaymentInformation,
+        hourlyPayRate: t.hourlyPayRate,
+        currency: t.currency,
+        overtime: t.overtime,
+        calculationBasis: t.calculationBasis,
+        weekly: t.weekly,
+        daily: t.daily,
+        overtimeTiers: t.overtimeTiers,
+        tier: t.tier,
+        after: t.after,
+        hours: t.hours,
+        rateType: t.rateType,
+        multiplier: t.multiplier,
+        fixedHourlyRate: t.fixedHourlyRate,
+        addOvertimeTier: t.addOvertimeTier,
+        removeOvertimeTier: t.removeOvertimeTier,
+        validationMessages: t.paymentValidation,
+      }}
+    />
+  );
 
   const updateDay = (index: number, field: keyof DayEntry, value: string) => {
     setDays((prev) => {
@@ -541,6 +778,19 @@ export default function TimeCardCalculator({
     setDays((prev) => prev.map((day) => ({ ...day, breaks: [...day.breaks, ""] })));
   };
 
+  const addWorkSegment = () => {
+    setDays((previous) => [
+      ...previous,
+      {
+        date: `${t.shiftLabel} ${previous.length + 1}`,
+        from: "",
+        to: "",
+        breakDeduction: "",
+        breaks: [],
+      },
+    ]);
+  };
+
   const removeBreakColumn = (index: number) => {
     if (breakColumns <= 1) return;
 
@@ -558,23 +808,36 @@ export default function TimeCardCalculator({
     if (typeof window === "undefined") return;
 
     const reportTitle = t.printReportTitles[copyVariant] ?? t.printReportTitles["time-card"];
-    const totalColumns = 4 + (showLunchColumn ? 1 : 0) + Math.max(0, breakColumns - 1);
-
     const rowsHtml = days
       .map((day, index) => {
         const dayTotal = totals.dayTotals[index];
-        const extraCells = Array.from({ length: breakColumns - 1 }, (_, i) => `<td>${day.breaks[i + 1] || "-"}</td>`).join("");
+        const extraCells = showBreakDeduction
+          ? Array.from({ length: breakColumns - 1 }, (_, i) => `<td>${day.breaks[i + 1] || "-"}</td>`).join("")
+          : "";
         return `<tr>
           <td>${day.date}</td>
           <td>${day.from || "-"}</td>
           <td>${day.to || "-"}</td>
-          <td>${day.breakDeduction || "-"}</td>
+          ${showBreakDeduction ? `<td>${day.breakDeduction || "-"}</td>` : ""}
           ${showLunchColumn ? `<td>${day.lunch || "-"}</td>` : ""}
           ${extraCells}
           <td>${dayTotal > 0 ? minutesToHours(dayTotal) : "-"}</td>
         </tr>`;
       })
       .join("");
+    const paymentHtml = includePayment && paymentValidationErrors.length === 0
+      ? `
+        <div class="payment-breakdown">
+          <h2>${t.paymentBreakdown}</h2>
+          <div>${t.regularPay}: ${formatHours(paymentResult.regularHours)} × ${formatAmount(paymentResult.hourlyRate)}/h = ${formatAmount(paymentResult.regularPay)}</div>
+          ${paymentResult.tiers.filter((tier) => tier.hours > 0).map((tier, index) => `
+            <div>${t.overtimeTier} ${index + 1}: ${formatHours(tier.hours)} × ${formatAmount(tier.effectiveRate)}/h = ${formatAmount(tier.pay)}</div>
+          `).join("")}
+          ${paymentResult.overtimeHours > 0 ? `<div>${t.totalOvertimePay}: ${formatAmount(paymentResult.overtimePay)}</div>` : ""}
+          <div class="total">${t.estimatedTotalPay}: ${formatAmount(paymentResult.totalPay)}</div>
+        </div>
+      `
+      : "";
 
     const html = `
       <!doctype html>
@@ -590,6 +853,9 @@ export default function TimeCardCalculator({
           th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
           th { background: #f4f6f8; }
           .total { margin-top: 16px; font-weight: 700; }
+          .payment-breakdown { margin-top: 18px; border-top: 1px solid #ddd; padding-top: 12px; }
+          .payment-breakdown h2 { font-size: 18px; margin: 0 0 8px; }
+          .payment-breakdown div { margin-top: 6px; }
           .notes { margin-top: 16px; border: 1px solid #ddd; padding: 10px; }
         </style>
       </head>
@@ -603,9 +869,9 @@ export default function TimeCardCalculator({
               <th>${mergedLabels.day}</th>
               <th>${mergedLabels.start}</th>
               <th>${mergedLabels.end}</th>
-              <th>${mergedLabels.break}</th>
+              ${showBreakDeduction ? `<th>${mergedLabels.break}</th>` : ""}
               ${showLunchColumn ? `<th>${mergedLabels.lunch}</th>` : ""}
-              ${Array.from({ length: breakColumns - 1 }, (_, i) => `<th>${mergedLabels.break} ${i + 2}</th>`).join("")}
+              ${showBreakDeduction ? Array.from({ length: breakColumns - 1 }, (_, i) => `<th>${mergedLabels.break} ${i + 2}</th>`).join("") : ""}
               <th>${t.total}</th>
             </tr>
           </thead>
@@ -615,8 +881,8 @@ export default function TimeCardCalculator({
         </table>
         <div class="total">${t.totalHours}: ${totals.totalHours.toFixed(2)} (${minutesToHours(totals.totalMinutes)})</div>
         <div class="total">${t.totalBreakTime}: ${minutesToHours(totals.breakMinutes)}</div>
-        ${showOvertime ? `<div class="total">${t.overtime}: ${minutesToHours(totals.totalOvertimeMinutes)}</div>` : ""}
-        ${includePayment ? `<div class="total">${t.totalPay}: ${currency}${totalPay.toFixed(2)}</div>` : ""}
+        ${showOvertime && overtimeEnabled ? `<div class="total">${t.overtime}: ${minutesToHours(totalOvertimeMinutes)}</div>` : ""}
+        ${paymentHtml}
         ${reportNotes ? `<div class="notes"><strong>${t.notes}:</strong><br/>${reportNotes.replace(/\n/g, "<br/>")}</div>` : ""}
       </body>
       </html>
@@ -673,74 +939,63 @@ export default function TimeCardCalculator({
                 </Button>
               )}
 
-              {mode !== "hours" && (
+              {mode === "time-card" && (
                 <Button variant="outline" onClick={copyFirstRowDown} size="sm">
                   <Copy className="h-4 w-4 mr-1" />
                   {t.copyFirstRow}
                 </Button>
               )}
 
-              {!showLunchColumn && (
+              {mode !== "split-shift" && !showLunchColumn && (
                 <Button variant="outline" onClick={addLunchColumn} size="sm">
                   <Plus className="h-4 w-4 mr-1" />
                   {t.withLunch}
                 </Button>
               )}
 
-              {mode !== "hours" && (
+              {mode === "time-card" && showBreakDeduction && (
                 <Button variant="outline" onClick={addBreakColumn} size="sm" disabled={breakColumns >= 3}>
                   <Plus className="h-4 w-4 mr-1" />
                   {t.withBreak}
                 </Button>
               )}
 
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <CreditCard className="h-4 w-4 mr-1" />
-                    {t.payment} ({currency}{basePay}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-80" align="end">
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="includePayment"
-                        checked={includePayment}
-                        onCheckedChange={(checked) => setIncludePayment(checked === true)}
-                      />
-                      <Label htmlFor="includePayment" className="text-blue-600 font-semibold">
-                        {t.includePaymentInformation}
-                      </Label>
-                    </div>
+              {mode === "split-shift" && (
+                <Button variant="outline" onClick={addWorkSegment} size="sm">
+                  <Plus className="mr-1 h-4 w-4" />
+                  {t.addWorkSegment}
+                </Button>
+              )}
 
-                    <div>
-                      <Label htmlFor="basePay">{t.hourlyPayRate}</Label>
-                      <div className="flex items-center mt-1">
-                        <Input
-                          id="currency"
-                          value={currency}
-                          onChange={(e) => setCurrency(e.target.value)}
-                          className="w-12 h-8 text-center rounded-r-none"
-                          placeholder="$"
-                        />
-                        <Input
-                          id="basePay"
-                          value={basePay}
-                          onChange={(e) => setBasePay(e.target.value)}
-                          className="rounded-l-none h-8"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </PopoverContent>
-              </Popover>
+              {paymentPresentation === "popover" && (
+                <Popover defaultOpen={paymentSettingsDefaultOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                    >
+                      <CreditCard className="mr-1 h-4 w-4" />
+                      {t.payment} ({currency} {basePay || "—"}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
+                      <ChevronDown className="ml-1 h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="max-h-[80vh] w-[22rem] overflow-y-auto" align="end">
+                    {paymentSettings}
+                  </PopoverContent>
+                </Popover>
+              )}
 
               {mode === "time-card" && (
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" size="sm">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                    >
                       {t.settings}
+                      <ChevronDown className="ml-1 h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80" align="end">
@@ -760,6 +1015,16 @@ export default function TimeCardCalculator({
                 </Popover>
               )}
             </div>
+
+            {paymentPresentation === "prominent" && (
+              <div className="rounded-lg border border-blue-200 bg-white p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <CreditCard className="h-5 w-5 text-blue-700" />
+                  <h2 className="font-semibold text-gray-900">{t.payment}</h2>
+                </div>
+                {paymentSettings}
+              </div>
+            )}
 
             {showPrintableTimesheet && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -787,7 +1052,7 @@ export default function TimeCardCalculator({
                   <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{mergedLabels.start}</th>
                   <th className="border border-gray-300 p-1 text-left font-semibold min-w-[120px]">{mergedLabels.end}</th>
 
-                  <th className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
+                  {showBreakDeduction && <th className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
                     <div className="flex items-center gap-1">
                       <span>{mergedLabels.break}</span>
                       {breakColumns > 1 && (
@@ -802,7 +1067,7 @@ export default function TimeCardCalculator({
                         </Button>
                       )}
                     </div>
-                  </th>
+                  </th>}
 
                   {showLunchColumn && (
                     <th className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
@@ -821,7 +1086,7 @@ export default function TimeCardCalculator({
                     </th>
                   )}
 
-                  {Array.from({ length: breakColumns - 1 }, (_, i) => (
+                  {showBreakDeduction && Array.from({ length: breakColumns - 1 }, (_, i) => (
                     <th key={`break-${i + 1}`} className="border border-gray-300 p-1 text-left font-semibold min-w-[100px]">
                       <div className="flex items-center gap-1">
                         <span>{mergedLabels.break} {i + 2}</span>
@@ -868,14 +1133,14 @@ export default function TimeCardCalculator({
                       />
                     </td>
 
-                    <td className="border border-gray-300 p-1">
+                    {showBreakDeduction && <td className="border border-gray-300 p-1">
                       <Input
                         value={day.breakDeduction}
                         onChange={(e) => updateDay(index, "breakDeduction", e.target.value)}
                         placeholder={breakDefault}
                         className="w-full h-9"
                       />
-                    </td>
+                    </td>}
 
                     {showLunchColumn && (
                       <td className="border border-gray-300 p-1">
@@ -888,7 +1153,7 @@ export default function TimeCardCalculator({
                       </td>
                     )}
 
-                    {Array.from({ length: breakColumns - 1 }, (_, i) => (
+                    {showBreakDeduction && Array.from({ length: breakColumns - 1 }, (_, i) => (
                       <td key={`break-${index}-${i + 1}`} className="border border-gray-300 p-1">
                         <Input
                           value={day.breaks[i + 1] || ""}
@@ -918,14 +1183,17 @@ export default function TimeCardCalculator({
                 ))}
 
                 <tr className="bg-gradient-to-r from-blue-100 to-green-100 font-semibold">
-                  <td className="border border-gray-300 p-2 text-right" colSpan={4 + (showLunchColumn ? 1 : 0) + (breakColumns - 1)}>
+                  <td
+                    className="border border-gray-300 p-2 text-right"
+                    colSpan={3 + (showBreakDeduction ? breakColumns : 0) + (showLunchColumn ? 1 : 0)}
+                  >
                     {t.totalPaidHours}
                   </td>
                   <td className="border border-gray-300 p-2 text-center font-mono text-green-700">
                     {totals.totalHours.toFixed(2)}h / {minutesToHours(totals.totalMinutes)}
                   </td>
                   <td className="border border-gray-300 p-2 text-center text-green-700 font-semibold">
-                    {includePayment ? `${currency}${totalPay.toFixed(2)}` : "-"}
+                    {includePayment && paymentValidationErrors.length === 0 ? formatAmount(totalPay) : "-"}
                   </td>
                 </tr>
               </tbody>
@@ -950,10 +1218,33 @@ export default function TimeCardCalculator({
             <div className="rounded-lg border p-3 bg-gray-50">
               <p className="text-xs text-gray-500">{t.overtimeSummary}</p>
               <p className="text-lg font-semibold text-gray-900">
-                {showOvertime ? `${minutesToHours(totals.totalOvertimeMinutes)} (${(totals.totalOvertimeMinutes / 60).toFixed(2)}h)` : t.hidden}
+                {showOvertime && overtimeEnabled
+                  ? `${minutesToHours(totalOvertimeMinutes)} (${formatHours(paymentResult.overtimeHours)})`
+                  : t.hidden}
               </p>
             </div>
           </div>
+
+          {includePayment && paymentValidationErrors.length === 0 && (
+            <PaymentBreakdown
+              result={paymentResult}
+              formatAmount={formatAmount}
+              formatHours={formatHours}
+              labels={{
+                paymentBreakdown: t.paymentBreakdown,
+                totalHours: t.totalHours,
+                regularHours: t.regularHours,
+                overtimeHours: t.overtimeHours,
+                hourlyPayRate: t.hourlyPayRate,
+                regularPay: t.regularPay,
+                overtimeTier: t.overtimeTier,
+                totalOvertimePay: t.totalOvertimePay,
+                estimatedTotalPay: t.estimatedTotalPay,
+                after: t.after,
+                hours: t.hours,
+              }}
+            />
+          )}
         </CardContent>
       </Card>
     </div>

@@ -7,6 +7,7 @@ const ogLocaleMap: Record<string, string> = {
   de: "de_DE",
   "pt-br": "pt_BR",
   fr: "fr_FR",
+  es: "es_ES",
 };
 
 const sanitizePageSegment = (value?: string) => {
@@ -48,6 +49,7 @@ interface HeadInfoProps {
   modifiedTime?: string;
   noindex?: boolean;
   structuredData?: Record<string, unknown>;
+  alternatePaths?: Partial<Record<string, string>>;
 }
 
 const HeadInfo = ({
@@ -63,6 +65,7 @@ const HeadInfo = ({
   modifiedTime,
   noindex,
   structuredData,
+  alternatePaths,
 }: HeadInfoProps) => {
   const normalizedBase =
     process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/+$/, "") ||
@@ -90,6 +93,9 @@ const HeadInfo = ({
   };
 
   const canonicalUrl = buildUrl(locale);
+  const alternateEntries = alternatePaths
+    ? Object.entries(alternatePaths)
+    : languages.map((item) => [item.value, buildPath(item.value)] as const);
   const defaultOgImage = ogImage ?? "/og-image.png";
   const ogImageUrl = buildAbsoluteUrl(normalizedBase, defaultOgImage);
   const ogImageAltText = ogImageAlt ?? `${title} | ${SITE_NAME}`;
@@ -170,15 +176,15 @@ const HeadInfo = ({
       <meta name="robots" content={robotsContent} />
 
       <link rel="canonical" href={canonicalUrl} />
-      {languages.map((item) => (
+      {alternateEntries.map(([alternateLocale, alternatePath]) => (
         <link
-          key={`${item.value}-alternate`}
+          key={`${alternateLocale}-alternate`}
           rel="alternate"
-          hrefLang={item.value}
-          href={buildUrl(item.value)}
+          hrefLang={alternateLocale}
+          href={buildAbsoluteUrl(normalizedBase, alternatePath)}
         />
       ))}
-      <link rel="alternate" hrefLang="x-default" href={buildUrl("en")} />
+      {!alternatePaths && <link rel="alternate" hrefLang="x-default" href={buildUrl("en")} />}
 
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:url" content={canonicalUrl} />

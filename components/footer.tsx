@@ -39,6 +39,12 @@ export default function Footer() {
     const localized = getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug);
     return { name: localized.title, href: `/${localizedSlug}` };
   });
+  if (locale === "es") {
+    popularTools.push(
+      { name: "Calculadora de Horas Extras", href: "/calculadora-de-horas-extras" },
+      { name: "Calcular Horas de una Jornada Partida", href: "/calcular-horas-jornada-partida" },
+    );
+  }
   const guideLinks = [
     { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
     { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
