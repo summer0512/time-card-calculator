@@ -6,25 +6,12 @@ import { getTranslations } from "next-intl/server";
 import { toolCalculators } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
-
-const relatedGuides = [
-  {
-    titleKey: "guideLunch",
-    href: "/guides/time-card-calculator-with-lunch"
-  },
-  {
-    titleKey: "guideBreaks",
-    href: "/guides/time-card-calculator-with-breaks"
-  },
-  {
-    titleKey: "guideBiweekly",
-    href: "/guides/biweekly-time-card-calculator"
-  }
-] as const;
+import { getGuidesForLocale } from "@/lib/guides";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
+  const relatedGuides = getGuidesForLocale(locale as SupportedLocale);
 
   return (
     <div>
@@ -84,21 +71,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </ul>
           </section>
 
-          <section className="mt-6 bg-white rounded-lg border p-6 mb-12">
+          {relatedGuides.length > 0 && <section className="mt-6 bg-white rounded-lg border p-6 mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t("relatedGuides")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {relatedGuides.map((guide) => (
-                <Link
-                  key={guide.href}
-                  href={guide.href}
-                  className="border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-colors"
-                >
-                  <p className="font-semibold text-gray-900">{t(guide.titleKey)}</p>
-                  <p className="text-sm text-gray-600 mt-1">{t("guideCardDescription")}</p>
-                </Link>
+                <a key={guide.path} href={guide.path} className="border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                  <p className="font-semibold text-gray-900">{guide.title}</p>
+                  <p className="text-sm text-gray-600 mt-1">{guide.description}</p>
+                </a>
               ))}
             </div>
-          </section>
+          </section>}
         </div>
       </main>
     </div>

@@ -11,6 +11,7 @@ import { toolCalculatorMap } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
+import { getGuidesForLocale } from "@/lib/guides";
 
 export default function MobileMenuButton() {
   const locale = useLocale();
@@ -26,6 +27,7 @@ export default function MobileMenuButton() {
     ["timesheet-calculator-with-lunch", timesheetSlug],
     ["time-punch-calculator", punchSlug],
   ] as const;
+  const guideItems = getGuidesForLocale(locale as SupportedLocale);
   const menuItems = [
     { name: t("home"), href: "/" },
     ...toolMenuItems
@@ -34,7 +36,7 @@ export default function MobileMenuButton() {
         name: getLocalizedToolView(locale as SupportedLocale, toolCalculatorMap[canonicalSlug], localizedSlug).title,
         href: `/${localizedSlug}`,
       })),
-    { name: t("guides"), href: "/guides/time-card-calculator-with-lunch" },
+    ...guideItems.map((guide) => ({ name: guide.title, href: guide.path, exactPath: true })),
     { name: t("contact"), href: "/contact" }
   ];
 
@@ -52,13 +54,12 @@ export default function MobileMenuButton() {
             <div className="px-3 py-2 border-b border-gray-100 mb-1">
               <LanguageToggle />
             </div>
-            {menuItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors"
-                onClick={() => setIsMenuOpen(false)}
-              >
+            {menuItems.map((item) => "exactPath" in item ? (
+              <a key={item.name} href={item.href} className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+                {item.name}
+              </a>
+            ) : (
+              <Link key={item.name} href={item.href} className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {item.name}
               </Link>
             ))}

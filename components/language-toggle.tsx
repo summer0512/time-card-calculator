@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { languages, type SupportedLocale } from "@/i18n/config";
-import { getAvailableToolLocales, getLocalizedToolPath, resolveLocalizedToolSlug } from "@/lib/i18n-slugs";
+import { getAvailableToolLocales, getLocalizedToolSlug, resolveLocalizedToolSlug } from "@/lib/i18n-slugs";
 import { getAvailableGuideLocales, getLocalizedGuidePath, resolveGuideByPath } from "@/lib/guides";
 
 export function LanguageToggle() {
@@ -21,13 +21,17 @@ export function LanguageToggle() {
   const handleLocaleChange = (newLocale: string) => {
     const targetLocale = newLocale as SupportedLocale;
     if (canonicalTool) {
-      const target = getLocalizedToolPath(targetLocale, canonicalTool);
-      if (target) window.location.assign(target);
+      const targetSlug = getLocalizedToolSlug(targetLocale, canonicalTool);
+      if (targetSlug) router.push(`/${targetSlug}`, { locale: targetLocale });
       return;
     }
     if (canonicalGuide) {
       const target = getLocalizedGuidePath(canonicalGuide.id, targetLocale);
-      if (target) window.location.assign(target);
+      if (target) {
+        const localePrefix = targetLocale === "en" ? "" : `/${targetLocale}`;
+        const internalPath = localePrefix && target.startsWith(localePrefix) ? target.slice(localePrefix.length) || "/" : target;
+        router.push(internalPath, { locale: targetLocale });
+      }
       return;
     }
     router.replace(pathname, { locale: targetLocale });

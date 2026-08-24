@@ -17,6 +17,7 @@ import { toolCalculators } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
+import { getGuidesForLocale } from "@/lib/guides";
 
 export default function Header() {
   const locale = useLocale();
@@ -27,11 +28,10 @@ export default function Header() {
     { name: t("home"), href: "/" },
     { name: t("contact"), href: "/contact" }
   ];
-  const guideItems = [
-    { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
-    { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
-    { name: t("guideBiweekly"), href: "/guides/biweekly-time-card-calculator" }
-  ];
+  const guideItems = getGuidesForLocale(locale as SupportedLocale).map((guide) => ({
+    name: guide.title,
+    href: guide.path,
+  }));
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -105,7 +105,7 @@ export default function Header() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DropdownMenu>
+            {guideItems.length > 0 && <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(
@@ -120,7 +120,7 @@ export default function Header() {
               <DropdownMenuContent align="start" className="w-72">
                 {guideItems.map((item) => (
                   <DropdownMenuItem key={item.href} asChild>
-                    <Link
+                    <a
                       href={item.href}
                       className={cn(
                         "w-full px-2 py-2 text-sm cursor-pointer",
@@ -130,11 +130,11 @@ export default function Header() {
                       )}
                     >
                       {item.name}
-                    </Link>
+                    </a>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu>}
           </nav>
 
           <div className="flex items-center gap-3">

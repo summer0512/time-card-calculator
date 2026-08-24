@@ -28,6 +28,12 @@ export const guideRegistry: GuideRegistry = {
   "calculate-work-hours": { fr: { path: "/fr/comment-calculer-heures-travail", title: "Comment calculer les heures de travail", description: "Guide SEO en français pour calculer les heures de travail par jour, par semaine et avec pause.", keywords: "comment calculer les heures de travail, comment calculer heure de travail, comment calculer des heures de travail, comment calculer les heures de travail par jour", h1: "Comment calculer les heures de travail", ogImageAlt: "Comment calculer les heures de travail - guide français", article: FrenchWorkHoursArticle, relatedTool: "time-card-calculator-with-lunch", faqs: frenchFaqs } },
 };
 
+export const getGuidesForLocale = (locale: SupportedLocale) =>
+  (Object.entries(guideRegistry) as [GuideId, GuideRegistry[GuideId]][]).flatMap(([id, locales]) => {
+    const guide = locales[locale];
+    return guide ? [{ id, ...guide }] : [];
+  });
+
 export const getLocalizedGuide = (id: GuideId, locale: SupportedLocale) => guideRegistry[id][locale] ?? null;
 export const getLocalizedGuidePath = (id: GuideId, locale: SupportedLocale) => getLocalizedGuide(id, locale)?.path ?? null;
 export const isGuideAvailableInLocale = (id: GuideId, locale: SupportedLocale) => Boolean(getLocalizedGuide(id, locale));

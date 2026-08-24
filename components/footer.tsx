@@ -8,6 +8,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { toolCalculatorMap } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
+import { getGuidesForLocale } from "@/lib/guides";
 
 const friendLinks = [
   { name: "Time Card Calculator", href: "https://link.zhihu.com/?target=https://time-card-calculator.work", follow: true },
@@ -46,11 +47,10 @@ export default function Footer() {
       { name: "Calcular Horas de una Jornada Partida", href: "/calcular-horas-jornada-partida" },
     );
   }
-  const guideLinks = [
-    { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
-    { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
-    { name: t("guideBiweekly"), href: "/guides/biweekly-time-card-calculator" }
-  ];
+  const guideLinks = getGuidesForLocale(locale as SupportedLocale).map((guide) => ({
+    name: guide.title,
+    href: guide.path,
+  }));
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -119,16 +119,16 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="col-span-1 md:col-span-3">
+          {guideLinks.length > 0 && <div className="col-span-1 md:col-span-3">
             <h4 className="text-sm font-semibold text-white mb-2">{t("guides")}</h4>
             <div className="flex flex-wrap gap-3">
               {guideLinks.map((guide) => (
-                <Link key={guide.href} href={guide.href} className="text-xs text-gray-400 hover:text-white transition-colors">
+                <a key={guide.href} href={guide.href} className="text-xs text-gray-400 hover:text-white transition-colors">
                   {guide.name}
-                </Link>
+                </a>
               ))}
             </div>
-          </div>
+          </div>}
           {/* <div className="col-span-1 md:col-span-2">
             <h4 className="text-sm font-semibold text-white mb-2">{t("friendLinks")}</h4>
             <div className="flex flex-wrap gap-3">
