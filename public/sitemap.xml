@@ -85,6 +85,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://time-card-calculator.work/time-card-calculator-with-overtime</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://time-card-calculator.work/contact</loc>
     <lastmod>2026-04-27</lastmod>
     <changefreq>monthly</changefreq>
