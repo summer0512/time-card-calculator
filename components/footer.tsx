@@ -1,5 +1,7 @@
 "use client";
 
+import type { SupportedLocale } from "@/i18n/config";
+
 import { Clock, Github, Mail } from "lucide-react";
 import { Link } from "@/i18n/routing";
 import { useLocale, useTranslations } from "next-intl";
@@ -33,15 +35,14 @@ export default function Footer() {
     "timesheet-calculator-with-lunch",
     "lunch-break-calculator",
     "time-punch-calculator"
-  ].filter((slug) => isLocalizedToolEnabled(locale, slug as keyof typeof toolCalculatorMap)).map((slug) => {
+  ].filter((slug) => isLocalizedToolEnabled(locale as SupportedLocale, slug as keyof typeof toolCalculatorMap)).map((slug) => {
     const canonicalSlug = slug as keyof typeof toolCalculatorMap;
-    const localizedSlug = getLocalizedToolSlug(locale, canonicalSlug);
-    const localized = getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug);
+    const localizedSlug = getLocalizedToolSlug(locale as SupportedLocale, canonicalSlug)!;
+    const localized = getLocalizedToolView(locale as SupportedLocale, toolCalculatorMap[canonicalSlug], localizedSlug);
     return { name: localized.title, href: `/${localizedSlug}` };
   });
   if (locale === "es") {
     popularTools.push(
-      { name: "Calculadora de Horas Extras", href: "/calculadora-de-horas-extras" },
       { name: "Calcular Horas de una Jornada Partida", href: "/calcular-horas-jornada-partida" },
     );
   }

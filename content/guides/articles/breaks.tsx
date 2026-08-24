@@ -1,71 +1,61 @@
-import HeadInfo from '@/components/head-info';
 
-export default function TimeCardCalculatorWithLunchGuide() {
+export default function GuideArticle() {
   return (
     <div>
-      <HeadInfo
-        locale="en"
-        page="guides/time-card-calculator-with-lunch"
-        title="How to Calculate Time Cards with Lunch Breaks"
-        description="Step-by-step tutorial for calculating time cards with lunch breaks, with direct access to the free calculator tool."
-        keywords="time card calculator, lunch break, work hours, time tracking"
-        ogType="article"
-        ogImageAlt="Time card calculator with lunch breaks guide cover"
-      />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-4xl mx-auto px-4 py-12">
           {/* Hero Section */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              How to Calculate Time Cards with Lunch Breaks
+              How to Calculate Time Cards with Multiple Breaks
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
-              Master the art of accurate time tracking with our comprehensive guide to using lunch breaks in your time card calculations.
+              Master the art of accurate time tracking with our comprehensive guide to using break periods in your time card calculations.
             </p>
             <a 
-              href="/time-card-calculator-with-lunch" 
+              href="/time-card-calculator-with-breaks" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Use the free Time Card Calculator with Lunch Breaks
+              Use the free Time Card Calculator with Breaks
             </a>
           </div>
 
           {/* Introduction */}
           <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
             <h2 className="text-3xl font-semibold text-gray-800 mb-4">
-              Understanding Lunch Break Tracking
+              Understanding Break Tracking
             </h2>
             <p className="text-gray-600 mb-4">
-              Our Time Card Calculator offers flexible lunch break tracking to ensure accurate payroll calculations. Whether you need to track standard lunch breaks, multiple breaks, or customize break times, our calculator provides the tools you need.
+              Our Time Card Calculator offers flexible break tracking to ensure accurate payroll calculations. Whether you need to track short breaks, meal periods, or multiple break types, our calculator provides the tools you need.
             </p>
             <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
               <p className="text-blue-800">
-                <strong>Key Feature:</strong> The lunch break column can be easily added or removed based on your specific time tracking needs.
+                <strong>Key Feature:</strong> Support for up to 3 break columns with customizable durations for each break period.
               </p>
             </div>
             <a
-              href="/time-card-calculator-with-lunch"
+              href="/time-card-calculator-with-breaks"
               className="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Use the free Time Card Calculator with Lunch Breaks
+              Use the free Time Card Calculator with Breaks
             </a>
           </div>
 
           {/* Getting Started */}
           <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
             <h2 className="text-3xl font-semibold text-gray-800 mb-6">
-              Getting Started with Lunch Breaks
+              Getting Started with Breaks
             </h2>
             
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Step 1: Enable Lunch Break Column
+              Step 1: Enable Break Columns
             </h3>
             <p className="text-gray-600 mb-4">
-              To start tracking lunch breaks, click the "With Lunch" button in the calculator toolbar. This will add a dedicated lunch break column to your time card.
+              To start tracking breaks, click the "With Break" button in the calculator toolbar. This will add dedicated break columns to your time card.
             </p>
             <div className="bg-gray-100 rounded-lg p-4 mb-6">
               <p className="font-mono text-sm text-gray-700">
-                💡 When you enable the lunch column, it automatically sets a default 1:00 hour lunch break for all days.
+                💡 You can add up to 3 break columns, each with its own duration settings.
               </p>
             </div>
 
@@ -82,27 +72,27 @@ export default function TimeCardCalculatorWithLunchGuide() {
             </ul>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Step 3: Customize Lunch Break Duration
+              Step 3: Configure Break Durations
             </h3>
             <p className="text-gray-600 mb-4">
-              Modify the lunch break duration for each day as needed. Common lunch break durations include:
+              Set the break duration for each break column. Common break durations include:
             </p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-green-50 p-3 rounded text-center">
-                <p className="font-semibold text-green-800">30 min</p>
-                <p className="text-sm text-green-600">0:30</p>
+                <p className="font-semibold text-green-800">15 min</p>
+                <p className="text-sm text-green-600">0:15</p>
               </div>
               <div className="bg-blue-50 p-3 rounded text-center">
-                <p className="font-semibold text-blue-800">45 min</p>
-                <p className="text-sm text-blue-600">0:45</p>
+                <p className="font-semibold text-blue-800">20 min</p>
+                <p className="text-sm text-blue-600">0:20</p>
               </div>
               <div className="bg-purple-50 p-3 rounded text-center">
-                <p className="font-semibold text-purple-800">1 hour</p>
-                <p className="text-sm text-purple-600">1:00</p>
+                <p className="font-semibold text-purple-800">30 min</p>
+                <p className="text-sm text-purple-600">0:30</p>
               </div>
               <div className="bg-orange-50 p-3 rounded text-center">
-                <p className="font-semibold text-orange-800">1.5 hours</p>
-                <p className="text-sm text-orange-600">1:30</p>
+                <p className="font-semibold text-orange-800">45 min</p>
+                <p className="text-sm text-orange-600">0:45</p>
               </div>
             </div>
           </div>
@@ -110,32 +100,32 @@ export default function TimeCardCalculatorWithLunchGuide() {
           {/* Advanced Features */}
           <div className="bg-white rounded-lg shadow-sm border p-8 mb-8">
             <h2 className="text-3xl font-semibold text-gray-800 mb-6">
-              Advanced Lunch Break Features
+              Advanced Break Features
             </h2>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Multiple Break Support
+              Multiple Break Types
             </h3>
             <p className="text-gray-600 mb-4">
-              In addition to lunch breaks, our calculator supports tracking multiple break periods:
+              Our calculator supports tracking different types of breaks simultaneously:
             </p>
             <ul className="list-disc list-inside text-gray-600 mb-6 space-y-2">
-              <li>Primary break column for standard breaks</li>
-              <li>Additional break columns (up to 3 total)</li>
-              <li>Customizable break durations for each column</li>
-              <li>Automatic calculation of total break time</li>
+              <li>Morning breaks (15-20 minutes)</li>
+              <li>Lunch breaks (30-60 minutes)</li>
+              <li>Afternoon breaks (10-15 minutes)</li>
+              <li>Custom break periods as needed</li>
             </ul>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
               Column Management
             </h3>
             <p className="text-gray-600 mb-4">
-              You have full control over break and lunch columns:
+              You have full control over break columns:
             </p>
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
               <h4 className="font-semibold text-yellow-800 mb-2">Column Actions:</h4>
               <ul className="text-yellow-700 space-y-1">
-                <li>• <strong>Add:</strong> Click "With Lunch" or "With Break" buttons</li>
+                <li>• <strong>Add:</strong> Click "With Break" button (up to 3 columns)</li>
                 <li>• <strong>Remove:</strong> Click the trash icon in column headers</li>
                 <li>• <strong>Customize:</strong> Edit individual cell values</li>
               </ul>
@@ -150,20 +140,20 @@ export default function TimeCardCalculatorWithLunchGuide() {
             <div className="bg-gray-50 rounded-lg p-6 mb-6">
               <h4 className="font-semibold text-gray-800 mb-3">Calculation Formula:</h4>
               <p className="font-mono text-sm text-gray-700 mb-3">
-                Total Work Time = (End Time - Start Time) - (Lunch Break + All Additional Breaks)
+                Total Work Time = (End Time - Start Time) - (Break 1 + Break 2 + Break 3)
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="font-semibold text-gray-700">Example 1:</p>
                   <p className="text-gray-600">8:00AM to 5:00PM</p>
-                  <p className="text-gray-600">Lunch: 1:00</p>
-                  <p className="text-green-600 font-semibold">Total: 8 hours</p>
+                  <p className="text-gray-600">Breaks: 0:15 + 0:30</p>
+                  <p className="text-green-600 font-semibold">Total: 8.25 hours</p>
                 </div>
                 <div>
                   <p className="font-semibold text-gray-700">Example 2:</p>
                   <p className="text-gray-600">9:00AM to 6:00PM</p>
-                  <p className="text-gray-600">Lunch: 0:30 + Break: 0:15</p>
-                  <p className="text-green-600 font-semibold">Total: 8.25 hours</p>
+                  <p className="text-gray-600">Breaks: 0:15 + 1:00 + 0:15</p>
+                  <p className="text-green-600 font-semibold">Total: 7.5 hours</p>
                 </div>
               </div>
             </div>
@@ -176,50 +166,50 @@ export default function TimeCardCalculatorWithLunchGuide() {
             </h2>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Standard Office Hours
+              Standard Office Environment
             </h3>
             <p className="text-gray-600 mb-4">
-              Perfect for traditional 9-to-5 jobs with a standard lunch break:
+              Perfect for traditional office settings with scheduled breaks:
             </p>
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
               <p className="text-blue-800 font-semibold mb-2">Typical Setup:</p>
               <ul className="text-blue-700 space-y-1">
-                <li>• Start: 9:00AM</li>
-                <li>• End: 5:00PM</li>
-                <li>• Lunch: 1:00 hour</li>
-                <li>• Daily Total: 8 hours</li>
+                <li>• Morning break: 15 minutes</li>
+                <li>• Lunch break: 30-60 minutes</li>
+                <li>• Afternoon break: 15 minutes</li>
+                <li>• Daily total: 8 hours minus breaks</li>
               </ul>
             </div>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Flexible Work Schedules
+              Manufacturing and Industrial
             </h3>
             <p className="text-gray-600 mb-4">
-              Ideal for flexible work arrangements with varying break times:
+              Ideal for industrial settings with regulated break schedules:
             </p>
             <div className="bg-green-50 rounded-lg p-4 mb-6">
-              <p className="text-green-800 font-semibold mb-2">Flexible Features:</p>
+              <p className="text-green-800 font-semibold mb-2">Industrial Features:</p>
               <ul className="text-green-700 space-y-1">
-                <li>• Custom lunch durations per day</li>
                 <li>• Multiple short breaks</li>
-                <li>• Variable start/end times</li>
-                <li>• Automatic total calculations</li>
+                <li>• Mandatory meal periods</li>
+                <li>• Overtime calculations</li>
+                <li>• Compliance tracking</li>
               </ul>
             </div>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Shift Work
+              Healthcare and Service Industry
             </h3>
             <p className="text-gray-600 mb-4">
-              Excellent for shift workers with different break schedules:
+              Excellent for healthcare and service professionals with varying schedules:
             </p>
             <div className="bg-purple-50 rounded-lg p-4 mb-6">
-              <p className="text-purple-800 font-semibold mb-2">Shift Support:</p>
+              <p className="text-purple-800 font-semibold mb-2">Healthcare Support:</p>
               <ul className="text-purple-700 space-y-1">
-                <li>• Overnight shifts</li>
-                <li>• Multiple break periods</li>
-                <li>• Custom break allocations</li>
-                <li>• Accurate overtime calculations</li>
+                <li>• Split shifts</li>
+                <li>• Variable break times</li>
+                <li>• On-call periods</li>
+                <li>• Accurate hour tracking</li>
               </ul>
             </div>
           </div>
@@ -237,33 +227,33 @@ export default function TimeCardCalculatorWithLunchGuide() {
               <div className="bg-green-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-green-800 mb-2">✓ Do's</h4>
                 <ul className="text-green-700 space-y-1 text-sm">
+                  <li>• Track all break periods accurately</li>
                   <li>• Use consistent time formats</li>
-                  <li>• Include all break periods</li>
+                  <li>• Include unpaid breaks</li>
                   <li>• Review calculations daily</li>
-                  <li>• Save your time cards regularly</li>
                 </ul>
               </div>
               <div className="bg-red-50 p-4 rounded-lg">
                 <h4 className="font-semibold text-red-800 mb-2">✗ Don'ts</h4>
                 <ul className="text-red-700 space-y-1 text-sm">
-                  <li>• Mix time formats in same card</li>
-                  <li>• Forget to add break times</li>
-                  <li>• Overlook overnight shifts</li>
+                  <li>• Forget to log short breaks</li>
+                  <li>• Mix time formats</li>
+                  <li>• Overlook mandatory breaks</li>
                   <li>• Skip verification steps</li>
                 </ul>
               </div>
             </div>
 
             <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-              Time-Saving Features
+              Compliance Considerations
             </h3>
             <div className="bg-blue-50 rounded-lg p-6 mb-6">
-              <h4 className="font-semibold text-blue-800 mb-3">Productivity Boosters:</h4>
+              <h4 className="font-semibold text-blue-800 mb-3">Legal Requirements:</h4>
               <ul className="text-blue-700 space-y-2">
-                <li>• <strong>Copy First Row:</strong> Quickly apply the same schedule to multiple days</li>
-                <li>• <strong>Clear All:</strong> Reset the entire calculator for a new pay period</li>
-                <li>• <strong>Print Report:</strong> Generate professional time card reports</li>
-                <li>• <strong>Auto-calculation:</strong> Real-time updates as you type</li>
+                <li>• <strong>State Laws:</strong> Break requirements vary by state</li>
+                <li>• <strong>Federal Guidelines:</strong> Follow FLSA regulations</li>
+                <li>• <strong>Industry Standards:</strong> Follow industry-specific rules</li>
+                <li>• <strong>Company Policy:</strong> Adhere to internal break policies</li>
               </ul>
             </div>
           </div>
@@ -286,7 +276,7 @@ export default function TimeCardCalculatorWithLunchGuide() {
                 </p>
               </div>
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Incorrect break calculations</h4>
+                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Incorrect break totals</h4>
                 <p className="text-yellow-700 text-sm">
                   <strong>Solution:</strong> Verify break times are in correct format (HH:MM or decimal). 
                   Check that all break columns are properly configured.
@@ -299,17 +289,17 @@ export default function TimeCardCalculatorWithLunchGuide() {
             </h3>
             <div className="space-y-4">
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Can't add lunch column</h4>
-                <p className="text-yellow-700 text-sm">
-                  <strong>Solution:</strong> The lunch column may already be enabled. Check if you see 
-                  a lunch column in your table. If visible, use the trash icon to remove it first.
-                </p>
-              </div>
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Too many break columns</h4>
+                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Can't add more break columns</h4>
                 <p className="text-yellow-700 text-sm">
                   <strong>Solution:</strong> The calculator supports a maximum of 3 break columns. 
                   Remove existing columns before adding new ones.
+                </p>
+              </div>
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <h4 className="font-semibold text-yellow-800 mb-1">Issue: Break column disappeared</h4>
+                <p className="text-yellow-700 text-sm">
+                  <strong>Solution:</strong> The column may have been accidentally removed. 
+                  Click "With Break" to add it back.
                 </p>
               </div>
             </div>
@@ -321,19 +311,19 @@ export default function TimeCardCalculatorWithLunchGuide() {
               Conclusion
             </h2>
             <p className="text-gray-600 mb-4">
-              Our Time Card Calculator with lunch break support provides a comprehensive solution for accurate time tracking and payroll calculations. By understanding how to effectively use lunch breaks and multiple break periods, you can ensure precise time recording for any work schedule.
+              Our Time Card Calculator with break support provides a comprehensive solution for accurate time tracking and payroll calculations. By understanding how to effectively use multiple break periods, you can ensure precise time recording for any work environment.
             </p>
             <div className="bg-white rounded-lg p-6">
               <h3 className="text-xl font-semibold text-gray-800 mb-3">Key Takeaways:</h3>
               <ul className="text-gray-600 space-y-2">
-                <li>• Lunch break columns can be added/removed as needed</li>
-                <li>• Multiple break periods are supported for complex schedules</li>
+                <li>• Up to 3 break columns can be configured</li>
+                <li>• Various break types and durations are supported</li>
                 <li>• Automatic calculations ensure accuracy</li>
-                <li>• Flexible time formats accommodate various preferences</li>
-                <li>• Professional reports are available for payroll processing</li>
+                <li>• Flexible time formats accommodate different preferences</li>
+                <li>• Professional reports available for payroll processing</li>
               </ul>
             </div>
-          </div>
+            </div>
         </div>
       </div>
     </div>

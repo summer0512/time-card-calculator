@@ -1,5 +1,7 @@
 "use client";
 
+import type { SupportedLocale } from "@/i18n/config";
+
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
@@ -14,10 +16,10 @@ export default function MobileMenuButton() {
   const locale = useLocale();
   const t = useTranslations("Nav");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const lunchSlug = getLocalizedToolSlug(locale, "time-card-calculator-with-lunch");
-  const biweeklySlug = getLocalizedToolSlug(locale, "biweekly-time-card-calculator");
-  const timesheetSlug = getLocalizedToolSlug(locale, "timesheet-calculator-with-lunch");
-  const punchSlug = getLocalizedToolSlug(locale, "time-punch-calculator");
+  const lunchSlug = getLocalizedToolSlug(locale as SupportedLocale, "time-card-calculator-with-lunch")!;
+  const biweeklySlug = getLocalizedToolSlug(locale as SupportedLocale, "biweekly-time-card-calculator")!;
+  const timesheetSlug = getLocalizedToolSlug(locale as SupportedLocale, "timesheet-calculator-with-lunch")!;
+  const punchSlug = getLocalizedToolSlug(locale as SupportedLocale, "time-punch-calculator")!;
   const toolMenuItems = [
     ["time-card-calculator-with-lunch", lunchSlug],
     ["biweekly-time-card-calculator", biweeklySlug],
@@ -27,12 +29,11 @@ export default function MobileMenuButton() {
   const menuItems = [
     { name: t("home"), href: "/" },
     ...toolMenuItems
-      .filter(([canonicalSlug]) => isLocalizedToolEnabled(locale, canonicalSlug))
+      .filter(([canonicalSlug]) => isLocalizedToolEnabled(locale as SupportedLocale, canonicalSlug))
       .map(([canonicalSlug, localizedSlug]) => ({
-        name: getLocalizedToolView(locale, toolCalculatorMap[canonicalSlug], localizedSlug).title,
+        name: getLocalizedToolView(locale as SupportedLocale, toolCalculatorMap[canonicalSlug], localizedSlug).title,
         href: `/${localizedSlug}`,
       })),
-    ...(locale === "es" ? [{ name: "Calculadora de Horas Extras", href: "/calculadora-de-horas-extras" }] : []),
     { name: t("guides"), href: "/guides/time-card-calculator-with-lunch" },
     { name: t("contact"), href: "/contact" }
   ];

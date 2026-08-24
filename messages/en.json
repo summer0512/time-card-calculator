@@ -375,6 +375,7 @@
     "faqTitle": "Frequently Asked Questions About {title}",
     "relatedCalculators": "Related Calculators",
     "backToHome": "Back to Free Time Card Calculator",
-    "readRelatedGuide": "Read Related Guide"
+    "readRelatedGuide": "Read Related Guide",
+    "previewAlt": "{title} tool preview"
   }
 }

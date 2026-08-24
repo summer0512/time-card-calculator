@@ -1,5 +1,7 @@
 "use client";
 
+import type { SupportedLocale } from "@/i18n/config";
+
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/routing";
 import { Clock, ChevronDown } from "lucide-react";
@@ -39,8 +41,8 @@ export default function Header() {
   };
 
   const isToolsActive = toolCalculators.some((item) =>
-    pathname.includes(`/${getLocalizedToolSlug(locale, item.slug)}`) || pathname.includes(`/${item.slug}`)
-  ) || pathname.includes("/calculadora-de-horas-extras");
+    pathname.includes(`/${getLocalizedToolSlug(locale as SupportedLocale, item.slug)}`) || pathname.includes(`/${item.slug}`)
+  );
   const isGuidesActive = guideItems.some((item) => pathname.includes(item.href));
 
   return (
@@ -81,9 +83,9 @@ export default function Header() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-72 max-h-96 overflow-auto">
-                {toolCalculators.filter((item) => isLocalizedToolEnabled(locale, item.slug)).map((item) => {
-                  const localizedSlug = getLocalizedToolSlug(locale, item.slug);
-                  const localizedView = getLocalizedToolView(locale, item, localizedSlug);
+                {toolCalculators.filter((item) => isLocalizedToolEnabled(locale as SupportedLocale, item.slug)).map((item) => {
+                  const localizedSlug = getLocalizedToolSlug(locale as SupportedLocale, item.slug)!;
+                  const localizedView = getLocalizedToolView(locale as SupportedLocale, item, localizedSlug);
                   return (
                   <DropdownMenuItem key={item.slug} asChild>
                     <Link
@@ -100,13 +102,6 @@ export default function Header() {
                   </DropdownMenuItem>
                   );
                 })}
-                {locale === "es" && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/calculadora-de-horas-extras" className="w-full px-2 py-2 text-sm cursor-pointer text-gray-700 hover:text-blue-600 hover:bg-gray-50">
-                      Calculadora de Horas Extras
-                    </Link>
-                  </DropdownMenuItem>
-                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

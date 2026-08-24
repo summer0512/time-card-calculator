@@ -1,17 +1,7 @@
-import HeadInfo from '@/components/head-info';
 
-export default function BiweeklyTimeCardCalculatorGuide() {
+export default function GuideArticle() {
   return (
     <div>
-      <HeadInfo
-        locale="en"
-        page="guides/biweekly-time-card-calculator"
-        title="How to Calculate a Biweekly Time Card"
-        description="Tutorial for calculating two-week pay periods with lunch and overtime rules, with a direct link to the free biweekly calculator tool."
-        keywords="biweekly time card calculator, 2 week time card calculator, time tracking, payroll calculator"
-        ogType="article"
-        ogImageAlt="Biweekly time card calculator guide cover"
-      />
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
         <div className="max-w-4xl mx-auto px-4 py-12">
           {/* Hero Section */}
