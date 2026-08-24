@@ -1,3 +1,4 @@
+import type { SupportedLocale } from "@/i18n/config";
 import HeadInfo from "@/components/head-info";
 import TimeCardCalculator from "@/components/time-card-calculator";
 import { Link } from "@/i18n/routing";
@@ -5,25 +6,12 @@ import { getTranslations } from "next-intl/server";
 import { toolCalculators } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
-
-const relatedGuides = [
-  {
-    titleKey: "guideLunch",
-    href: "/guides/time-card-calculator-with-lunch"
-  },
-  {
-    titleKey: "guideBreaks",
-    href: "/guides/time-card-calculator-with-breaks"
-  },
-  {
-    titleKey: "guideBiweekly",
-    href: "/guides/biweekly-time-card-calculator"
-  }
-] as const;
+import { getGuidesForLocale } from "@/lib/guides";
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
+  const relatedGuides = getGuidesForLocale(locale as SupportedLocale);
 
   return (
     <div>
@@ -58,9 +46,9 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           <section className="mt-8 bg-white rounded-lg border p-6">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t("popularTitle")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {toolCalculators.filter((tool) => isLocalizedToolEnabled(locale, tool.slug)).map((tool) => {
-                const localizedSlug = getLocalizedToolSlug(locale, tool.slug);
-                const localizedView = getLocalizedToolView(locale, tool, localizedSlug);
+              {toolCalculators.filter((tool) => isLocalizedToolEnabled(locale as SupportedLocale, tool.slug)).map((tool) => {
+                const localizedSlug = getLocalizedToolSlug(locale as SupportedLocale, tool.slug)!;
+                const localizedView = getLocalizedToolView(locale as SupportedLocale, tool, localizedSlug);
                 return (
                   <article key={tool.slug} className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
                     <h3 className="text-lg font-semibold text-gray-900">{localizedView.title}</h3>
@@ -71,15 +59,6 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
                   </article>
                 );
               })}
-              {locale === "es" && (
-                <article className="border rounded-lg p-4 hover:border-blue-500 transition-colors">
-                  <h3 className="text-lg font-semibold text-gray-900">Calculadora de Horas Extras</h3>
-                  <p className="text-sm text-gray-600 mt-2">Configura reglas diarias o semanales y calcula el pago ordinario y extra.</p>
-                  <Link href="/calculadora-de-horas-extras" className="inline-block mt-3 text-blue-600 hover:text-blue-700 font-medium">
-                    {t("openCalculator")}
-                  </Link>
-                </article>
-              )}
             </div>
           </section>
 
@@ -92,21 +71,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             </ul>
           </section>
 
-          <section className="mt-6 bg-white rounded-lg border p-6 mb-12">
+          {relatedGuides.length > 0 && <section className="mt-6 bg-white rounded-lg border p-6 mb-12">
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">{t("relatedGuides")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {relatedGuides.map((guide) => (
-                <Link
-                  key={guide.href}
-                  href={guide.href}
-                  className="border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-colors"
-                >
-                  <p className="font-semibold text-gray-900">{t(guide.titleKey)}</p>
-                  <p className="text-sm text-gray-600 mt-1">{t("guideCardDescription")}</p>
-                </Link>
+                <a key={guide.path} href={guide.path} className="border rounded-lg p-4 hover:border-blue-500 hover:bg-blue-50 transition-colors">
+                  <p className="font-semibold text-gray-900">{guide.title}</p>
+                  <p className="text-sm text-gray-600 mt-1">{guide.description}</p>
+                </a>
               ))}
             </div>
-          </section>
+          </section>}
         </div>
       </main>
     </div>

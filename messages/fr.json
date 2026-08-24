@@ -375,6 +375,7 @@
     "faqTitle": "Questions fréquentes sur {title}",
     "relatedCalculators": "Calculateurs associés",
     "backToHome": "Retour au calculateur d'heures de travail gratuit",
-    "readRelatedGuide": "Lire le guide associé"
+    "readRelatedGuide": "Lire le guide associé",
+    "previewAlt": "Aperçu de {title}"
   }
 }

@@ -100,8 +100,7 @@ const HeadInfo = ({
   const ogImageUrl = buildAbsoluteUrl(normalizedBase, defaultOgImage);
   const ogImageAltText = ogImageAlt ?? `${title} | ${SITE_NAME}`;
   const ogLocale = ogLocaleMap[locale] ?? ogLocaleMap.en;
-  const alternateOgLocales = languages
-    .map((lang) => lang.value)
+  const alternateOgLocales = (alternatePaths ? Object.keys(alternatePaths) : languages.map((lang) => lang.value))
     .filter((value) => value !== locale)
     .map((value) => ogLocaleMap[value])
     .filter((value): value is string => Boolean(value));

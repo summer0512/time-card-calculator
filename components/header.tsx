@@ -1,5 +1,7 @@
 "use client";
 
+import type { SupportedLocale } from "@/i18n/config";
+
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/routing";
 import { Clock, ChevronDown } from "lucide-react";
@@ -15,6 +17,7 @@ import { toolCalculators } from "@/lib/tool-calculators";
 import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
+import { getGuidesForLocale } from "@/lib/guides";
 
 export default function Header() {
   const locale = useLocale();
@@ -25,11 +28,10 @@ export default function Header() {
     { name: t("home"), href: "/" },
     { name: t("contact"), href: "/contact" }
   ];
-  const guideItems = [
-    { name: t("guideLunch"), href: "/guides/time-card-calculator-with-lunch" },
-    { name: t("guideBreaks"), href: "/guides/time-card-calculator-with-breaks" },
-    { name: t("guideBiweekly"), href: "/guides/biweekly-time-card-calculator" }
-  ];
+  const guideItems = getGuidesForLocale(locale as SupportedLocale).map((guide) => ({
+    name: guide.title,
+    href: guide.path,
+  }));
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -39,8 +41,8 @@ export default function Header() {
   };
 
   const isToolsActive = toolCalculators.some((item) =>
-    pathname.includes(`/${getLocalizedToolSlug(locale, item.slug)}`) || pathname.includes(`/${item.slug}`)
-  ) || pathname.includes("/calculadora-de-horas-extras");
+    pathname.includes(`/${getLocalizedToolSlug(locale as SupportedLocale, item.slug)}`) || pathname.includes(`/${item.slug}`)
+  );
   const isGuidesActive = guideItems.some((item) => pathname.includes(item.href));
 
   return (
@@ -81,9 +83,9 @@ export default function Header() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-72 max-h-96 overflow-auto">
-                {toolCalculators.filter((item) => isLocalizedToolEnabled(locale, item.slug)).map((item) => {
-                  const localizedSlug = getLocalizedToolSlug(locale, item.slug);
-                  const localizedView = getLocalizedToolView(locale, item, localizedSlug);
+                {toolCalculators.filter((item) => isLocalizedToolEnabled(locale as SupportedLocale, item.slug)).map((item) => {
+                  const localizedSlug = getLocalizedToolSlug(locale as SupportedLocale, item.slug)!;
+                  const localizedView = getLocalizedToolView(locale as SupportedLocale, item, localizedSlug);
                   return (
                   <DropdownMenuItem key={item.slug} asChild>
                     <Link
@@ -100,17 +102,10 @@ export default function Header() {
                   </DropdownMenuItem>
                   );
                 })}
-                {locale === "es" && (
-                  <DropdownMenuItem asChild>
-                    <Link href="/calculadora-de-horas-extras" className="w-full px-2 py-2 text-sm cursor-pointer text-gray-700 hover:text-blue-600 hover:bg-gray-50">
-                      Calculadora de Horas Extras
-                    </Link>
-                  </DropdownMenuItem>
-                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <DropdownMenu>
+            {guideItems.length > 0 && <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   className={cn(
@@ -125,7 +120,7 @@ export default function Header() {
               <DropdownMenuContent align="start" className="w-72">
                 {guideItems.map((item) => (
                   <DropdownMenuItem key={item.href} asChild>
-                    <Link
+                    <a
                       href={item.href}
                       className={cn(
                         "w-full px-2 py-2 text-sm cursor-pointer",
@@ -135,11 +130,11 @@ export default function Header() {
                       )}
                     >
                       {item.name}
-                    </Link>
+                    </a>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu>}
           </nav>
 
           <div className="flex items-center gap-3">

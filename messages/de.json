@@ -375,6 +375,7 @@
     "faqTitle": "Häufige Fragen zu {title}",
     "relatedCalculators": "Ähnliche Rechner",
     "backToHome": "Zurück zum Stundenrechner",
-    "readRelatedGuide": "Passenden Ratgeber lesen"
+    "readRelatedGuide": "Passenden Ratgeber lesen",
+    "previewAlt": "Vorschau für {title}"
   }
 }

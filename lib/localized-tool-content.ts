@@ -2,6 +2,7 @@ import deCalculatorContent from "@/content/calculators/de.json";
 import ptBrCalculatorContent from "@/content/calculators/pt-br.json";
 import frCalculatorContent from "@/content/calculators/fr.json";
 import esSeoContent from "@/content/calculators/es-seo.json";
+import type { SupportedLocale } from "@/i18n/config";
 import { ToolCalculatorConfig, ToolSlug } from "@/lib/tool-calculators";
 
 interface LocalizedToolOverrides {
@@ -27,12 +28,26 @@ type LocalizedContentMap = Partial<Record<ToolSlug, LocalizedToolOverrides>>;
 const deContent = deCalculatorContent as LocalizedContentMap;
 const ptBrContent = ptBrCalculatorContent as LocalizedContentMap;
 const frContent = frCalculatorContent as LocalizedContentMap;
+const toSpanishOverride = (content: (typeof esSeoContent)[keyof typeof esSeoContent]): LocalizedToolOverrides => ({
+  title: content.h1,
+  metaTitle: content.title,
+  metaDescription: content.description,
+  h1: content.h1,
+  subtitle: content.subtitle,
+  intro: content.intro,
+  keywords: content.keywords,
+  howToSteps: content.howToSteps,
+  example: content.example,
+  faqs: content.faqs,
+});
+
 const esContent: LocalizedContentMap = {
-  "time-card-calculator-with-lunch": esSeoContent["calculadora-de-horas"],
-  "time-card-calculator-with-multiple-in-and-out": esSeoContent["calcular-horas-jornada-partida"],
+  "time-card-calculator-with-lunch": toSpanishOverride(esSeoContent["calculadora-de-horas"]),
+  "time-card-calculator-with-overtime": toSpanishOverride(esSeoContent["calculadora-de-horas-extras"]),
+  "time-card-calculator-with-multiple-in-and-out": toSpanishOverride(esSeoContent["calcular-horas-jornada-partida"]),
 };
 
-const localeContent: Record<string, LocalizedContentMap> = {
+const localeContent: Partial<Record<SupportedLocale, LocalizedContentMap>> = {
   de: deContent,
   "pt-br": ptBrContent,
   fr: frContent,
@@ -61,7 +76,7 @@ const defaultKeywords = (config: ToolCalculatorConfig) =>
   `${config.title.toLowerCase()}, free ${config.title.toLowerCase()}, ${config.slug.replace(/-/g, " ")}`;
 
 export const getLocalizedToolView = (
-  locale: string,
+  locale: SupportedLocale,
   config: ToolCalculatorConfig,
   fallbackSlug: string
 ): LocalizedToolView => {

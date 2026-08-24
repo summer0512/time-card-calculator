@@ -373,6 +373,7 @@
     "faqTitle": "Preguntas frecuentes sobre {title}",
     "relatedCalculators": "Calculadoras relacionadas",
     "backToHome": "Volver a la calculadora de horas",
-    "readRelatedGuide": "Leer la guía relacionada"
+    "readRelatedGuide": "Leer la guía relacionada",
+    "previewAlt": "Vista previa de {title}"
   }
 }

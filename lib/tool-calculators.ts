@@ -1,6 +1,7 @@
 import type { OvertimeBasis, OvertimeTier } from "@/lib/payment";
 
 export type ToolSlug =
+  | "time-card-calculator-with-overtime"
   | "time-card-calculator-with-lunch"
   | "biweekly-time-card-calculator"
   | "time-card-calculator-with-breaks"
@@ -1004,7 +1005,60 @@ export const toolCalculators: ToolCalculatorConfig[] = [
         day: "Day"
       }
     }
+  },
+  {
+    slug: "time-card-calculator-with-overtime",
+    title: "Time Card Calculator with Overtime",
+    metaTitle: "Time Card Calculator with Overtime | Free Weekly Pay Calculator",
+    metaDescription: "Calculate regular hours, overtime hours, and total pay with customizable weekly overtime thresholds, rates, and tiers.",
+    h1: "Time Card Calculator with Overtime",
+    subtitle: "Calculate regular hours, overtime hours, and total pay with customizable overtime thresholds and rates.",
+    intro: "This free time card calculator with overtime helps employees and employers separate regular and overtime hours, apply custom overtime rates, and estimate total weekly pay.",
+    howToSteps: [
+      "Enter the start and end time for each workday.",
+      "Open pay settings and enter your hourly rate.",
+      "Keep weekly overtime enabled or customize the threshold and rate tiers.",
+      "Review regular hours, overtime hours, regular pay, overtime pay, and total pay."
+    ],
+    example: {
+      title: "Weekly overtime example",
+      calculation: "45 hours at $20 per hour, with overtime after 40 hours at 1.5×",
+      result: "Regular pay is $800 and overtime pay is $150, for $950 total pay."
+    },
+    faqs: [
+      { question: "How does the time card calculator calculate overtime?", answer: "By default, hours over 40 in a week are placed in the first overtime tier and paid at 1.5 times the base hourly rate." },
+      { question: "Can I change the overtime threshold?", answer: "Yes. You can customize when each overtime tier begins." },
+      { question: "Can I use a fixed overtime hourly rate?", answer: "Yes. Each tier can use either a multiplier or a fixed hourly rate." },
+      { question: "Does the calculator show regular and overtime pay separately?", answer: "Yes. The payment breakdown separates regular hours and pay, overtime hours and pay, and total pay." },
+      { question: "Can I add more than one overtime tier?", answer: "Yes. Add custom tiers for rules such as time-and-a-half followed by double time." }
+    ],
+    relatedSlugs: [
+      "time-card-calculator-with-lunch",
+      "biweekly-time-card-calculator",
+      "time-card-calculator-with-breaks",
+      "timesheet-calculator-with-lunch"
+    ],
+    calculatorProps: {
+      mode: "time-card",
+      defaultBreakMinutes: 0,
+      showBreakDeduction: true,
+      showOvertime: true,
+      showPrintableTimesheet: true,
+      timeFormat: "auto",
+      paymentPresentation: "popover",
+      paymentSettingsDefaultOpen: true,
+      paymentDefaults: {
+        enabled: true,
+        currency: "USD",
+        overtime: {
+          enabled: true,
+          basis: "weekly",
+          tiers: [{ id: "tier-1", afterHours: 40, rateType: "multiplier", rateValue: 1.5 }]
+        }
+      }
+    }
   }
+
 ];
 
 export const toolCalculatorMap: Record<ToolSlug, ToolCalculatorConfig> = toolCalculators.reduce(
