@@ -331,22 +331,79 @@ Keep authentication intentionally simple.
 
 ---
 
-# 11. Recommended Technical Stack
+# 11. Required Technical Stack
 
-Reuse the project's existing architecture where possible.
+This project must use the same validated account/database deployment architecture already proven in production on the reference Cloudflare Workers application.
 
-Recommended stack:
+Required stack:
 
 ```text
 Next.js
 TypeScript
-Better Auth
-Drizzle ORM
+Cloudflare Workers
+OpenNext for Cloudflare
+Cloudflare Hyperdrive in production
+Direct Neon DATABASE_URL in local development only
 Neon PostgreSQL
-Google OAuth
+pg Client (request/event scoped; never a cross-request Pool)
+Drizzle ORM using drizzle-orm/node-postgres
+Better Auth
+Google OAuth only for V1
 ```
 
-Do not introduce a second ORM or authentication framework if the repository already uses the technologies above.
+This is not a list of interchangeable options. Codex should implement this architecture directly unless an existing repository constraint makes one item technically impossible, in which case it must stop and explain the conflict rather than silently substituting another database driver, auth framework, pooling strategy, or deployment model.
+
+Production database traffic must go through the Cloudflare Hyperdrive binding. Local Next.js development must connect directly to Neon through `DATABASE_URL`.
+
+Do not introduce a second ORM, authentication framework, database driver architecture, or application-level production connection pool.
+
+The production runtime must be treated as a Cloudflare Workers runtime, not as a conventional long-lived Node.js server. Local `next dev` behavior is not sufficient evidence that a server-side API is safe in production.
+
+## 11A. Validated Environment Split
+
+The environment split is fixed:
+
+```text
+Local development
+Next.js / Node.js
+    -> DATABASE_URL
+    -> direct Neon PostgreSQL
+
+Production
+Cloudflare Workers / OpenNext
+    -> HYPERDRIVE binding
+    -> env.HYPERDRIVE.connectionString
+    -> Cloudflare Hyperdrive pooling
+    -> Neon PostgreSQL
+```
+
+Do not use Hyperdrive as a requirement for ordinary local `next dev`.
+
+Do not use the raw Neon `DATABASE_URL` as the normal production Worker connection path.
+
+Do not create a production fallback that silently bypasses Hyperdrive when the `HYPERDRIVE` binding is missing. A missing production Hyperdrive binding is a deployment/configuration error and should fail clearly.
+
+## 11B. Version and Dependency Discipline
+
+Reuse the dependency pattern from the already-validated implementation where practical. Do not combine the account-system work with opportunistic upgrades of Better Auth, `pg`, Drizzle, OpenNext, Wrangler, or Next.js.
+
+### Better Auth version is pinned
+
+For this implementation, use the same Better Auth release already validated in the reference Cloudflare Workers + Hyperdrive + Neon deployment:
+
+```text
+better-auth = 1.6.29
+```
+
+Do not intentionally upgrade or downgrade Better Auth while implementing Accounts V1.
+
+If `time-card-calculator.work` already has a different Better Auth version, align it to `1.6.29` before generating or finalizing the authentication schema, unless an existing repository constraint makes that impossible. If such a constraint exists, stop and explain it instead of silently adapting the schema to another Better Auth release.
+
+Any Better Auth companion/adapter packages used by the repository must remain compatible with the pinned `1.6.29` release and should follow the same dependency combination as the validated reference implementation where available.
+
+Do not use examples, generated schema, or migration output from a different Better Auth release as the source of truth.
+
+Do not run a generator through an unpinned `@latest` command for this work. Schema generation/verification must use repository-pinned tooling compatible with Better Auth `1.6.29`, or the schema must be defined explicitly from the validated `1.6.29` contract below.
 
 ---
 
@@ -2230,27 +2287,63 @@ If using Better Auth schema generation:
 
 If the generated Better Auth output targets `public`, adapt the schema through the project's Drizzle table definitions/migrations rather than accepting that output unchanged.
 
+For Better Auth `1.6.29`, do not "fix" snake_case database columns by adding Better Auth field overrides such as `expires_at`, `provider_id`, or `account_id`. Keep the Better Auth/Drizzle property names camelCase and map only the physical PostgreSQL column names in the Drizzle definitions. Do not use an unpinned `@latest` generator during this migration work.
+
 ---
 
-# 92. Environment Variables
+# 92. Environment Variables and Bindings
 
-Reuse existing environment conventions.
+Use the following validated environment model.
 
-Likely required values include equivalents of:
+## Local development
+
+Required local values:
 
 ```text
-DATABASE_URL
-
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-
-BETTER_AUTH_SECRET
-BETTER_AUTH_URL
+DATABASE_URL=<direct Neon PostgreSQL connection string>
+BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET=<local development secret>
+GOOGLE_CLIENT_ID=<Google OAuth client id>
+GOOGLE_CLIENT_SECRET=<Google OAuth client secret>
 ```
 
-Never hard-code secrets.
+Local development connects directly to Neon through `DATABASE_URL`.
 
-The exact variable names should follow existing project conventions.
+The local database client must be closed after the request/operation to avoid leaking direct Neon connections.
+
+## Production Cloudflare Workers
+
+Required production runtime configuration:
+
+```text
+HYPERDRIVE=<Cloudflare Hyperdrive binding named HYPERDRIVE>
+BETTER_AUTH_URL=https://time-card-calculator.work
+BETTER_AUTH_SECRET=<Cloudflare secret>
+GOOGLE_CLIENT_ID=<Cloudflare secret or appropriately protected runtime value>
+GOOGLE_CLIENT_SECRET=<Cloudflare secret>
+```
+
+Production database traffic must use:
+
+```text
+env.HYPERDRIVE.connectionString
+```
+
+Do not configure application code to use a raw production `DATABASE_URL` as the normal Worker database path.
+
+Do not expose the Hyperdrive connection string to browser/client bundles.
+
+Never hard-code secrets or connection strings.
+
+The `HYPERDRIVE` binding is runtime infrastructure and must be declared in the Cloudflare/Wrangler deployment configuration.
+
+The production Worker should fail clearly if the `HYPERDRIVE` binding is unavailable instead of silently falling back to a direct Neon URL.
+
+## Cloudflare compatibility requirements
+
+The Worker deployment must use the repository's OpenNext configuration and must enable the compatibility required by the validated stack, including `nodejs_compat` when using `pg`/OpenNext in this architecture.
+
+Keep Cloudflare Workers observability enabled for the initial rollout so OAuth callback, session, database, and runtime failures can be diagnosed without reproducing them locally.
 
 ---
 
@@ -2270,7 +2363,472 @@ The application code should explicitly address its own schema-backed tables.
 
 ---
 
-# 94. Google OAuth
+# 94. Cloudflare Workers Database Connection Lifecycle
+
+This is a **release-blocking production-runtime requirement**.
+
+`time-card-calculator.work` is deployed to a Cloudflare Workers/OpenNext runtime. Treat every HTTP request, OAuth callback, Server Action/Route Handler invocation, and future scheduled/background event as an isolated Worker execution context.
+
+Do **not** model the runtime as a conventional long-lived Node.js server.
+
+The implementation MUST NOT keep live database I/O resources in module/global scope across requests.
+
+Do not create or cache module-level instances such as:
+
+```ts
+const pool = new Pool(...);
+const db = drizzle(pool, ...);
+
+let database = ...;
+let auth = ...;
+```
+
+when those objects retain or capture a live database client, socket, transaction, request context, or other request-bound I/O resource.
+
+In particular, do not cache across Worker requests:
+
+- `pg.Pool`,
+- `pg.Client`,
+- a Drizzle database object backed by a live `pg` connection,
+- a Better Auth instance that captures a Drizzle adapter backed by a request-scoped connection,
+- transactions,
+- request-bound Cloudflare context objects,
+- any helper object that indirectly retains one of the above.
+
+A module-level constant is acceptable only when it is immutable configuration or pure data and does not retain live I/O state.
+
+## Required request-scoped pattern
+
+Use one database context per HTTP request or Worker event.
+
+Conceptually:
+
+```text
+HTTP request / OAuth callback / Worker event
+        ↓
+create request-scoped database client/context
+        ↓
+create Drizzle database for that context
+        ↓
+create Better Auth from the current database when needed
+        ↓
+pass db/auth explicitly through the request call chain
+        ↓
+complete response
+        ↓
+perform the connection cleanup appropriate to the selected driver
+```
+
+Prefer a small boundary such as:
+
+```ts
+withDatabase(async (db) => {
+  // session/auth/business operations for this request
+});
+```
+
+or an equivalent repository-native request context.
+
+The exact helper name is not important. The lifecycle is.
+
+## One request, one database context
+
+A route should acquire the database context once and pass it into lower layers.
+
+Prefer:
+
+```ts
+return withDatabase(async (db) => {
+  const session = await requireSession(db);
+  return createTimeCard(db, session.user.id, input);
+});
+```
+
+over service functions that independently create database clients:
+
+```ts
+requireSession();
+createTimeCard();
+listTimeCards();
+```
+
+where each helper silently opens its own connection.
+
+Service/domain functions should accept the current database context explicitly where practical:
+
+```ts
+createTimeCard(db, ...);
+listTimeCards(db, ...);
+getTimeCard(db, ...);
+updateTimeCard(db, ...);
+renameTimeCard(db, ...);
+duplicateTimeCard(db, ...);
+deleteTimeCard(db, ...);
+```
+
+This keeps transactions, authorization, and connection ownership clear and prevents one request from accidentally opening several unrelated clients.
+
+## Better Auth lifecycle
+
+If Better Auth is configured with a Drizzle adapter backed by the request-scoped database, do not cache that Better Auth instance globally.
+
+Prefer:
+
+```text
+request
+  → current db
+  → createAuth(db)
+  → Better Auth handler / session lookup
+```
+
+For this project, a global Better Auth singleton is prohibited because Better Auth is configured with a Drizzle adapter backed by the request-scoped database. Always create it from the current database context.
+
+## Hyperdrive + Neon + pg Client: required implementation pattern
+
+Production uses Cloudflare Hyperdrive and local development uses direct `DATABASE_URL`.
+
+Use the same validated connection lifecycle pattern:
+
+- use `pg.Client`, not a module-level or cross-request `pg.Pool`,
+- create a new Worker-side client/database context for the current HTTP request or Worker event,
+- create Drizzle with `drizzle(client, {schema})`,
+- pass the resulting database object explicitly through session/auth/service code,
+- let Hyperdrive own production connection pooling,
+- never reuse a `pg.Client` from an earlier Worker request,
+- close direct local-development clients after the operation,
+- keep production Hyperdrive cleanup behavior inside the database boundary rather than scattering `client.end()` calls through routes/services.
+
+The database boundary should conceptually distinguish these two targets:
+
+```ts
+type DatabaseTarget = {
+  connectionString: string;
+  closeClientAfterUse: boolean;
+};
+
+// Production Worker
+// connectionString = env.HYPERDRIVE.connectionString
+// closeClientAfterUse = false
+
+// Local next dev
+// connectionString = process.env.DATABASE_URL
+// closeClientAfterUse = true
+```
+
+A helper equivalent to the following architecture is expected:
+
+```ts
+export async function withDatabase<T>(
+  operation: (db: Database) => Promise<T>,
+  environment?: RuntimeDatabaseEnv,
+): Promise<T> {
+  const target = resolveDatabaseTarget(environment);
+  const client = new Client({connectionString: target.connectionString});
+  let connected = false;
+
+  try {
+    await client.connect();
+    connected = true;
+    const db = drizzle(client, {schema});
+    return await operation(db);
+  } finally {
+    if (connected && target.closeClientAfterUse) {
+      await client.end();
+    }
+  }
+}
+```
+
+The exact filenames/helper names may follow repository conventions, but the lifecycle and environment split above are mandatory.
+
+## Failure mode this requirement prevents
+
+Cross-request reuse of live database I/O can appear to work locally and on the first request, then fail on a later OAuth callback or subsequent request with a Worker runtime hang/cancellation such as Cloudflare `1101`.
+
+Do not treat successful local Google OAuth as sufficient validation. The callback must be tested in a production-like Worker runtime.
+
+---
+
+# 94A. Better Auth and Google OAuth Runtime Pattern
+
+Use the same validated Better Auth integration pattern as the reference implementation.
+
+Better Auth must be created from the current request-scoped Drizzle database:
+
+```text
+request
+  -> withDatabase(db)
+  -> createAuth(db)
+  -> drizzleAdapter(db, { provider: 'pg', schema: authSchema })
+  -> Better Auth handler/session lookup
+```
+
+Do not keep a module-level Better Auth singleton that captures the database adapter.
+
+The Better Auth configuration must include:
+
+```text
+baseURL = BETTER_AUTH_URL
+Google social provider enabled
+email/password disabled for V1
+trusted origin: https://time-card-calculator.work
+trusted origin: http://localhost:3000
+```
+
+Expected Google OAuth callback URLs for the validated Better Auth route layout are:
+
+```text
+https://time-card-calculator.work/api/auth/callback/google
+http://localhost:3000/api/auth/callback/google
+```
+
+Verify these exact routes against the installed Better Auth route handler before final Google Console configuration. Do not invent a different callback path.
+
+Auth callback/session/private account endpoints must never be statically cached. Use dynamic/no-store behavior where appropriate so authenticated responses are not reused across users.
+
+## Better Auth 1.6.29 schema compatibility requirements
+
+This project must copy the **validated Better Auth 1.6.29 + Drizzle naming pattern exactly**.
+
+### Critical naming rule: camelCase is the Drizzle property name; snake_case is only the PostgreSQL column name
+
+Do **not** add redundant Better Auth field-name overrides that change Better Auth/adapter field names to snake_case.
+
+The correct mapping belongs in the Drizzle table definition itself:
+
+```ts
+export const verification = timeCardCalculatorSchema.table('verification', {
+  id: text('id').primaryKey(),
+  identifier: text('identifier').notNull(),
+  value: text('value').notNull(),
+  expiresAt: timestamp('expires_at', {withTimezone: true}).notNull(),
+  createdAt: timestamp('created_at', {withTimezone: true}).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', {withTimezone: true}).defaultNow().notNull(),
+});
+```
+
+In this example:
+
+```text
+Drizzle / Better Auth property: expiresAt
+PostgreSQL column:             expires_at
+```
+
+Better Auth and the Drizzle adapter must continue to address the schema property as `expiresAt`. The database column is snake_case because Drizzle maps the property to `timestamp('expires_at', ...)`.
+
+Do **not** configure Better Auth to look for a Drizzle property named `expires_at`. Doing so can reproduce the runtime/schema error where Better Auth reports that `expires_at` does not exist in the `verification` Drizzle schema.
+
+Apply the same rule consistently:
+
+```text
+TypeScript / Drizzle property        PostgreSQL column
+------------------------------------------------------
+emailVerified                        email_verified
+createdAt                            created_at
+updatedAt                            updated_at
+expiresAt                            expires_at
+ipAddress                            ip_address
+userAgent                            user_agent
+userId                               user_id
+accountId                            account_id
+providerId                           provider_id
+accessToken                          access_token
+refreshToken                         refresh_token
+idToken                              id_token
+accessTokenExpiresAt                 access_token_expires_at
+refreshTokenExpiresAt                refresh_token_expires_at
+```
+
+These are **Drizzle property-to-database-column mappings**, not Better Auth `fields` overrides.
+
+### Validated Better Auth 1.6.29 auth-table shape
+
+Use the following model shape unless direct inspection of the pinned `1.6.29` package proves an exact repository-specific requirement differs:
+
+```text
+user
+- id
+- name
+- email
+- emailVerified
+- image
+- createdAt
+- updatedAt
+
+session
+- id
+- expiresAt
+- token
+- createdAt
+- updatedAt
+- ipAddress
+- userAgent
+- userId
+
+account
+- id
+- accountId
+- providerId
+- userId
+- accessToken
+- refreshToken
+- idToken
+- accessTokenExpiresAt
+- refreshTokenExpiresAt
+- scope
+- password
+- createdAt
+- updatedAt
+
+verification
+- id
+- identifier
+- value
+- expiresAt
+- createdAt
+- updatedAt
+```
+
+The `account` table must have database-level uniqueness for the OAuth identity pair used by Better Auth `1.6.29`:
+
+```text
+(provider_id, account_id)
+```
+
+In Drizzle this should be expressed against the camelCase properties, for example:
+
+```ts
+uniqueIndex('account_provider_account_uidx').on(
+  table.providerId,
+  table.accountId,
+);
+```
+
+Do **not** add an `issuer` column for this implementation. The validated Better Auth `1.6.29` schema identifies the OAuth account with `providerId + accountId`; examples from other Better Auth versions must not be merged into this schema.
+
+### Better Auth adapter configuration must stay simple
+
+The server auth configuration should pass the schema-backed Drizzle tables directly to the adapter:
+
+```ts
+database: drizzleAdapter(database, {
+  provider: 'pg',
+  schema: authSchema,
+}),
+```
+
+Do not add snake_case field remapping in the Better Auth configuration merely to mirror PostgreSQL column names. Drizzle already owns that mapping.
+
+Before applying migrations, compare the final Drizzle auth schema against the installed/pinned Better Auth `1.6.29` package and the validated reference schema. Any mismatch is release-blocking.
+
+---
+
+# 95. Cloudflare Workers Runtime API Compatibility
+
+This is also a **release-blocking production-runtime requirement**.
+
+Cloudflare Workers are not a full traditional Node.js server environment. `nodejs_compat` and a Next.js `runtime = 'nodejs'` declaration do not guarantee that every Node API is implemented or that a normal local filesystem exists at request time.
+
+Do not use server APIs at Worker request time merely because they work under local `next dev`.
+
+## Runtime filesystem access is prohibited
+
+Do not perform request-time content/config loading with patterns such as:
+
+```ts
+import {readFileSync, readdirSync} from 'node:fs';
+import {resolve} from 'node:path';
+
+readFileSync(resolve(process.cwd(), 'content/...'));
+```
+
+Do not rely on:
+
+- `node:fs` runtime reads/writes,
+- `readFileSync`,
+- `readdirSync`,
+- local files addressed through `process.cwd()` at request time,
+- a persistent writable filesystem,
+- `child_process`,
+- unsupported native Node addons,
+- other Node APIs that Cloudflare Workers/OpenNext does not support in the deployed runtime.
+
+Before adding a Node-specific server dependency, verify that the exact API it uses is supported by the current Cloudflare Workers/OpenNext deployment target.
+
+## Bundle static data instead of reading files at runtime
+
+Static content, templates, configuration, and lookup data required by a dynamic page should be bundled at build time.
+
+Prefer:
+
+```ts
+import data from './data.json';
+import {content} from './content';
+```
+
+or a build step that generates TypeScript/JSON consumed by the Worker bundle.
+
+Do not make a dynamic Server Component read source files from the repository filesystem during a production request.
+
+## Static rendering can hide runtime incompatibilities
+
+A Node-only helper can appear safe when used by a statically generated page because it executes during build on a real Node.js machine. The same helper can fail immediately when called by a `force-dynamic` page or authenticated server route because it then executes inside Cloudflare Workers.
+
+Therefore:
+
+> "The homepage works in production" does not prove that the same server helper is Worker-safe.
+
+Audit every code path that can execute at request time, especially:
+
+- Google OAuth callback routes,
+- session/auth routes,
+- `/my-time-cards`,
+- saved-card load/edit routes,
+- dynamic Server Components,
+- Server Actions,
+- Route Handlers,
+- any future scheduled/background Worker handler.
+
+## Runtime configuration rule
+
+Do not switch routes arbitrarily between Next.js Edge Runtime and Node Runtime as a workaround. Follow the repository's OpenNext/Cloudflare architecture. Regardless of the Next.js runtime declaration, code that is ultimately executed in Cloudflare Workers must use APIs supported by that deployed runtime.
+
+## Production-like validation is mandatory
+
+Local `next dev` is only one test environment. Before release, also validate the actual Cloudflare/OpenNext build path.
+
+At minimum:
+
+1. run the repository's production Cloudflare/OpenNext build,
+2. run Wrangler/OpenNext preview or an equivalent production-like Worker test where available,
+3. exercise dynamic pages and API routes,
+4. deploy a staging/production Worker with a real `HYPERDRIVE` binding,
+5. complete a real Google OAuth round trip through that deployed Worker,
+6. verify session restoration on a subsequent request,
+7. create, reopen, update, duplicate, rename, and delete a test time card through Hyperdrive,
+8. repeat auth/session/database requests to catch cross-request connection reuse bugs,
+9. inspect Worker logs for runtime errors, cancellations, and application 500 responses,
+10. verify that no request-time filesystem or unsupported Node API is executed.
+
+A local `next dev` pass and a successful build are not sufficient release evidence for this stack. The final acceptance test must exercise Cloudflare Workers + the real Hyperdrive binding + Neon + Better Auth + Google OAuth together.
+
+When debugging, distinguish:
+
+```text
+Worker runtime cancellation / 1101
+```
+
+from:
+
+```text
+HTTP 500 returned by the application while Worker outcome is otherwise OK
+```
+
+The former may indicate an I/O lifecycle/runtime issue; the latter may indicate a normal application exception or an unsupported API surfaced through the compatibility layer.
+
+---
+
+# 96. Google OAuth
 
 Configure both:
 
@@ -2291,7 +2849,7 @@ Do not guess the callback route based on outdated documentation.
 
 ---
 
-# 95. SEO Requirements
+# 97. SEO Requirements
 
 Do not negatively affect existing public calculator pages.
 
@@ -2308,7 +2866,7 @@ Do not require authentication to render calculator content.
 
 ---
 
-# 96. My Time Cards SEO
+# 98. My Time Cards SEO
 
 `/my-time-cards` is private account functionality.
 
@@ -2324,7 +2882,7 @@ Do not expose saved user content to search engines.
 
 ---
 
-# 97. Authentication Pages and SEO
+# 99. Authentication Pages and SEO
 
 Authentication/callback/account routes should not accidentally become indexable public content pages.
 
@@ -2332,7 +2890,7 @@ Apply appropriate private/auth route metadata where relevant.
 
 ---
 
-# 98. Performance
+# 100. Performance
 
 Anonymous calculator visitors must not incur unnecessary saved-card queries.
 
@@ -2350,7 +2908,7 @@ History should load when needed.
 
 ---
 
-# 99. My Time Cards Performance
+# 101. My Time Cards Performance
 
 The history list should query only:
 
@@ -2364,7 +2922,7 @@ Cached totals exist partly for this purpose.
 
 ---
 
-# 100. Error Handling
+# 102. Error Handling
 
 ## Save failure
 
@@ -2378,7 +2936,7 @@ Do not clear user inputs.
 
 ---
 
-# 101. Authentication Failure
+# 103. Authentication Failure
 
 If Google authentication fails or is cancelled:
 
@@ -2388,7 +2946,7 @@ If Google authentication fails or is cancelled:
 
 ---
 
-# 102. Load Failure
+# 104. Load Failure
 
 If the card is missing or unavailable:
 
@@ -2404,7 +2962,7 @@ My Time Cards
 
 ---
 
-# 103. Mutation Failure
+# 105. Mutation Failure
 
 For:
 
@@ -2421,7 +2979,7 @@ Avoid irreversible optimistic UI unless rollback is implemented correctly.
 
 ---
 
-# 104. Loading States
+# 106. Loading States
 
 Provide loading/disabled states for:
 
@@ -2440,7 +2998,7 @@ Prevent accidental duplicate requests from repeated button clicks.
 
 ---
 
-# 105. Responsive Design
+# 107. Responsive Design
 
 New features must work on:
 
@@ -2456,7 +3014,7 @@ Account controls may collapse into navigation menus on smaller screens.
 
 ---
 
-# 106. Accessibility
+# 108. Accessibility
 
 New functionality should:
 
@@ -2475,7 +3033,7 @@ More actions for Aug 24 – Sep 6, 2026
 
 ---
 
-# 107. User Preferences Are Out of Scope
+# 109. User Preferences Are Out of Scope
 
 Do not add a user-wide preferences system in V1.
 
@@ -2509,7 +3067,7 @@ Do not implement unless specifically required later.
 
 ---
 
-# 108. Explicitly Out of Scope
+# 110. Explicitly Out of Scope
 
 Do not implement:
 
@@ -2537,7 +3095,7 @@ Do not implement:
 
 ---
 
-# 109. Important Cross-Product Rule
+# 111. Important Cross-Product Rule
 
 Even though the Neon database is shared, users of `time-card-calculator.work` are not automatically users of other applications.
 
@@ -2553,7 +3111,7 @@ No other project's `user` table should participate in authentication for this si
 
 ---
 
-# 110. Testing — Database Isolation
+# 112. Testing — Database Isolation
 
 Before considering implementation complete, verify:
 
@@ -2572,7 +3130,7 @@ Before considering implementation complete, verify:
 
 ---
 
-# 111. Testing — Authentication
+# 113. Testing — Authentication
 
 Verify:
 
@@ -2582,10 +3140,15 @@ Verify:
 - anonymous calculator usage still works.
 - `/my-time-cards` requires authentication.
 - authentication records appear only under `time_card_calculator`.
+- the Google callback succeeds in the Cloudflare/OpenNext runtime, not only in local Next.js development.
+- repeated sign-in/session requests do not reuse a live database client from an earlier Worker request.
+- the OAuth callback does not produce a Worker hang, runtime cancellation, or Cloudflare `1101`.
+- session lookup and saved-card operations within one request use the same request-scoped database context where practical.
+- no Better Auth singleton retains a request-scoped Drizzle/database connection across Worker requests.
 
 ---
 
-# 112. Testing — Anonymous Save
+# 114. Testing — Anonymous Save
 
 Critical acceptance test:
 
@@ -2606,7 +3169,7 @@ Critical acceptance test:
 
 ---
 
-# 113. Testing — Weekly
+# 115. Testing — Weekly
 
 Verify weekly cards persist:
 
@@ -2623,7 +3186,7 @@ Verify weekly cards persist:
 
 ---
 
-# 114. Testing — Biweekly
+# 116. Testing — Biweekly
 
 Verify biweekly cards persist:
 
@@ -2639,7 +3202,7 @@ Verify biweekly cards persist:
 
 ---
 
-# 115. Testing — Breaks
+# 117. Testing — Breaks
 
 Test:
 
@@ -2662,7 +3225,7 @@ Verify:
 
 ---
 
-# 116. Testing — Multiple Punches
+# 118. Testing — Multiple Punches
 
 Where supported:
 
@@ -2673,7 +3236,7 @@ Where supported:
 
 ---
 
-# 117. Testing — Overtime
+# 119. Testing — Overtime
 
 Test:
 
@@ -2690,7 +3253,7 @@ Reload and verify equivalent configuration.
 
 ---
 
-# 118. Testing — Payment
+# 120. Testing — Payment
 
 Verify:
 
@@ -2703,7 +3266,7 @@ Verify:
 
 ---
 
-# 119. Testing — Update
+# 121. Testing — Update
 
 Open an existing card.
 
@@ -2726,7 +3289,7 @@ Verify:
 
 ---
 
-# 120. Testing — Duplicate
+# 122. Testing — Duplicate
 
 Duplicate a card.
 
@@ -2743,7 +3306,7 @@ Verify:
 
 ---
 
-# 121. Testing — Rename
+# 123. Testing — Rename
 
 Rename from `My Time Cards`.
 
@@ -2755,7 +3318,7 @@ Verify:
 
 ---
 
-# 122. Testing — Delete
+# 124. Testing — Delete
 
 Delete a card.
 
@@ -2768,7 +3331,7 @@ Verify:
 
 ---
 
-# 123. Testing — Authorization
+# 125. Testing — Authorization
 
 Use at least two test users.
 
@@ -2786,7 +3349,7 @@ Verify at the server/data layer.
 
 ---
 
-# 124. Testing — Migration Safety
+# 126. Testing — Migration Safety
 
 Before production deployment:
 
@@ -2801,7 +3364,7 @@ Before production deployment:
 
 ---
 
-# 125. Acceptance Criteria
+# 127. Acceptance Criteria
 
 Implementation is complete only when all of the following are true.
 
@@ -2909,7 +3472,55 @@ Implementation is complete only when all of the following are true.
 
 ---
 
-# 126. Recommended Implementation Order
+### Cloudflare Workers Runtime Safety
+
+41. No module/global `pg.Pool`, `pg.Client`, or equivalent live database connection is reused across Worker requests.
+
+42. No module/global Drizzle database object retains a live request-scoped connection across Worker requests.
+
+43. Better Auth does not use a global singleton that captures a request-scoped Drizzle/database connection.
+
+44. Each HTTP request or Worker event owns a clear database lifecycle, and lower service layers receive the current database context instead of silently creating/caching their own global connection.
+
+45. If Hyperdrive is used, Hyperdrive owns production connection pooling and the application does not add a cross-request `pg.Pool` on top of it.
+
+46. Google OAuth callback and session restoration succeed in a production-like Cloudflare Worker runtime without `1101`, deadlock, or runtime cancellation.
+
+47. Dynamic Server Components, API routes, and auth routes do not execute unsupported Node APIs at Worker request time.
+
+48. No request-time `node:fs` / `readFileSync` / repository-filesystem dependency exists in the deployed Worker path.
+
+49. Static content/configuration required by dynamic routes is bundled or generated at build time.
+
+50. A production Cloudflare/OpenNext build and production-like runtime test pass in addition to local `next dev` testing.
+
+---
+
+### Validated Stack Conformance
+
+51. Production database access uses the Cloudflare binding named `HYPERDRIVE` and `env.HYPERDRIVE.connectionString`.
+
+52. Production does not silently fall back to a raw Neon `DATABASE_URL` if Hyperdrive is missing.
+
+53. Local `next dev` uses direct `DATABASE_URL` without requiring Hyperdrive.
+
+54. Database access uses request/event-scoped `pg.Client` + `drizzle-orm/node-postgres`; no application-level cross-request `pg.Pool` is introduced.
+
+55. Direct local Neon clients are closed after use; Hyperdrive-specific cleanup behavior remains encapsulated in the database boundary.
+
+56. Better Auth is instantiated from the current request database context and uses `drizzleAdapter(db, {provider: 'pg', schema: authSchema})` or an equivalent validated configuration.
+
+57. `BETTER_AUTH_URL` is `https://time-card-calculator.work` in production and the Google callback uses the verified Better Auth callback route.
+
+58. Better Auth `trustedOrigins` includes the production origin and the local development origin.
+
+59. Better Auth is pinned to `1.6.29`; the Drizzle schema uses camelCase properties mapped to snake_case PostgreSQL column names (for example `verification.expiresAt` -> `expires_at`) without redundant Better Auth snake_case field overrides, and the `account` table enforces `(provider_id, account_id)` uniqueness.
+
+60. A real deployed Cloudflare Worker test verifies Hyperdrive + Neon + Better Auth + Google OAuth together, including repeated callback/session requests and saved-time-card CRUD.
+
+---
+
+# 128. Recommended Implementation Order
 
 ## Phase 1 — Inspect Existing Architecture
 
@@ -2923,10 +3534,16 @@ Before changing code:
 6. inspect multiple-punch model,
 7. inspect current Drizzle setup if present,
 8. inspect migration configuration,
-9. inspect installed Better Auth version if present,
-10. identify all relevant calculator routes.
+9. verify that Better Auth is pinned to `1.6.29` and inspect that exact installed package before finalizing auth schema/migrations,
+10. identify all relevant calculator routes,
+11. inspect the current Cloudflare Workers/OpenNext deployment path and bindings,
+12. search for module/global database clients, pools, Drizzle instances, and Better Auth singletons,
+13. identify every dynamic Server Component, Route Handler, Server Action, and OAuth callback that can execute in Workers,
+14. search request-time server code for `node:fs`, `readFileSync`, `readdirSync`, `process.cwd()` filesystem loading, `child_process`, native addons, or other Node-only assumptions.
 
 Do not implement a parallel state model without first understanding existing types.
+
+Do not assume code is production-safe merely because it works in `next dev`.
 
 ---
 
@@ -2943,10 +3560,13 @@ Do not implement a parallel state model without first understanding existing typ
 
 1. define Better Auth schema-backed tables,
 2. configure Google OAuth,
-3. configure session handling,
-4. generate/review migration,
-5. verify all Auth tables live under `time_card_calculator`,
-6. test sign-in/sign-out.
+3. implement request-scoped database/auth lifecycle for Worker requests,
+4. configure session handling against the current request database context,
+5. ensure Better Auth is not globally cached with a live request-scoped Drizzle/database connection,
+6. generate/review migration,
+7. verify all Auth tables live under `time_card_calculator`,
+8. test sign-in/sign-out locally,
+9. test the full Google OAuth callback in a production-like Cloudflare/OpenNext runtime.
 
 ---
 
@@ -3052,11 +3672,17 @@ Test:
 - authorization,
 - responsive layout,
 - SEO,
-- database schema isolation.
+- database schema isolation,
+- repeated Worker requests do not reuse global live DB connections,
+- OAuth callback succeeds after the initial sign-in request,
+- dynamic pages execute successfully in the Cloudflare/OpenNext runtime,
+- no request-time `node:fs` or unsupported Node API is used,
+- production Cloudflare/OpenNext build succeeds,
+- Wrangler/OpenNext production-like preview or equivalent runtime validation succeeds.
 
 ---
 
-# 127. Final Architecture
+# 129. Final Architecture
 
 The expected final architecture is:
 
@@ -3077,30 +3703,46 @@ time-card-calculator.work
 │   ├── Duplicate
 │   └── Delete
 │
-├── Persistence Layer
-│   ├── serialization
-│   ├── authorization
-│   └── transactions
-│
-├── Drizzle ORM
-│
-└── Shared Neon PostgreSQL Database
+└── Cloudflare Workers / OpenNext Runtime
     │
-    ├── other application schemas
-    │   └── MUST NOT TOUCH
+    ├── Request/Event-Scoped Runtime Context
+    │   ├── one database lifecycle per request/event
+    │   ├── request-scoped Drizzle database
+    │   ├── request-scoped Better Auth when DB-backed
+    │   └── NO global live DB client/pool reuse
     │
-    └── time_card_calculator
-        ├── user
-        ├── account
-        ├── session
-        ├── verification
-        ├── time_card
-        └── time_card_row
+    ├── Persistence Layer
+    │   ├── serialization
+    │   ├── authorization
+    │   └── transactions
+    │
+    ├── Worker-Safe Server Code
+    │   ├── no request-time filesystem reads
+    │   ├── no unsupported Node APIs
+    │   └── static content/config bundled at build time
+    │
+    ├── Drizzle ORM
+    │
+    ├── Cloudflare Hyperdrive (required in production)
+    │   └── production connection pooling
+    │
+    └── Shared Neon PostgreSQL Database
+        │
+        ├── other application schemas
+        │   └── MUST NOT TOUCH
+        │
+        └── time_card_calculator
+            ├── user
+            ├── account
+            ├── session
+            ├── verification
+            ├── time_card
+            └── time_card_row
 ```
 
 ---
 
-# 128. Final Implementation Guidance
+# 130. Final Implementation Guidance
 
 Keep V1 deliberately focused.
 
@@ -3151,3 +3793,45 @@ The shared Neon database must be treated as a multi-tenant development environme
 > `time-card-calculator.work` owns its schema, not the entire database.
 
 No implementation decision, migration generator, authentication generator, or ORM configuration may override that isolation boundary.
+
+The Cloudflare Worker must also be treated as a request-isolated runtime:
+
+> `time-card-calculator.work` owns a database connection context for the current request/event, not a permanent cross-request Node.js database process.
+
+Do not ship a global live database pool/client, a global DB-bound Better Auth singleton, or request-time server code that depends on unsupported Node filesystem/runtime APIs.
+
+Do not ship a Better Auth version other than `1.6.29` for Accounts V1 without an explicit architecture review, and do not add Better Auth snake_case field overrides on top of the validated camelCase Drizzle schema-property pattern.
+
+A feature is not production-ready until it has passed both local tests and a production-like Cloudflare/OpenNext runtime test.
+---
+
+# 131. Validated Stack Precedence Rule
+
+If any earlier wording in this document can be interpreted as making Hyperdrive, `pg`, the request-scoped database lifecycle, or the Cloudflare Workers deployment model optional, this section and Sections 11/11A/92/94/94A take precedence.
+
+The required implementation target is:
+
+```text
+Production:
+Cloudflare Workers / OpenNext
+  -> request-scoped pg.Client
+  -> Drizzle node-postgres adapter
+  -> Cloudflare Hyperdrive
+  -> Neon PostgreSQL
+  -> time_card_calculator schema
+
+Authentication:
+Google OAuth
+  -> Better Auth
+  -> request-scoped createAuth(db)
+  -> same Drizzle database context
+
+Local development:
+Next.js / Node.js
+  -> request-scoped pg.Client
+  -> direct DATABASE_URL
+  -> Neon PostgreSQL
+```
+
+This architecture has already been validated in a comparable production Cloudflare Workers application and should be replicated rather than redesigned during this V1 implementation.
+
