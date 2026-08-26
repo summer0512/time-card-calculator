@@ -45,4 +45,7 @@ next-env.d.ts
 
 screenshot
 
+.open-next/
+.dev.vars
+.wrangler/
 
