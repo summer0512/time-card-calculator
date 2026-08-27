@@ -260,7 +260,10 @@
     "guides": "Guides",
     "guideLunch": "Comment calculer le temps de travail avec pause déjeuner",
     "guideBreaks": "Comment calculer le temps de travail avec pauses",
-    "guideBiweekly": "Guide du calculateur bimensuel"
+    "guideBiweekly": "Guide du calculateur bimensuel",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "myTimeCards": "Mes fiches horaires"
   },
   "Footer": {
     "description": "Calculateurs gratuits en ligne pour les cartes de temps, les pauses déjeuner, les pointages et les totaux d'heures pour la paie bimensuelle.",
@@ -365,7 +368,13 @@
       "INVALID_MULTIPLIER": "Saisissez un multiplicateur supérieur à zéro.",
       "INVALID_FIXED_RATE": "Saisissez un taux fixe positif ou nul."
     },
-    "addWorkSegment": "Ajouter une plage de travail"
+    "addWorkSegment": "Ajouter une plage de travail",
+    "saveTimeCard": "Enregistrer",
+    "saveChanges": "Enregistrer les modifications",
+    "saveTooltip": "Enregistrez cette fiche pour la rouvrir et continuer plus tard.",
+    "saveTitlePrompt": "Nommer cette fiche",
+    "saveError": "Impossible d’enregistrer la fiche. Réessayez.",
+    "saving": "Enregistrement…"
   },
   "ToolPage": {
     "home": "Accueil",
@@ -377,5 +386,26 @@
     "backToHome": "Retour au calculateur d'heures de travail gratuit",
     "readRelatedGuide": "Lire le guide associé",
     "previewAlt": "Aperçu de {title}"
+  },
+  "MyTimeCards": {
+    "title": "My Time Cards",
+    "description": "Open and manage your saved time cards.",
+    "signInDescription": "Sign in with Google to see your saved time cards.",
+    "continueGoogle": "Continue with Google",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "emptyTitle": "No saved time cards yet.",
+    "emptyDescription": "Create a time card and save it here so you can come back and edit it later.",
+    "create": "Create a Time Card",
+    "renamePrompt": "Enter a new title",
+    "deleteConfirm": "Delete {title}?",
+    "moreActions": "More actions for {title}",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "hours": "Total hours",
+    "pay": "Total pay",
+    "updated": "Last updated",
+    "open": "Open"
   }
 }

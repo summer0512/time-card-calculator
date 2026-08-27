@@ -260,7 +260,10 @@
     "guides": "Guias",
     "guideLunch": "Como calcular horas com almoço",
     "guideBreaks": "Como calcular pausas na jornada",
-    "guideBiweekly": "Guia de cálculo quinzenal"
+    "guideBiweekly": "Guia de cálculo quinzenal",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "myTimeCards": "Meus cartões de ponto"
   },
   "Footer": {
     "description": "Calculadoras online grátis para jornada de trabalho, intervalos, marcações de ponto e totais quinzenais.",
@@ -365,7 +368,13 @@
       "INVALID_MULTIPLIER": "Informe um multiplicador maior que zero.",
       "INVALID_FIXED_RATE": "Informe um valor fixo igual ou maior que zero."
     },
-    "addWorkSegment": "Adicionar período de trabalho"
+    "addWorkSegment": "Adicionar período de trabalho",
+    "saveTimeCard": "Salvar cartão",
+    "saveChanges": "Salvar alterações",
+    "saveTooltip": "Salve este cartão para abrir e continuar na próxima vez.",
+    "saveTitlePrompt": "Nomeie este cartão",
+    "saveError": "Não foi possível salvar. Tente novamente.",
+    "saving": "Salvando…"
   },
   "ToolPage": {
     "home": "Início",
@@ -377,5 +386,26 @@
     "backToHome": "Voltar para a Calculadora de Horas",
     "readRelatedGuide": "Ler guia relacionado",
     "previewAlt": "Prévia de {title}"
+  },
+  "MyTimeCards": {
+    "title": "My Time Cards",
+    "description": "Open and manage your saved time cards.",
+    "signInDescription": "Sign in with Google to see your saved time cards.",
+    "continueGoogle": "Continue with Google",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "emptyTitle": "No saved time cards yet.",
+    "emptyDescription": "Create a time card and save it here so you can come back and edit it later.",
+    "create": "Create a Time Card",
+    "renamePrompt": "Enter a new title",
+    "deleteConfirm": "Delete {title}?",
+    "moreActions": "More actions for {title}",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "hours": "Total hours",
+    "pay": "Total pay",
+    "updated": "Last updated",
+    "open": "Open"
   }
 }

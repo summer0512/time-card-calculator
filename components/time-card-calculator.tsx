@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -22,6 +22,7 @@ import {
   type WorkPeriod,
 } from "@/lib/payment";
 import { useLocale, useTranslations } from "next-intl";
+import { authClient } from "@/lib/auth-client";
 
 interface DayEntry {
   date: string;
@@ -52,6 +53,7 @@ export interface PaymentDefaults {
 }
 
 interface TimeCardCalculatorProps {
+  calculatorType?: string;
   mode?: "time-card" | "hours" | "split-shift";
   defaultBreakMinutes?: number;
   showLunchBreak?: boolean;
@@ -73,6 +75,12 @@ interface TimeCardCalculatorProps {
 }
 
 export interface CalculatorUiText {
+  saveTimeCard: string;
+  saveChanges: string;
+  saveTooltip: string;
+  saveTitlePrompt: string;
+  saveError: string;
+  saving: string;
   weekDays: string[];
   shiftLabel: string;
   weekLabel: string;
@@ -147,6 +155,12 @@ const DEFAULT_LABELS: CalculatorLabels = {
 };
 
 const DEFAULT_UI_TEXT: CalculatorUiText = {
+  saveTimeCard: "Save Time Card",
+  saveChanges: "Save Changes",
+  saveTooltip: "Save this time card so you can open it and continue next time.",
+  saveTitlePrompt: "Name this time card",
+  saveError: "We couldn't save your time card. Please try again.",
+  saving: "Saving…",
   weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
   shiftLabel: "Shift",
   weekLabel: "Week",
@@ -417,6 +431,7 @@ const createDays = (
 };
 
 export default function TimeCardCalculator({
+  calculatorType = "time-card-calculator",
   mode = "time-card",
   defaultBreakMinutes = 30,
   showLunchBreak = false,
@@ -439,6 +454,12 @@ export default function TimeCardCalculator({
   const tCalculator = useTranslations("Calculator");
   const locale = useLocale();
   const localizedUiText: Partial<CalculatorUiText> = {
+    saveTimeCard: tCalculator("saveTimeCard"),
+    saveChanges: tCalculator("saveChanges"),
+    saveTooltip: tCalculator("saveTooltip"),
+    saveTitlePrompt: tCalculator("saveTitlePrompt"),
+    saveError: tCalculator("saveError"),
+    saving: tCalculator("saving"),
     weekDays: (tCalculator.raw("weekDays") as string[]) || DEFAULT_UI_TEXT.weekDays,
     shiftLabel: tCalculator("shiftLabel"),
     weekLabel: tCalculator("weekLabel"),
@@ -553,6 +574,13 @@ export default function TimeCardCalculator({
   const [days, setDays] = useState<DayEntry[]>(
     createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
   );
+  const { data: sessionData } = authClient.useSession();
+  const [savedCardId, setSavedCardId] = useState<string | null>(null);
+  const [savedTitle, setSavedTitle] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [resumeReady, setResumeReady] = useState(false);
+  const isRestoring = useRef(false);
 
   useEffect(() => {
     setShowLunchColumn(showLunchBreak);
@@ -567,6 +595,7 @@ export default function TimeCardCalculator({
   }, [configuredHourlyRate, configuredCurrency]);
 
   useEffect(() => {
+    if (isRestoring.current) { isRestoring.current = false; return; }
     setDays(createDays(mode, isBiweekly, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
   }, [isBiweekly, mode, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
@@ -681,6 +710,63 @@ export default function TimeCardCalculator({
       }}
     />
   );
+
+  const normalizeTime = (value: string) => {
+    if (!value.trim()) return "";
+    const minutes = parseTimeToMinutes(value);
+    return `${Math.floor(minutes / 60).toString().padStart(2, "0")}:${(minutes % 60).toString().padStart(2, "0")}`;
+  };
+  const snapshot = () => ({ days, showLunchColumn, breakColumns, isBiweekly, reportHeader, reportNotes, includePayment, basePay, currency, overtimeEnabled, overtimeBasis, overtimeTiers });
+  const restoreSnapshot = (state: ReturnType<typeof snapshot>) => {
+    isRestoring.current = true;
+    setDays(state.days); setShowLunchColumn(state.showLunchColumn); setBreakColumns(state.breakColumns); setIsBiweekly(state.isBiweekly);
+    setReportHeader(state.reportHeader); setReportNotes(state.reportNotes); setIncludePayment(state.includePayment); setBasePay(state.basePay); setCurrency(state.currency);
+    setOvertimeEnabled(state.overtimeEnabled); setOvertimeBasis(state.overtimeBasis); setOvertimeTiers(state.overtimeTiers);
+  };
+  const buildPayload = (title: string) => ({
+    title, reportHeader, notes: reportNotes, calculatorType, sourcePath: window.location.pathname,
+    periodType: mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly",
+    periodStart: null, periodEnd: null, paymentEnabled: includePayment, currency: includePayment ? normalizeCurrencyCode(currency) : null,
+    hourlyRate: includePayment && Number.isFinite(Number(basePay)) ? Number(basePay) : null,
+    settings: { mode, timeFormat, showLunchColumn, breakColumnCount: breakColumns, showBreakDeduction, isBiweekly, copyVariant,
+      overtime: { enabled: includePayment && showOvertime && overtimeEnabled, basis: overtimeBasis, tiers: overtimeTiers.map((tier) => ({ id: tier.id, afterHours: Number(tier.afterHours), rateType: tier.rateType, rateValue: Number(tier.rateValue) })) } },
+    cachedTotalMinutes: totals.totalMinutes, cachedTotalPay: includePayment && paymentValidationErrors.length === 0 ? totalPay : null,
+    rows: days.map((day, position) => ({ position, workDate: null, dayLabel: day.date, punches: [{ start: normalizeTime(day.from), end: normalizeTime(day.to) }],
+      breaks: [
+        ...(showBreakDeduction && day.breakDeduction ? [{ kind: "break" as const, position: 0, minutes: parseTimeToMinutes(day.breakDeduction) }] : []),
+        ...(showLunchColumn && day.lunch ? [{ kind: "lunch" as const, position: 1, minutes: parseTimeToMinutes(day.lunch) }] : []),
+        ...day.breaks.slice(1, breakColumns).flatMap((value, index) => value ? [{ kind: "break" as const, position: index + 2, minutes: parseTimeToMinutes(value) }] : []),
+      ] })),
+  });
+  const saveCard = async () => {
+    setSaveMessage("");
+    if (!sessionData?.user) {
+      sessionStorage.setItem("pending-time-card-save", JSON.stringify({ path: window.location.pathname, state: snapshot() }));
+      await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.pathname}?resumeSave=1` }); return;
+    }
+    const title = savedCardId ? savedTitle : window.prompt(t.saveTitlePrompt, reportHeader || (isBiweekly ? "Biweekly Time Card" : "Weekly Time Card"));
+    if (!title?.trim()) return;
+    setIsSaving(true);
+    try {
+      const response = await fetch(savedCardId ? `/api/time-cards/${savedCardId}` : "/api/time-cards", { method: savedCardId ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildPayload(title.trim())) });
+      if (!response.ok) throw new Error("save failed");
+      const result = await response.json(); if (result.id) setSavedCardId(result.id); setSavedTitle(title.trim()); setSaveMessage("✓");
+    } catch { setSaveMessage(t.saveError); } finally { setIsSaving(false); }
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search); const cardId = params.get("card");
+    if (cardId && sessionData?.user && cardId !== savedCardId) fetch(`/api/time-cards/${cardId}`).then((response) => { if (!response.ok) throw new Error(); return response.json(); }).then(({ card }) => {
+      const settings = card.settings; isRestoring.current = true; setSavedCardId(card.id); setSavedTitle(card.title); setReportHeader(card.reportHeader ?? ""); setReportNotes(card.notes ?? "");
+      setShowLunchColumn(settings.showLunchColumn); setBreakColumns(settings.breakColumnCount); setIsBiweekly(settings.isBiweekly); setIncludePayment(card.paymentEnabled);
+      setCurrency(card.currency ?? currency); setBasePay(card.hourlyRate ?? basePay); setOvertimeEnabled(settings.overtime.enabled); setOvertimeBasis(settings.overtime.basis);
+      setOvertimeTiers(settings.overtime.tiers.map((tier: OvertimeTier) => ({ ...tier, afterHours: String(tier.afterHours), rateValue: String(tier.rateValue) })));
+      setDays(card.rows.map((row: { dayLabel: string; punches: Array<{start:string;end:string}>; breaks: Array<{kind:"break"|"lunch";position:number;minutes:number}> }) => { const asDuration = (minutes: number) => minutesToHours(minutes); const lunch = row.breaks.find((item) => item.kind === "lunch"); const regular = row.breaks.filter((item) => item.kind === "break").sort((a,b) => a.position-b.position); return { date: row.dayLabel, from: row.punches[0]?.start ?? "", to: row.punches[0]?.end ?? "", breakDeduction: regular[0] ? asDuration(regular[0].minutes) : "", lunch: settings.showLunchColumn ? (lunch ? asDuration(lunch.minutes) : "") : undefined, breaks: Array.from({ length: settings.breakColumnCount }, (_, index) => index === 0 ? (regular[0] ? asDuration(regular[0].minutes) : "") : (regular[index] ? asDuration(regular[index].minutes) : "")) }; }));
+    }).catch(() => setSaveMessage(t.saveError));
+    if (params.get("resumeSave") === "1" && sessionData?.user) { const raw = sessionStorage.getItem("pending-time-card-save"); if (raw) { const pending = JSON.parse(raw); restoreSnapshot(pending.state); sessionStorage.removeItem("pending-time-card-save"); window.history.replaceState({}, "", pending.path); setResumeReady(true); } }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionData?.user?.id]);
+  useEffect(() => { if (resumeReady) { setResumeReady(false); void saveCard(); } }, [resumeReady]);
 
   const updateDay = (index: number, field: keyof DayEntry, value: string) => {
     setDays((prev) => {
@@ -927,6 +1013,10 @@ export default function TimeCardCalculator({
         <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50 rounded-t-lg py-4">
           <div className="flex flex-col gap-4">
             <div className="flex flex-wrap gap-2">
+              <Button onClick={saveCard} size="sm" disabled={isSaving} title={t.saveTooltip} aria-label={`${savedCardId ? t.saveChanges : t.saveTimeCard}. ${t.saveTooltip}`}>
+                <Save className="h-4 w-4 mr-1" />{isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
+              </Button>
+              {saveMessage && <span className={saveMessage === "✓" ? "self-center text-sm text-green-700" : "self-center text-sm text-red-700"} role="status">{saveMessage}</span>}
               <Button variant="outline" onClick={clearAll} size="sm">
                 <RotateCcw className="h-4 w-4 mr-1" />
                 {t.clearAll}

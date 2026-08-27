@@ -258,7 +258,10 @@
     "guides": "Guías",
     "guideLunch": "Cómo calcular horas con descanso",
     "guideBreaks": "Cómo calcular pausas de trabajo",
-    "guideBiweekly": "Guía de jornada quincenal"
+    "guideBiweekly": "Guía de jornada quincenal",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "myTimeCards": "Mis tarjetas de tiempo"
   },
   "Footer": {
     "description": "Calculadoras gratuitas para sumar horas trabajadas, pausas, jornadas partidas y horas extra.",
@@ -363,7 +366,13 @@
       "DUPLICATE_THRESHOLD": "Cada límite debe ser único.",
       "INVALID_MULTIPLIER": "Introduce un multiplicador superior a cero.",
       "INVALID_FIXED_RATE": "Introduce una tarifa fija igual o superior a cero."
-    }
+    },
+    "saveTimeCard": "Guardar tarjeta",
+    "saveChanges": "Guardar cambios",
+    "saveTooltip": "Guarda esta tarjeta para abrirla y continuar la próxima vez.",
+    "saveTitlePrompt": "Nombra esta tarjeta",
+    "saveError": "No pudimos guardar la tarjeta. Inténtalo de nuevo.",
+    "saving": "Guardando…"
   },
   "ToolPage": {
     "home": "Inicio",
@@ -375,5 +384,26 @@
     "backToHome": "Volver a la calculadora de horas",
     "readRelatedGuide": "Leer la guía relacionada",
     "previewAlt": "Vista previa de {title}"
+  },
+  "MyTimeCards": {
+    "title": "My Time Cards",
+    "description": "Open and manage your saved time cards.",
+    "signInDescription": "Sign in with Google to see your saved time cards.",
+    "continueGoogle": "Continue with Google",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "emptyTitle": "No saved time cards yet.",
+    "emptyDescription": "Create a time card and save it here so you can come back and edit it later.",
+    "create": "Create a Time Card",
+    "renamePrompt": "Enter a new title",
+    "deleteConfirm": "Delete {title}?",
+    "moreActions": "More actions for {title}",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "hours": "Total hours",
+    "pay": "Total pay",
+    "updated": "Last updated",
+    "open": "Open"
   }
 }

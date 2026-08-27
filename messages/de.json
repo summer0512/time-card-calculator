@@ -260,7 +260,10 @@
     "guides": "Ratgeber",
     "guideLunch": "Arbeitszeit mit Mittagspause berechnen",
     "guideBreaks": "Arbeitszeit mit Pausen berechnen",
-    "guideBiweekly": "2-Wochen-Arbeitszeit Guide"
+    "guideBiweekly": "2-Wochen-Arbeitszeit Guide",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "myTimeCards": "Meine Stundenzettel"
   },
   "Footer": {
     "description": "Kostenlose Online-Rechner für Arbeitszeit, Pausen, Stempelzeiten und zweiwöchige Stundenübersichten.",
@@ -365,7 +368,13 @@
       "INVALID_MULTIPLIER": "Geben Sie einen Multiplikator größer als null ein.",
       "INVALID_FIXED_RATE": "Geben Sie einen festen Tarif von null oder mehr ein."
     },
-    "addWorkSegment": "Arbeitsabschnitt hinzufügen"
+    "addWorkSegment": "Arbeitsabschnitt hinzufügen",
+    "saveTimeCard": "Stundenzettel speichern",
+    "saveChanges": "Änderungen speichern",
+    "saveTooltip": "Speichern Sie diesen Stundenzettel, um ihn später wieder zu öffnen.",
+    "saveTitlePrompt": "Stundenzettel benennen",
+    "saveError": "Der Stundenzettel konnte nicht gespeichert werden.",
+    "saving": "Speichern…"
   },
   "ToolPage": {
     "home": "Startseite",
@@ -377,5 +386,26 @@
     "backToHome": "Zurück zum Stundenrechner",
     "readRelatedGuide": "Passenden Ratgeber lesen",
     "previewAlt": "Vorschau für {title}"
+  },
+  "MyTimeCards": {
+    "title": "My Time Cards",
+    "description": "Open and manage your saved time cards.",
+    "signInDescription": "Sign in with Google to see your saved time cards.",
+    "continueGoogle": "Continue with Google",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "emptyTitle": "No saved time cards yet.",
+    "emptyDescription": "Create a time card and save it here so you can come back and edit it later.",
+    "create": "Create a Time Card",
+    "renamePrompt": "Enter a new title",
+    "deleteConfirm": "Delete {title}?",
+    "moreActions": "More actions for {title}",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "hours": "Total hours",
+    "pay": "Total pay",
+    "updated": "Last updated",
+    "open": "Open"
   }
 }
