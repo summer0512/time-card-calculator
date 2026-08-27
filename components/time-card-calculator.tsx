@@ -21,7 +21,8 @@ import PaymentSettings, { type EditableOvertimeTier } from "@/components/payment
 import {
   calculatePayment,
   formatPaymentAmount,
-  formatPaymentHours,
+  formatPaymentHoursFromMinutes,
+  parseLocalizedDecimal,
   validatePaymentConfig,
   type OvertimeBasis,
   type OvertimeTier,
@@ -32,6 +33,13 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
 import type { SavedTimeCard } from "@/lib/time-cards/types";
+import {
+  calculateClockSpanMinutes,
+  formatDecimalHoursFromMinutes,
+  formatDurationMinutes,
+  normalizeTimeTo24Hour,
+  parseDurationToMinutes,
+} from "@/lib/time-cards/time";
 
 interface DayEntry {
   date: string;
@@ -271,66 +279,8 @@ const DEFAULT_UI_TEXT: CalculatorUiText = {
   hourlyRateUnitLabel: "/hr"
 };
 
-const toBreakString = (minutes: number) => {
-  const hours = Math.floor(minutes / 60);
-  const mins = Math.max(0, minutes % 60);
-  return `${hours}:${mins.toString().padStart(2, "0")}`;
-};
-
-const minutesToHours = (minutes: number): string => {
-  const hours = Math.floor(minutes / 60);
-  const mins = Math.max(0, minutes % 60);
-  return `${hours}:${mins.toString().padStart(2, "0")}`;
-};
-
-const parseTimeToMinutes = (timeStr: string): number => {
-  if (!timeStr.trim()) return 0;
-
-  const cleanTime = timeStr.trim().toLowerCase();
-  let hours = 0;
-  let minutes = 0;
-
-  if (cleanTime.includes("am") || cleanTime.includes("pm")) {
-    const isPM = cleanTime.includes("pm");
-    const timeOnly = cleanTime.replace(/[ap]m/g, "").trim();
-
-    if (timeOnly.includes(":")) {
-      const [h, m] = timeOnly.split(":");
-      hours = parseInt(h, 10) || 0;
-      minutes = parseInt(m, 10) || 0;
-    } else {
-      hours = parseInt(timeOnly, 10) || 0;
-    }
-
-    if (isPM && hours !== 12) hours += 12;
-    if (!isPM && hours === 12) hours = 0;
-    return hours * 60 + minutes;
-  }
-
-  if (cleanTime.includes(":")) {
-    const [h, m] = cleanTime.split(":");
-    hours = parseInt(h, 10) || 0;
-    minutes = parseInt(m, 10) || 0;
-    return hours * 60 + minutes;
-  }
-
-  if (cleanTime.includes(".")) {
-    const value = Number(cleanTime);
-    if (!Number.isNaN(value)) {
-      const whole = Math.floor(value);
-      const fractional = value - whole;
-      return whole * 60 + Math.round(fractional * 60);
-    }
-  }
-
-  return (parseInt(cleanTime, 10) || 0) * 60;
-};
-
-const parseDecimalInput = (value: string): number | null => {
-  if (!value.trim()) return null;
-  const parsed = Number(value.replace(",", "."));
-  return Number.isFinite(parsed) ? parsed : Number.NaN;
-};
+const toBreakString = (minutes: number) => formatDurationMinutes(minutes);
+const minutesToHours = (minutes: number) => formatDurationMinutes(minutes);
 
 const normalizeCurrencyCode = (currency: string): string => {
   const currencyMap: Record<string, string> = {
@@ -355,32 +305,20 @@ const toEditableTiers = (tiers?: OvertimeTier[]): EditableOvertimeTier[] =>
   }));
 
 const calculateDayTotal = (day: DayEntry, showLunch: boolean, breakColumns: number): number => {
-  const fromMinutes = parseTimeToMinutes(day.from);
-  const toMinutes = parseTimeToMinutes(day.to);
+  const totalMinutes = calculateClockSpanMinutes(day.from, day.to);
+  if (totalMinutes === null) return 0;
 
-  if (fromMinutes === 0 || toMinutes === 0) return 0;
-
-  let totalMinutes = toMinutes - fromMinutes;
-  if (totalMinutes < 0) totalMinutes += 24 * 60;
-
-  const baseBreak = breakColumns > 0 ? parseTimeToMinutes(day.breakDeduction) : 0;
-  const lunchMinutes = showLunch ? parseTimeToMinutes(day.lunch ?? "") : 0;
+  const baseBreak = breakColumns > 0 ? (parseDurationToMinutes(day.breakDeduction) ?? 0) : 0;
+  const lunchMinutes = showLunch ? (parseDurationToMinutes(day.lunch ?? "") ?? 0) : 0;
   const extraBreakMinutes = day.breaks
     .slice(1, breakColumns)
-    .reduce((sum, value) => sum + parseTimeToMinutes(value), 0);
+    .reduce((sum, value) => sum + (parseDurationToMinutes(value) ?? 0), 0);
 
   return Math.max(0, totalMinutes - baseBreak - lunchMinutes - extraBreakMinutes);
 };
 
-const calculateRawShiftMinutes = (day: DayEntry): number => {
-  const fromMinutes = parseTimeToMinutes(day.from);
-  const toMinutes = parseTimeToMinutes(day.to);
-  if (fromMinutes === 0 || toMinutes === 0) return 0;
-
-  let totalMinutes = toMinutes - fromMinutes;
-  if (totalMinutes < 0) totalMinutes += 24 * 60;
-  return totalMinutes;
-};
+const calculateRawShiftMinutes = (day: DayEntry): number =>
+  calculateClockSpanMinutes(day.from, day.to) ?? 0;
 
 const getFirstDay = (
   timeFormat: TimeCardCalculatorProps["timeFormat"],
@@ -678,7 +616,6 @@ export default function TimeCardCalculator({
     return {
       dayTotals,
       totalMinutes,
-      totalHours: totalMinutes / 60,
       totalRawMinutes,
       breakMinutes,
       workedDays,
@@ -690,20 +627,20 @@ export default function TimeCardCalculator({
   const workPeriods = useMemo<WorkPeriod[]>(() => totals.dayTotals.map((workedMinutes, index) => ({
     dayId: mode === "split-shift" ? "split-day" : String(index % 7),
     weekId: mode === "hours" ? "shift" : mode === "split-shift" ? "week-1" : String(Math.floor(index / 7)),
-    workedHours: workedMinutes / 60,
+    workedMinutes,
   })), [mode, totals.dayTotals]);
   const paymentConfig = useMemo<PaymentConfig>(() => ({
     enabled: includePayment,
     currency,
-    hourlyRate: parseDecimalInput(basePay),
+    hourlyRate: parseLocalizedDecimal(basePay),
     overtime: {
       enabled: includePayment && showOvertime && overtimeEnabled,
       basis: overtimeBasis,
       tiers: overtimeTiers.map((tier) => ({
         id: tier.id,
-        afterHours: parseDecimalInput(tier.afterHours) ?? Number.NaN,
+        afterHours: parseLocalizedDecimal(tier.afterHours) ?? Number.NaN,
         rateType: tier.rateType,
-        rateValue: parseDecimalInput(tier.rateValue) ?? Number.NaN,
+        rateValue: parseLocalizedDecimal(tier.rateValue) ?? Number.NaN,
       })),
     },
   }), [basePay, currency, includePayment, overtimeBasis, overtimeEnabled, overtimeTiers, showOvertime]);
@@ -723,9 +660,8 @@ export default function TimeCardCalculator({
     }, workPeriods);
   }, [paymentConfig, paymentValidationErrors.length, workPeriods]);
   const totalPay = paymentResult.totalPay;
-  const totalOvertimeMinutes = paymentResult.overtimeHours * 60;
   const formatAmount = (amount: number) => formatPaymentAmount(amount, currency, locale);
-  const formatHours = (hours: number) => formatPaymentHours(hours, locale);
+  const formatPaymentMinutes = (minutes: number) => formatPaymentHoursFromMinutes(minutes, locale);
   const paymentSettings = (
     <PaymentSettings
       enabled={includePayment}
@@ -764,11 +700,7 @@ export default function TimeCardCalculator({
     />
   );
 
-  const normalizeTime = (value: string) => {
-    if (!value.trim()) return "";
-    const minutes = parseTimeToMinutes(value);
-    return `${Math.floor(minutes / 60).toString().padStart(2, "0")}:${(minutes % 60).toString().padStart(2, "0")}`;
-  };
+  const normalizeTime = (value: string) => normalizeTimeTo24Hour(value);
   const snapshot = () => ({ days, showLunchColumn, breakColumns, isBiweekly, reportHeader, reportNotes, includePayment, basePay, currency, overtimeEnabled, overtimeBasis, overtimeTiers });
   const restoreSnapshot = (state: ReturnType<typeof snapshot>) => {
     isRestoring.current = true;
@@ -871,15 +803,23 @@ export default function TimeCardCalculator({
     title, reportHeader, notes: reportNotes, calculatorType, sourcePath: window.location.pathname,
     periodType: mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly",
     periodStart: null, periodEnd: null, paymentEnabled: includePayment, currency: includePayment ? normalizeCurrencyCode(currency) : null,
-    hourlyRate: includePayment && Number.isFinite(Number(basePay)) ? Number(basePay) : null,
-    settings: { mode, timeFormat, showLunchColumn, breakColumnCount: breakColumns, showBreakDeduction, isBiweekly, copyVariant,
-      overtime: { enabled: includePayment && showOvertime && overtimeEnabled, basis: overtimeBasis, tiers: overtimeTiers.map((tier) => ({ id: tier.id, afterHours: Number(tier.afterHours), rateType: tier.rateType, rateValue: Number(tier.rateValue) })) } },
+    hourlyRate: includePayment && paymentConfig.hourlyRate !== null && Number.isFinite(paymentConfig.hourlyRate)
+      ? paymentConfig.hourlyRate
+      : null,
+    settings: {
+      mode, timeFormat, showLunchColumn, breakColumnCount: breakColumns, showBreakDeduction, isBiweekly, copyVariant,
+      overtime: {
+        enabled: includePayment && showOvertime && overtimeEnabled,
+        basis: overtimeBasis,
+        tiers: paymentConfig.overtime.tiers,
+      },
+    },
     cachedTotalMinutes: totals.totalMinutes, cachedTotalPay: includePayment && paymentValidationErrors.length === 0 ? totalPay : null,
     rows: days.map((day, position) => ({ position, workDate: null, dayLabel: day.date, punches: [{ start: normalizeTime(day.from), end: normalizeTime(day.to) }],
       breaks: [
-        ...(showBreakDeduction && day.breakDeduction ? [{ kind: "break" as const, position: 0, minutes: parseTimeToMinutes(day.breakDeduction) }] : []),
-        ...(showLunchColumn && day.lunch ? [{ kind: "lunch" as const, position: 1, minutes: parseTimeToMinutes(day.lunch) }] : []),
-        ...day.breaks.slice(1, breakColumns).flatMap((value, index) => value ? [{ kind: "break" as const, position: index + 2, minutes: parseTimeToMinutes(value) }] : []),
+        ...(showBreakDeduction && day.breakDeduction ? [{ kind: "break" as const, position: 0, minutes: parseDurationToMinutes(day.breakDeduction) ?? 0 }] : []),
+        ...(showLunchColumn && day.lunch ? [{ kind: "lunch" as const, position: 1, minutes: parseDurationToMinutes(day.lunch) ?? 0 }] : []),
+        ...day.breaks.slice(1, breakColumns).flatMap((value, index) => value ? [{ kind: "break" as const, position: index + 2, minutes: parseDurationToMinutes(value) ?? 0 }] : []),
       ] })),
   });
   const persistCard = async (title: string) => {
@@ -1161,11 +1101,11 @@ export default function TimeCardCalculator({
       ? `
         <div class="payment-breakdown">
           <h2>${t.paymentBreakdown}</h2>
-          <div>${t.regularPay}: ${formatHours(paymentResult.regularHours)} × ${formatAmount(paymentResult.hourlyRate)}/h = ${formatAmount(paymentResult.regularPay)}</div>
-          ${paymentResult.tiers.filter((tier) => tier.hours > 0).map((tier, index) => `
-            <div>${t.overtimeTier} ${index + 1}: ${formatHours(tier.hours)} × ${formatAmount(tier.effectiveRate)}/h = ${formatAmount(tier.pay)}</div>
+          <div>${t.regularPay}: ${formatPaymentMinutes(paymentResult.regularMinutes)} × ${formatAmount(paymentResult.hourlyRate)}/h = ${formatAmount(paymentResult.regularPay)}</div>
+          ${paymentResult.tiers.filter((tier) => tier.minutes > 0).map((tier, index) => `
+            <div>${t.overtimeTier} ${index + 1}: ${formatPaymentMinutes(tier.minutes)} × ${formatAmount(tier.effectiveRate)}/h = ${formatAmount(tier.pay)}</div>
           `).join("")}
-          ${paymentResult.overtimeHours > 0 ? `<div>${t.totalOvertimePay}: ${formatAmount(paymentResult.overtimePay)}</div>` : ""}
+          ${paymentResult.overtimeMinutes > 0 ? `<div>${t.totalOvertimePay}: ${formatAmount(paymentResult.overtimePay)}</div>` : ""}
           <div class="total">${t.estimatedTotalPay}: ${formatAmount(paymentResult.totalPay)}</div>
         </div>
       `
@@ -1211,9 +1151,9 @@ export default function TimeCardCalculator({
             ${rowsHtml}
           </tbody>
         </table>
-        <div class="total">${t.totalHours}: ${totals.totalHours.toFixed(2)} (${minutesToHours(totals.totalMinutes)})</div>
+        <div class="total">${t.totalHours}: ${formatDecimalHoursFromMinutes(totals.totalMinutes, locale)} (${minutesToHours(totals.totalMinutes)})</div>
         <div class="total">${t.totalBreakTime}: ${minutesToHours(totals.breakMinutes)}</div>
-        ${showOvertime && overtimeEnabled ? `<div class="total">${t.overtime}: ${minutesToHours(totalOvertimeMinutes)}</div>` : ""}
+        ${showOvertime && overtimeEnabled ? `<div class="total">${t.overtime}: ${minutesToHours(paymentResult.overtimeMinutes)}</div>` : ""}
         ${paymentHtml}
         ${reportNotes ? `<div class="notes"><strong>${t.notes}:</strong><br/>${reportNotes.replace(/\n/g, "<br/>")}</div>` : ""}
       </body>
@@ -1640,7 +1580,7 @@ export default function TimeCardCalculator({
                     ))}
 
                     <td className="border border-gray-300 text-center font-mono text-blue-700 font-semibold">
-                      {totals.dayTotals[index] > 0 ? `${(totals.dayTotals[index] / 60).toFixed(2)}h / ${minutesToHours(totals.dayTotals[index])}` : "-"}
+                      {totals.dayTotals[index] > 0 ? `${formatDecimalHoursFromMinutes(totals.dayTotals[index], locale)}h / ${minutesToHours(totals.dayTotals[index])}` : "-"}
                     </td>
 
                     <td className="border border-gray-300 text-center">
@@ -1665,7 +1605,7 @@ export default function TimeCardCalculator({
                     {t.totalPaidHours}
                   </td>
                   <td className="border border-gray-300 p-2 text-center font-mono text-green-700">
-                    {totals.totalHours.toFixed(2)}h / {minutesToHours(totals.totalMinutes)}
+                    {formatDecimalHoursFromMinutes(totals.totalMinutes, locale)}h / {minutesToHours(totals.totalMinutes)}
                   </td>
                   <td className="border border-gray-300 p-2 text-center text-green-700 font-semibold">
                     {includePayment && paymentValidationErrors.length === 0 ? formatAmount(totalPay) : "-"}
@@ -1694,8 +1634,8 @@ export default function TimeCardCalculator({
               <p className="text-xs text-gray-500">{t.overtimeSummary}</p>
               <p className="text-lg font-semibold text-gray-900">
                 {showOvertime && overtimeEnabled
-                  ? `${minutesToHours(totalOvertimeMinutes)} (${formatHours(paymentResult.overtimeHours)})`
-                  : t.hidden}
+                  ? `${minutesToHours(paymentResult.overtimeMinutes)} (${formatPaymentMinutes(paymentResult.overtimeMinutes)})`
+                  : '-'}
               </p>
             </div>
           </div>
@@ -1704,7 +1644,7 @@ export default function TimeCardCalculator({
             <PaymentBreakdown
               result={paymentResult}
               formatAmount={formatAmount}
-              formatHours={formatHours}
+              formatMinutes={formatPaymentMinutes}
               labels={{
                 paymentBreakdown: t.paymentBreakdown,
                 totalHours: t.totalHours,
