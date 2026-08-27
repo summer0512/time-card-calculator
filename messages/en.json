@@ -373,8 +373,20 @@
     "saveChanges": "Save Changes",
     "saveTooltip": "Save this time card so you can open it and continue next time.",
     "saveTitlePrompt": "Name this time card",
+    "saveDialogDescription": "Give this time card a name so you can easily find it later.",
+    "saveTitleLabel": "Time card name",
+    "saveTitlePlaceholder": "Weekly Time Card",
+    "defaultWeeklyTimeCardTitle": "Weekly Time Card",
+    "defaultBiweeklyTimeCardTitle": "Biweekly Time Card",
+    "cancel": "Cancel",
+    "saved": "Saved",
     "saveError": "We couldn't save your time card. Please try again.",
-    "saving": "Saving…"
+    "saving": "Saving…",
+    "loadingSavedTimeCard": "Loading your time card…",
+    "editingSavedTimeCard": "Editing saved time card",
+    "newTimeCard": "New Time Card",
+    "loadTimeCardError": "We couldn't load this time card. Please try again.",
+    "retry": "Try again"
   },
   "ToolPage": {
     "home": "Home",

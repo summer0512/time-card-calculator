@@ -373,8 +373,20 @@
     "saveChanges": "Salvar alterações",
     "saveTooltip": "Salve este cartão para abrir e continuar na próxima vez.",
     "saveTitlePrompt": "Nomeie este cartão",
+    "saveDialogDescription": "Dê um nome a este cartão para encontrá-lo facilmente depois.",
+    "saveTitleLabel": "Nome do cartão",
+    "saveTitlePlaceholder": "Cartão semanal",
+    "defaultWeeklyTimeCardTitle": "Cartão semanal",
+    "defaultBiweeklyTimeCardTitle": "Cartão quinzenal",
+    "cancel": "Cancelar",
+    "saved": "Salvo",
     "saveError": "Não foi possível salvar. Tente novamente.",
-    "saving": "Salvando…"
+    "saving": "Salvando…",
+    "loadingSavedTimeCard": "Carregando seu cartão…",
+    "editingSavedTimeCard": "Editando cartão salvo",
+    "newTimeCard": "Novo cartão",
+    "loadTimeCardError": "Não foi possível carregar este cartão. Tente novamente.",
+    "retry": "Tentar novamente"
   },
   "ToolPage": {
     "home": "Início",

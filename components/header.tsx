@@ -4,7 +4,7 @@ import type { SupportedLocale } from "@/i18n/config";
 
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/routing";
-import { Clock, ChevronDown, LogIn, UserCircle } from "lucide-react";
+import { Clock, ChevronDown, UserRound, UserCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import MobileMenuButton from "./mobile-menu-button";
 import { useLocale, useTranslations } from "next-intl";
@@ -92,6 +92,16 @@ export default function Header() {
                   <DropdownMenuItem key={item.slug} asChild>
                     <Link
                       href={`/${localizedSlug}`}
+                      onClick={(event) => {
+                        if (typeof window === "undefined") return;
+                        const currentUrl = new URL(window.location.href);
+                        const targetUrl = new URL(event.currentTarget.href);
+                        if (currentUrl.searchParams.has("card") && currentUrl.pathname === targetUrl.pathname) {
+                          event.preventDefault();
+                          window.history.pushState({}, "", `${targetUrl.pathname}${targetUrl.search}${targetUrl.hash}`);
+                          window.dispatchEvent(new PopStateEvent("popstate"));
+                        }
+                      }}
                       className={cn(
                         "w-full px-2 py-2 text-sm cursor-pointer",
                         isActive(`/${localizedSlug}`)
@@ -149,7 +159,7 @@ export default function Header() {
                   <DropdownMenuTrigger asChild><button className="flex items-center gap-1 rounded-md px-2 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600"><UserCircle className="h-5 w-5" /><span className="max-w-28 truncate">{session.user.name}</span><ChevronDown className="h-4 w-4" /></button></DropdownMenuTrigger>
                   <DropdownMenuContent align="end"><DropdownMenuItem asChild><Link href="/my-time-cards">{t("myTimeCards")}</Link></DropdownMenuItem><DropdownMenuItem onSelect={() => authClient.signOut()}>{t("signOut")}</DropdownMenuItem></DropdownMenuContent>
                 </DropdownMenu>
-              ) : <button onClick={() => authClient.signIn.social({ provider: "google", callbackURL: window.location.href })} className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"><LogIn className="h-4 w-4" />{t("signIn")}</button>}
+              ) : <button onClick={() => authClient.signIn.social({ provider: "google", callbackURL: window.location.href })} className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-600"><UserRound className="h-4 w-4" />{t("signIn")}</button>}
             </div>
             <MobileMenuButton />
           </div>

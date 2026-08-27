@@ -373,8 +373,20 @@
     "saveChanges": "Änderungen speichern",
     "saveTooltip": "Speichern Sie diesen Stundenzettel, um ihn später wieder zu öffnen.",
     "saveTitlePrompt": "Stundenzettel benennen",
+    "saveDialogDescription": "Geben Sie diesem Stundenzettel einen Namen, damit Sie ihn später leicht wiederfinden.",
+    "saveTitleLabel": "Name des Stundenzettels",
+    "saveTitlePlaceholder": "Wöchentlicher Stundenzettel",
+    "defaultWeeklyTimeCardTitle": "Wöchentlicher Stundenzettel",
+    "defaultBiweeklyTimeCardTitle": "Zweiwöchiger Stundenzettel",
+    "cancel": "Abbrechen",
+    "saved": "Gespeichert",
     "saveError": "Der Stundenzettel konnte nicht gespeichert werden.",
-    "saving": "Speichern…"
+    "saving": "Speichern…",
+    "loadingSavedTimeCard": "Stundenzettel wird geladen…",
+    "editingSavedTimeCard": "Gespeicherten Stundenzettel bearbeiten",
+    "newTimeCard": "Neuer Stundenzettel",
+    "loadTimeCardError": "Der Stundenzettel konnte nicht geladen werden. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen"
   },
   "ToolPage": {
     "home": "Startseite",

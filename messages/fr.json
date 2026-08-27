@@ -373,8 +373,20 @@
     "saveChanges": "Enregistrer les modifications",
     "saveTooltip": "Enregistrez cette fiche pour la rouvrir et continuer plus tard.",
     "saveTitlePrompt": "Nommer cette fiche",
+    "saveDialogDescription": "Donnez un nom à cette fiche afin de la retrouver facilement plus tard.",
+    "saveTitleLabel": "Nom de la fiche",
+    "saveTitlePlaceholder": "Fiche hebdomadaire",
+    "defaultWeeklyTimeCardTitle": "Fiche hebdomadaire",
+    "defaultBiweeklyTimeCardTitle": "Fiche sur 14 jours",
+    "cancel": "Annuler",
+    "saved": "Enregistrée",
     "saveError": "Impossible d’enregistrer la fiche. Réessayez.",
-    "saving": "Enregistrement…"
+    "saving": "Enregistrement…",
+    "loadingSavedTimeCard": "Chargement de votre fiche…",
+    "editingSavedTimeCard": "Modification de la fiche enregistrée",
+    "newTimeCard": "Nouvelle fiche",
+    "loadTimeCardError": "Impossible de charger cette fiche. Réessayez.",
+    "retry": "Réessayer"
   },
   "ToolPage": {
     "home": "Accueil",

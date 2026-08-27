@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save } from "lucide-react";
+import { AlertCircle, Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import PaymentBreakdown from "@/components/payment/payment-breakdown";
 import PaymentSettings, { type EditableOvertimeTier } from "@/components/payment/payment-settings";
 import {
@@ -23,6 +31,7 @@ import {
 } from "@/lib/payment";
 import { useLocale, useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
+import type { SavedTimeCard } from "@/lib/time-cards/types";
 
 interface DayEntry {
   date: string;
@@ -32,6 +41,8 @@ interface DayEntry {
   lunch?: string;
   breaks: string[];
 }
+
+type SavedCardLoadState = "idle" | "loading" | "loaded" | "error";
 
 export interface CalculatorLabels {
   start: string;
@@ -79,8 +90,20 @@ export interface CalculatorUiText {
   saveChanges: string;
   saveTooltip: string;
   saveTitlePrompt: string;
+  saveDialogDescription: string;
+  saveTitleLabel: string;
+  saveTitlePlaceholder: string;
+  defaultWeeklyTimeCardTitle: string;
+  defaultBiweeklyTimeCardTitle: string;
+  cancel: string;
+  saved: string;
   saveError: string;
   saving: string;
+  loadingSavedTimeCard: string;
+  editingSavedTimeCard: string;
+  newTimeCard: string;
+  loadTimeCardError: string;
+  retry: string;
   weekDays: string[];
   shiftLabel: string;
   weekLabel: string;
@@ -159,8 +182,20 @@ const DEFAULT_UI_TEXT: CalculatorUiText = {
   saveChanges: "Save Changes",
   saveTooltip: "Save this time card so you can open it and continue next time.",
   saveTitlePrompt: "Name this time card",
+  saveDialogDescription: "Give this time card a name so you can easily find it later.",
+  saveTitleLabel: "Time card name",
+  saveTitlePlaceholder: "Weekly Time Card",
+  defaultWeeklyTimeCardTitle: "Weekly Time Card",
+  defaultBiweeklyTimeCardTitle: "Biweekly Time Card",
+  cancel: "Cancel",
+  saved: "Saved",
   saveError: "We couldn't save your time card. Please try again.",
   saving: "Saving…",
+  loadingSavedTimeCard: "Loading your time card…",
+  editingSavedTimeCard: "Editing saved time card",
+  newTimeCard: "New Time Card",
+  loadTimeCardError: "We couldn't load this time card. Please try again.",
+  retry: "Try again",
   weekDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
   shiftLabel: "Shift",
   weekLabel: "Week",
@@ -458,8 +493,20 @@ export default function TimeCardCalculator({
     saveChanges: tCalculator("saveChanges"),
     saveTooltip: tCalculator("saveTooltip"),
     saveTitlePrompt: tCalculator("saveTitlePrompt"),
+    saveDialogDescription: tCalculator("saveDialogDescription"),
+    saveTitleLabel: tCalculator("saveTitleLabel"),
+    saveTitlePlaceholder: tCalculator("saveTitlePlaceholder"),
+    defaultWeeklyTimeCardTitle: tCalculator("defaultWeeklyTimeCardTitle"),
+    defaultBiweeklyTimeCardTitle: tCalculator("defaultBiweeklyTimeCardTitle"),
+    cancel: tCalculator("cancel"),
+    saved: tCalculator("saved"),
     saveError: tCalculator("saveError"),
     saving: tCalculator("saving"),
+    loadingSavedTimeCard: tCalculator("loadingSavedTimeCard"),
+    editingSavedTimeCard: tCalculator("editingSavedTimeCard"),
+    newTimeCard: tCalculator("newTimeCard"),
+    loadTimeCardError: tCalculator("loadTimeCardError"),
+    retry: tCalculator("retry"),
     weekDays: (tCalculator.raw("weekDays") as string[]) || DEFAULT_UI_TEXT.weekDays,
     shiftLabel: tCalculator("shiftLabel"),
     weekLabel: tCalculator("weekLabel"),
@@ -577,10 +624,16 @@ export default function TimeCardCalculator({
   const { data: sessionData } = authClient.useSession();
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
   const [savedTitle, setSavedTitle] = useState("");
+  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [saveTitle, setSaveTitle] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
   const [resumeReady, setResumeReady] = useState(false);
+  const [routeCardId, setRouteCardId] = useState<string | null>(null);
+  const [savedCardLoadState, setSavedCardLoadState] = useState<SavedCardLoadState>("idle");
+  const [savedCardReloadKey, setSavedCardReloadKey] = useState(0);
   const isRestoring = useRef(false);
+  const skipNextCardLoadRef = useRef<string | null>(null);
 
   useEffect(() => {
     setShowLunchColumn(showLunchBreak);
@@ -723,6 +776,97 @@ export default function TimeCardCalculator({
     setReportHeader(state.reportHeader); setReportNotes(state.reportNotes); setIncludePayment(state.includePayment); setBasePay(state.basePay); setCurrency(state.currency);
     setOvertimeEnabled(state.overtimeEnabled); setOvertimeBasis(state.overtimeBasis); setOvertimeTiers(state.overtimeTiers);
   };
+  const resetToNewCalculator = () => {
+    isRestoring.current = true;
+    setSavedCardId(null);
+    setSavedTitle("");
+    setSaveDialogOpen(false);
+    setSaveTitle("");
+    setSaveMessage("");
+    setShowLunchColumn(showLunchBreak);
+    setBreakColumns(initialBreakColumns);
+    setIsBiweekly(mode === "time-card" && showBiweekly);
+    setReportHeader("");
+    setReportNotes("");
+    setIncludePayment(paymentDefaults?.enabled ?? true);
+    setBasePay(configuredHourlyRate);
+    setCurrency(configuredCurrency);
+    setOvertimeEnabled(paymentDefaults?.overtime?.enabled ?? false);
+    setOvertimeBasis(paymentDefaults?.overtime?.basis ?? "weekly");
+    setOvertimeTiers(toEditableTiers(paymentDefaults?.overtime?.tiers));
+    setDays(createDays(
+      mode,
+      mode === "time-card" && showBiweekly,
+      initialBreakColumns,
+      showLunchBreak,
+      breakDefault,
+      timeFormat,
+      t.weekDays,
+      t.weekLabel,
+      t.shiftLabel,
+    ));
+  };
+  const setCardLocation = (cardId: string | null, historyMode: "push" | "replace" = "push") => {
+    const params = new URLSearchParams(window.location.search);
+    params.delete("resumeSave");
+    if (cardId) params.set("card", cardId);
+    else params.delete("card");
+    const query = params.toString();
+    const nextUrl = `${window.location.pathname}${query ? `?${query}` : ""}`;
+    if (historyMode === "replace") window.history.replaceState({}, "", nextUrl);
+    else window.history.pushState({}, "", nextUrl);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
+  const startNewTimeCard = () => {
+    resetToNewCalculator();
+    setSavedCardLoadState("idle");
+    setCardLocation(null, "push");
+  };
+  const restoreSavedCard = (card: SavedTimeCard) => {
+    const settings = card.settings;
+    isRestoring.current = true;
+    setSavedCardId(card.id);
+    setSavedTitle(card.title);
+    setReportHeader(card.reportHeader ?? "");
+    setReportNotes(card.notes ?? "");
+    setShowLunchColumn(settings.showLunchColumn);
+    setBreakColumns(settings.breakColumnCount);
+    setIsBiweekly(settings.isBiweekly);
+    setIncludePayment(card.paymentEnabled);
+    setCurrency(card.currency ?? configuredCurrency);
+    setBasePay(card.hourlyRate ?? configuredHourlyRate);
+    setOvertimeEnabled(settings.overtime.enabled);
+    setOvertimeBasis(settings.overtime.basis);
+    setOvertimeTiers(settings.overtime.tiers.map((tier: OvertimeTier) => ({
+      ...tier,
+      afterHours: String(tier.afterHours),
+      rateValue: String(tier.rateValue),
+    })));
+    setDays(card.rows.map((row: {
+      dayLabel: string;
+      punches: Array<{ start: string; end: string }>;
+      breaks: Array<{ kind: "break" | "lunch"; position: number; minutes: number }>;
+    }) => {
+      const asDuration = (minutes: number) => minutesToHours(minutes);
+      const lunch = row.breaks.find((item) => item.kind === "lunch");
+      const regular = row.breaks
+        .filter((item) => item.kind === "break")
+        .sort((a, b) => a.position - b.position);
+      return {
+        date: row.dayLabel,
+        from: row.punches[0]?.start ?? "",
+        to: row.punches[0]?.end ?? "",
+        breakDeduction: regular[0] ? asDuration(regular[0].minutes) : "",
+        lunch: settings.showLunchColumn ? (lunch ? asDuration(lunch.minutes) : "") : undefined,
+        breaks: Array.from(
+          { length: settings.breakColumnCount },
+          (_, index) => index === 0
+            ? (regular[0] ? asDuration(regular[0].minutes) : "")
+            : (regular[index] ? asDuration(regular[index].minutes) : ""),
+        ),
+      };
+    }));
+  };
   const buildPayload = (title: string) => ({
     title, reportHeader, notes: reportNotes, calculatorType, sourcePath: window.location.pathname,
     periodType: mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly",
@@ -738,32 +882,134 @@ export default function TimeCardCalculator({
         ...day.breaks.slice(1, breakColumns).flatMap((value, index) => value ? [{ kind: "break" as const, position: index + 2, minutes: parseTimeToMinutes(value) }] : []),
       ] })),
   });
+  const persistCard = async (title: string) => {
+    const trimmedTitle = title.trim();
+    if (!trimmedTitle) return;
+
+    setSaveMessage("");
+    setIsSaving(true);
+
+    try {
+      const isNewCard = !savedCardId;
+      const response = await fetch(savedCardId ? `/api/time-cards/${savedCardId}` : "/api/time-cards", {
+        method: savedCardId ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(buildPayload(trimmedTitle)),
+      });
+
+      if (!response.ok) throw new Error("save failed");
+
+      const result = await response.json();
+      if (result.id) {
+        setSavedCardId(result.id);
+        setSavedCardLoadState("loaded");
+        if (isNewCard) {
+          skipNextCardLoadRef.current = result.id;
+          setCardLocation(result.id, "replace");
+        }
+      }
+      setSavedTitle(trimmedTitle);
+      setSaveDialogOpen(false);
+      setSaveMessage("✓");
+    } catch {
+      setSaveMessage(t.saveError);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const saveCard = async () => {
     setSaveMessage("");
+
     if (!sessionData?.user) {
-      sessionStorage.setItem("pending-time-card-save", JSON.stringify({ path: window.location.pathname, state: snapshot() }));
-      await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.pathname}?resumeSave=1` }); return;
+      sessionStorage.setItem(
+        "pending-time-card-save",
+        JSON.stringify({ path: window.location.pathname, state: snapshot() }),
+      );
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: `${window.location.pathname}?resumeSave=1`,
+      });
+      return;
     }
-    const title = savedCardId ? savedTitle : window.prompt(t.saveTitlePrompt, reportHeader || (isBiweekly ? "Biweekly Time Card" : "Weekly Time Card"));
-    if (!title?.trim()) return;
-    setIsSaving(true);
-    try {
-      const response = await fetch(savedCardId ? `/api/time-cards/${savedCardId}` : "/api/time-cards", { method: savedCardId ? "PUT" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildPayload(title.trim())) });
-      if (!response.ok) throw new Error("save failed");
-      const result = await response.json(); if (result.id) setSavedCardId(result.id); setSavedTitle(title.trim()); setSaveMessage("✓");
-    } catch { setSaveMessage(t.saveError); } finally { setIsSaving(false); }
+
+    if (savedCardId) {
+      await persistCard(savedTitle);
+      return;
+    }
+
+    setSaveTitle(
+      reportHeader.trim() || (isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle),
+    );
+    setSaveDialogOpen(true);
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search); const cardId = params.get("card");
-    if (cardId && sessionData?.user && cardId !== savedCardId) fetch(`/api/time-cards/${cardId}`).then((response) => { if (!response.ok) throw new Error(); return response.json(); }).then(({ card }) => {
-      const settings = card.settings; isRestoring.current = true; setSavedCardId(card.id); setSavedTitle(card.title); setReportHeader(card.reportHeader ?? ""); setReportNotes(card.notes ?? "");
-      setShowLunchColumn(settings.showLunchColumn); setBreakColumns(settings.breakColumnCount); setIsBiweekly(settings.isBiweekly); setIncludePayment(card.paymentEnabled);
-      setCurrency(card.currency ?? currency); setBasePay(card.hourlyRate ?? basePay); setOvertimeEnabled(settings.overtime.enabled); setOvertimeBasis(settings.overtime.basis);
-      setOvertimeTiers(settings.overtime.tiers.map((tier: OvertimeTier) => ({ ...tier, afterHours: String(tier.afterHours), rateValue: String(tier.rateValue) })));
-      setDays(card.rows.map((row: { dayLabel: string; punches: Array<{start:string;end:string}>; breaks: Array<{kind:"break"|"lunch";position:number;minutes:number}> }) => { const asDuration = (minutes: number) => minutesToHours(minutes); const lunch = row.breaks.find((item) => item.kind === "lunch"); const regular = row.breaks.filter((item) => item.kind === "break").sort((a,b) => a.position-b.position); return { date: row.dayLabel, from: row.punches[0]?.start ?? "", to: row.punches[0]?.end ?? "", breakDeduction: regular[0] ? asDuration(regular[0].minutes) : "", lunch: settings.showLunchColumn ? (lunch ? asDuration(lunch.minutes) : "") : undefined, breaks: Array.from({ length: settings.breakColumnCount }, (_, index) => index === 0 ? (regular[0] ? asDuration(regular[0].minutes) : "") : (regular[index] ? asDuration(regular[index].minutes) : "")) }; }));
-    }).catch(() => setSaveMessage(t.saveError));
-    if (params.get("resumeSave") === "1" && sessionData?.user) { const raw = sessionStorage.getItem("pending-time-card-save"); if (raw) { const pending = JSON.parse(raw); restoreSnapshot(pending.state); sessionStorage.removeItem("pending-time-card-save"); window.history.replaceState({}, "", pending.path); setResumeReady(true); } }
+    const syncCardIdFromLocation = () => {
+      const nextCardId = new URLSearchParams(window.location.search).get("card");
+      setSavedCardLoadState(nextCardId ? "loading" : "idle");
+      setRouteCardId(nextCardId);
+    };
+
+    syncCardIdFromLocation();
+    window.addEventListener("popstate", syncCardIdFromLocation);
+    return () => window.removeEventListener("popstate", syncCardIdFromLocation);
+  }, []);
+
+  useEffect(() => {
+    if (!routeCardId) {
+      resetToNewCalculator();
+      setSavedCardLoadState("idle");
+      return;
+    }
+
+    if (skipNextCardLoadRef.current === routeCardId) {
+      skipNextCardLoadRef.current = null;
+      setSavedCardLoadState("loaded");
+      return;
+    }
+
+    const controller = new AbortController();
+    setSavedCardLoadState("loading");
+    setSavedCardId(null);
+    setSavedTitle("");
+    setSaveMessage("");
+
+    void fetch(`/api/time-cards/${encodeURIComponent(routeCardId)}`, {
+      cache: "no-store",
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error(`load failed: ${response.status}`);
+        return response.json();
+      })
+      .then(({ card }) => {
+        if (controller.signal.aborted) return;
+        restoreSavedCard(card);
+        setSavedCardLoadState("loaded");
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted || (error instanceof DOMException && error.name === "AbortError")) return;
+        setSavedCardLoadState("error");
+      });
+
+    return () => controller.abort();
+  // The reset/restore helpers intentionally capture the current calculator defaults.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeCardId, savedCardReloadKey]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("resumeSave") === "1" && sessionData?.user) {
+      const raw = sessionStorage.getItem("pending-time-card-save");
+      if (raw) {
+        const pending = JSON.parse(raw);
+        restoreSnapshot(pending.state);
+        sessionStorage.removeItem("pending-time-card-save");
+        window.history.replaceState({}, "", pending.path);
+        setResumeReady(true);
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionData?.user?.id]);
   useEffect(() => { if (resumeReady) { setResumeReady(false); void saveCard(); } }, [resumeReady]);
@@ -1007,16 +1253,155 @@ export default function TimeCardCalculator({
       ? "8:00AM"
       : "8:00AM or 08:00";
 
+  if (routeCardId && savedCardLoadState === "loading") {
+    return (
+      <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
+        <Card className="min-h-[520px] overflow-hidden shadow-lg">
+          <CardHeader className="rounded-t-lg bg-gradient-to-r from-blue-50 to-green-50 py-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-slate-600" role="status" aria-live="polite">
+              <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+              <span>{t.loadingSavedTimeCard}</span>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4 p-4 sm:p-6">
+            <div className="space-y-2">
+              <div className="h-5 w-52 animate-pulse rounded bg-slate-200" />
+              <div className="h-9 w-full max-w-xl animate-pulse rounded-md bg-slate-100" />
+            </div>
+            <div className="overflow-hidden rounded-lg border border-slate-200">
+              <div className="grid grid-cols-5 gap-px bg-slate-200">
+                {Array.from({ length: 25 }, (_, index) => (
+                  <div key={index} className={`bg-white p-2 ${index < 5 ? "bg-slate-50" : ""}`}>
+                    <div className={`animate-pulse rounded bg-slate-100 ${index < 5 ? "h-4" : "h-8"}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {Array.from({ length: 4 }, (_, index) => (
+                <div key={index} className="h-20 animate-pulse rounded-lg border border-slate-100 bg-slate-50" />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (routeCardId && savedCardLoadState === "error") {
+    return (
+      <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
+        <Card className="min-h-[360px] shadow-lg">
+          <CardContent className="flex min-h-[360px] flex-col items-center justify-center px-6 py-12 text-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <p className="mt-4 max-w-md text-sm leading-6 text-slate-600">{t.loadTimeCardError}</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-2">
+              <Button onClick={() => setSavedCardReloadKey((value) => value + 1)}>{t.retry}</Button>
+              <Button variant="outline" onClick={startNewTimeCard}>
+                <Plus className="mr-1 h-4 w-4" />
+                {t.newTimeCard}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const isEditingSavedCard = savedCardLoadState === "loaded" && Boolean(savedCardId);
+
   return (
     <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
+      <Dialog
+        open={saveDialogOpen}
+        onOpenChange={(open) => {
+          if (!isSaving) setSaveDialogOpen(open);
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t.saveTitlePrompt}</DialogTitle>
+            <DialogDescription>{t.saveDialogDescription}</DialogDescription>
+          </DialogHeader>
+
+          <form
+            className="space-y-4"
+            onSubmit={(event) => {
+              event.preventDefault();
+              void persistCard(saveTitle);
+            }}
+          >
+            <div className="space-y-2">
+              <Label htmlFor="time-card-title">{t.saveTitleLabel}</Label>
+              <Input
+                id="time-card-title"
+                value={saveTitle}
+                onChange={(event) => setSaveTitle(event.target.value)}
+                placeholder={t.saveTitlePlaceholder}
+                autoFocus
+                maxLength={120}
+              />
+            </div>
+
+            {saveMessage && saveMessage !== "✓" && (
+              <p className="text-sm text-red-700" role="alert">
+                {saveMessage}
+              </p>
+            )}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setSaveDialogOpen(false)}
+                disabled={isSaving}
+              >
+                {t.cancel}
+              </Button>
+              <Button type="submit" disabled={isSaving || !saveTitle.trim()}>
+                <Save className="mr-1 h-4 w-4" />
+                {isSaving ? t.saving : t.saveTimeCard}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
       <Card className="shadow-lg">
         <CardHeader className="bg-gradient-to-r from-blue-50 to-green-50 rounded-t-lg py-4">
           <div className="flex flex-col gap-4">
+            {isEditingSavedCard && (
+              <div className="flex flex-col gap-3 rounded-lg border border-blue-200/80 bg-white/80 px-3 py-2.5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <div className="mb-1 flex items-center gap-2">
+                    <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                      {t.editingSavedTimeCard}
+                    </span>
+                  </div>
+                  <p className="truncate text-base font-semibold text-slate-900" title={savedTitle}>
+                    {savedTitle}
+                  </p>
+                </div>
+                <Button variant="outline" size="sm" onClick={startNewTimeCard} className="shrink-0 bg-white">
+                  <Plus className="mr-1 h-4 w-4" />
+                  {t.newTimeCard}
+                </Button>
+              </div>
+            )}
             <div className="flex flex-wrap gap-2">
               <Button onClick={saveCard} size="sm" disabled={isSaving} title={t.saveTooltip} aria-label={`${savedCardId ? t.saveChanges : t.saveTimeCard}. ${t.saveTooltip}`}>
                 <Save className="h-4 w-4 mr-1" />{isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
               </Button>
-              {saveMessage && <span className={saveMessage === "✓" ? "self-center text-sm text-green-700" : "self-center text-sm text-red-700"} role="status">{saveMessage}</span>}
+              {saveMessage === "✓" ? (
+                <span className="flex self-center items-center gap-1 text-sm font-medium text-green-700" role="status">
+                  <Check className="h-4 w-4" />
+                  {t.saved}
+                </span>
+              ) : saveMessage ? (
+                <span className="self-center text-sm text-red-700" role="alert">{saveMessage}</span>
+              ) : null}
               <Button variant="outline" onClick={clearAll} size="sm">
                 <RotateCcw className="h-4 w-4 mr-1" />
                 {t.clearAll}
