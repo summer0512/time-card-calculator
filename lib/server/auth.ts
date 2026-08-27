@@ -16,7 +16,7 @@ export function createAuth(database: Database) {
   return betterAuth({
     database: drizzleAdapter(database, { provider: "pg", schema: authSchema }),
     baseURL, secret, emailAndPassword: { enabled: false },
-    trustedOrigins: ["http://localhost:3000", "https://time-card-calculator.work"],
+    trustedOrigins: ["http://localhost:3000", "https://time-card-calculator.work", "https://time-card-calculator.summer051200.workers.dev"],
     socialProviders: { google: { clientId, clientSecret } },
   });
 }
