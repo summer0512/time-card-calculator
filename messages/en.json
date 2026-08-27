@@ -260,7 +260,10 @@
     "guides": "Guides",
     "guideLunch": "How to Calculate Time Cards with Lunch Breaks",
     "guideBreaks": "How to Calculate Time Card Breaks",
-    "guideBiweekly": "Biweekly Time Card Guide"
+    "guideBiweekly": "Biweekly Time Card Guide",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "myTimeCards": "My Time Cards"
   },
   "Footer": {
     "description": "Free online calculators for time cards, lunch breaks, time punches, and biweekly payroll hour summaries.",
@@ -365,7 +368,25 @@
       "INVALID_MULTIPLIER": "Enter a multiplier greater than zero.",
       "INVALID_FIXED_RATE": "Enter a fixed rate of zero or more."
     },
-    "addWorkSegment": "Add work segment"
+    "addWorkSegment": "Add work segment",
+    "saveTimeCard": "Save Time Card",
+    "saveChanges": "Save Changes",
+    "saveTooltip": "Save this time card so you can open it and continue next time.",
+    "saveTitlePrompt": "Name this time card",
+    "saveDialogDescription": "Give this time card a name so you can easily find it later.",
+    "saveTitleLabel": "Time card name",
+    "saveTitlePlaceholder": "Weekly Time Card",
+    "defaultWeeklyTimeCardTitle": "Weekly Time Card",
+    "defaultBiweeklyTimeCardTitle": "Biweekly Time Card",
+    "cancel": "Cancel",
+    "saved": "Saved",
+    "saveError": "We couldn't save your time card. Please try again.",
+    "saving": "Saving…",
+    "loadingSavedTimeCard": "Loading your time card…",
+    "editingSavedTimeCard": "Editing saved time card",
+    "newTimeCard": "New Time Card",
+    "loadTimeCardError": "We couldn't load this time card. Please try again.",
+    "retry": "Try again"
   },
   "ToolPage": {
     "home": "Home",
@@ -377,5 +398,26 @@
     "backToHome": "Back to Free Time Card Calculator",
     "readRelatedGuide": "Read Related Guide",
     "previewAlt": "{title} tool preview"
+  },
+  "MyTimeCards": {
+    "title": "My Time Cards",
+    "description": "Open and manage your saved time cards.",
+    "signInDescription": "Sign in with Google to see your saved time cards.",
+    "continueGoogle": "Continue with Google",
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "emptyTitle": "No saved time cards yet.",
+    "emptyDescription": "Create a time card and save it here so you can come back and edit it later.",
+    "create": "Create a Time Card",
+    "renamePrompt": "Enter a new title",
+    "deleteConfirm": "Delete {title}?",
+    "moreActions": "More actions for {title}",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "delete": "Delete",
+    "hours": "Total hours",
+    "pay": "Total pay",
+    "updated": "Last updated",
+    "open": "Open"
   }
 }

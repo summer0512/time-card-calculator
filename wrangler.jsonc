@@ -16,6 +16,13 @@
     "binding": "ASSETS"
   },
 
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "188458d1f0ba4866b29c1ddb19534eb1"
+    }
+  ],
+
   "observability": {
     "enabled": true
   }
