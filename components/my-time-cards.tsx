@@ -245,11 +245,11 @@ export default function MyTimeCards() {
                   className="group overflow-hidden border-slate-200/90 bg-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
                 >
                   <CardHeader className="flex-row items-start justify-between space-y-0 border-b border-slate-100 bg-gradient-to-r from-blue-50/80 via-white to-emerald-50/50 px-5 py-5">
-                    <div className="min-w-0 pr-3">
+                    <div className="min-w-0 pr-3 flex items-center gap-2">
                       <h2 className="truncate text-lg font-semibold text-slate-900">
                         {card.title}
                       </h2>
-                      <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 text-xs font-medium capitalize text-slate-600 shadow-sm">
+                      <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 text-xs font-medium capitalize text-slate-600 shadow-sm">
                         <CalendarDays className="h-3.5 w-3.5 text-slate-500" />
                         {card.periodType.replaceAll("_", " ")}
                       </div>

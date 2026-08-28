@@ -566,6 +566,7 @@ export default function TimeCardCalculator({
   const [saveTitle, setSaveTitle] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [savedSnapshotKey, setSavedSnapshotKey] = useState<string | null>(null);
   const [resumeReady, setResumeReady] = useState(false);
   const [routeCardId, setRouteCardId] = useState<string | null>(null);
   const [savedCardLoadState, setSavedCardLoadState] = useState<SavedCardLoadState>("idle");
@@ -659,6 +660,33 @@ export default function TimeCardCalculator({
       overtime: { ...paymentConfig.overtime, enabled: false, tiers: [] },
     }, workPeriods);
   }, [paymentConfig, paymentValidationErrors.length, workPeriods]);
+  const currentSnapshotKey = useMemo(() => JSON.stringify({
+    days,
+    showLunchColumn,
+    breakColumns,
+    isBiweekly,
+    reportHeader,
+    reportNotes,
+    includePayment,
+    basePay,
+    currency,
+    overtimeEnabled,
+    overtimeBasis,
+    overtimeTiers,
+  }), [
+    days,
+    showLunchColumn,
+    breakColumns,
+    isBiweekly,
+    reportHeader,
+    reportNotes,
+    includePayment,
+    basePay,
+    currency,
+    overtimeEnabled,
+    overtimeBasis,
+    overtimeTiers,
+  ]);
   const totalPay = paymentResult.totalPay;
   const formatAmount = (amount: number) => formatPaymentAmount(amount, currency, locale);
   const formatPaymentMinutes = (minutes: number) => formatPaymentHoursFromMinutes(minutes, locale);
@@ -715,6 +743,7 @@ export default function TimeCardCalculator({
     setSaveDialogOpen(false);
     setSaveTitle("");
     setSaveMessage("");
+    setSavedSnapshotKey(null);
     setShowLunchColumn(showLunchBreak);
     setBreakColumns(initialBreakColumns);
     setIsBiweekly(mode === "time-card" && showBiweekly);
@@ -756,25 +785,12 @@ export default function TimeCardCalculator({
   };
   const restoreSavedCard = (card: SavedTimeCard) => {
     const settings = card.settings;
-    isRestoring.current = true;
-    setSavedCardId(card.id);
-    setSavedTitle(card.title);
-    setReportHeader(card.reportHeader ?? "");
-    setReportNotes(card.notes ?? "");
-    setShowLunchColumn(settings.showLunchColumn);
-    setBreakColumns(settings.breakColumnCount);
-    setIsBiweekly(settings.isBiweekly);
-    setIncludePayment(card.paymentEnabled);
-    setCurrency(card.currency ?? configuredCurrency);
-    setBasePay(card.hourlyRate ?? configuredHourlyRate);
-    setOvertimeEnabled(settings.overtime.enabled);
-    setOvertimeBasis(settings.overtime.basis);
-    setOvertimeTiers(settings.overtime.tiers.map((tier: OvertimeTier) => ({
+    const restoredOvertimeTiers = settings.overtime.tiers.map((tier: OvertimeTier) => ({
       ...tier,
       afterHours: String(tier.afterHours),
       rateValue: String(tier.rateValue),
-    })));
-    setDays(card.rows.map((row: {
+    }));
+    const restoredDays = card.rows.map((row: {
       dayLabel: string;
       punches: Array<{ start: string; end: string }>;
       breaks: Array<{ kind: "break" | "lunch"; position: number; minutes: number }>;
@@ -797,7 +813,38 @@ export default function TimeCardCalculator({
             : (regular[index] ? asDuration(regular[index].minutes) : ""),
         ),
       };
-    }));
+    });
+    const restoredState = {
+      days: restoredDays,
+      showLunchColumn: settings.showLunchColumn,
+      breakColumns: settings.breakColumnCount,
+      isBiweekly: settings.isBiweekly,
+      reportHeader: card.reportHeader ?? "",
+      reportNotes: card.notes ?? "",
+      includePayment: card.paymentEnabled,
+      basePay: card.hourlyRate ?? configuredHourlyRate,
+      currency: card.currency ?? configuredCurrency,
+      overtimeEnabled: settings.overtime.enabled,
+      overtimeBasis: settings.overtime.basis,
+      overtimeTiers: restoredOvertimeTiers,
+    };
+
+    isRestoring.current = true;
+    setSavedCardId(card.id);
+    setSavedTitle(card.title);
+    setReportHeader(restoredState.reportHeader);
+    setReportNotes(restoredState.reportNotes);
+    setShowLunchColumn(restoredState.showLunchColumn);
+    setBreakColumns(restoredState.breakColumns);
+    setIsBiweekly(restoredState.isBiweekly);
+    setIncludePayment(restoredState.includePayment);
+    setCurrency(restoredState.currency);
+    setBasePay(restoredState.basePay);
+    setOvertimeEnabled(restoredState.overtimeEnabled);
+    setOvertimeBasis(restoredState.overtimeBasis);
+    setOvertimeTiers(restoredState.overtimeTiers);
+    setDays(restoredState.days);
+    setSavedSnapshotKey(JSON.stringify(restoredState));
   };
   const buildPayload = (title: string) => ({
     title, reportHeader, notes: reportNotes, calculatorType, sourcePath: window.location.pathname,
@@ -849,6 +896,7 @@ export default function TimeCardCalculator({
         }
       }
       setSavedTitle(trimmedTitle);
+      setSavedSnapshotKey(currentSnapshotKey);
       setSaveDialogOpen(false);
       setSaveMessage("✓");
     } catch {
@@ -914,6 +962,7 @@ export default function TimeCardCalculator({
     setSavedCardId(null);
     setSavedTitle("");
     setSaveMessage("");
+    setSavedSnapshotKey(null);
 
     void fetch(`/api/time-cards/${encodeURIComponent(routeCardId)}`, {
       cache: "no-store",
@@ -1251,6 +1300,9 @@ export default function TimeCardCalculator({
   }
 
   const isEditingSavedCard = savedCardLoadState === "loaded" && Boolean(savedCardId);
+  const hasUnsavedChanges = isEditingSavedCard
+    && savedSnapshotKey !== null
+    && currentSnapshotKey !== savedSnapshotKey;
 
   return (
     <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
@@ -1330,18 +1382,7 @@ export default function TimeCardCalculator({
                 </Button>
               </div>
             )}
-            <div className="flex flex-wrap gap-2">
-              <Button onClick={saveCard} size="sm" disabled={isSaving} title={t.saveTooltip} aria-label={`${savedCardId ? t.saveChanges : t.saveTimeCard}. ${t.saveTooltip}`}>
-                <Save className="h-4 w-4 mr-1" />{isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
-              </Button>
-              {saveMessage === "✓" ? (
-                <span className="flex self-center items-center gap-1 text-sm font-medium text-green-700" role="status">
-                  <Check className="h-4 w-4" />
-                  {t.saved}
-                </span>
-              ) : saveMessage ? (
-                <span className="self-center text-sm text-red-700" role="alert">{saveMessage}</span>
-              ) : null}
+            <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" onClick={clearAll} size="sm">
                 <RotateCcw className="h-4 w-4 mr-1" />
                 {t.clearAll}
@@ -1429,6 +1470,27 @@ export default function TimeCardCalculator({
                   </PopoverContent>
                 </Popover>
               )}
+
+              <div className="ml-auto flex items-center gap-2">
+                {saveMessage === "✓" && !hasUnsavedChanges ? (
+                  <span className="flex items-center gap-1 text-sm font-medium text-green-700" role="status">
+                    <Check className="h-4 w-4" />
+                    {t.saved}
+                  </span>
+                ) : saveMessage && saveMessage !== "✓" ? (
+                  <span className="text-sm text-red-700" role="alert">{saveMessage}</span>
+                ) : null}
+                <Button
+                  onClick={saveCard}
+                  size="sm"
+                  disabled={isSaving || (isEditingSavedCard && !hasUnsavedChanges)}
+                  title={t.saveTooltip}
+                  aria-label={`${savedCardId ? t.saveChanges : t.saveTimeCard}. ${t.saveTooltip}`}
+                >
+                  <Save className="mr-1 h-4 w-4" />
+                  {isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
+                </Button>
+              </div>
             </div>
 
             {paymentPresentation === "prominent" && (
