@@ -1,29 +1,23 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-
   "name": "time-card-calculator",
-
   "main": ".open-next/worker.js",
-
   "compatibility_date": "2026-08-26",
-
   "compatibility_flags": [
     "nodejs_compat"
   ],
-
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
       "id": "188458d1f0ba4866b29c1ddb19534eb1"
     }
   ],
-
   "observability": {
     "enabled": true
-  }
+  },
+  "keep_vars": true
 }
