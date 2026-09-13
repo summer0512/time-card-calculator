@@ -1,0 +1,12 @@
+import { z } from "zod";
+import { timeCardInputSchema } from "@/lib/time-cards/types";
+import { withDatabase } from "@/lib/server/database";
+import { currentUserId } from "@/lib/server/request-auth";
+import { deleteTimeCard, duplicateTimeCard, getTimeCard, renameTimeCard, updateTimeCard } from "@/lib/server/time-cards";
+export const dynamic = "force-dynamic";
+type Context = { params: Promise<{ id: string }> };
+const notFound = () => Response.json({ error: "Not found" }, { status: 404 });
+export async function GET(request: Request, context: Context) { return withDatabase(async (db) => { const userId = await currentUserId(db, request); if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 }); const card = await getTimeCard(db, userId, (await context.params).id); return card ? Response.json({ card }, { headers: { "Cache-Control": "no-store" } }) : notFound(); }); }
+export async function PUT(request: Request, context: Context) { return withDatabase(async (db) => { const userId = await currentUserId(db, request); if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 }); const parsed = timeCardInputSchema.safeParse(await request.json()); if (!parsed.success) return Response.json({ error: "Invalid time card" }, { status: 400 }); return await updateTimeCard(db, userId, (await context.params).id, parsed.data) ? Response.json({ ok: true }) : notFound(); }); }
+export async function PATCH(request: Request, context: Context) { return withDatabase(async (db) => { const userId = await currentUserId(db, request); if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 }); const body = await request.json(); if (body.action === "duplicate") { const id = await duplicateTimeCard(db, userId, (await context.params).id); return id ? Response.json({ id }) : notFound(); } const parsed = z.object({ action: z.literal("rename"), title: z.string().trim().min(1).max(160) }).safeParse(body); if (!parsed.success) return Response.json({ error: "Invalid action" }, { status: 400 }); return await renameTimeCard(db, userId, (await context.params).id, parsed.data.title) ? Response.json({ ok: true }) : notFound(); }); }
+export async function DELETE(request: Request, context: Context) { return withDatabase(async (db) => { const userId = await currentUserId(db, request); if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 }); return await deleteTimeCard(db, userId, (await context.params).id) ? Response.json({ ok: true }) : notFound(); }); }

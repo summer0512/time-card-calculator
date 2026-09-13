@@ -1,4 +1,5 @@
 import type { PaymentConfig, PaymentValidationError } from "./types.ts";
+import { hoursToWholeMinutes } from "./parsing.ts";
 
 const isFiniteNumber = (value: unknown): value is number =>
   typeof value === "number" && Number.isFinite(value);
@@ -24,7 +25,7 @@ export const validatePaymentConfig = (config: PaymentConfig): PaymentValidationE
   }
 
   const ids = new Set<string>();
-  const thresholds = new Set<number>();
+  const thresholdMinutes = new Set<number>();
 
   config.overtime.tiers.forEach((tier, index) => {
     const path = `overtime.tiers.${index}`;
@@ -39,10 +40,15 @@ export const validatePaymentConfig = (config: PaymentConfig): PaymentValidationE
 
     if (!isFiniteNumber(tier.afterHours) || tier.afterHours < 0) {
       errors.push({ code: "INVALID_THRESHOLD", path: `${path}.afterHours`, tierId: tier.id });
-    } else if (thresholds.has(tier.afterHours)) {
-      errors.push({ code: "DUPLICATE_THRESHOLD", path: `${path}.afterHours`, tierId: tier.id });
     } else {
-      thresholds.add(tier.afterHours);
+      const normalizedMinutes = hoursToWholeMinutes(tier.afterHours);
+      if (!Number.isSafeInteger(normalizedMinutes) || normalizedMinutes < 0) {
+        errors.push({ code: "INVALID_THRESHOLD", path: `${path}.afterHours`, tierId: tier.id });
+      } else if (thresholdMinutes.has(normalizedMinutes)) {
+        errors.push({ code: "DUPLICATE_THRESHOLD", path: `${path}.afterHours`, tierId: tier.id });
+      } else {
+        thresholdMinutes.add(normalizedMinutes);
+      }
     }
 
     if (tier.rateType === "multiplier") {

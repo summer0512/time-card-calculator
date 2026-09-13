@@ -258,7 +258,10 @@
     "guides": "Guías",
     "guideLunch": "Cómo calcular horas con descanso",
     "guideBreaks": "Cómo calcular pausas de trabajo",
-    "guideBiweekly": "Guía de jornada quincenal"
+    "guideBiweekly": "Guía de jornada quincenal",
+    "signIn": "Iniciar sesión",
+    "signOut": "Cerrar sesión",
+    "myTimeCards": "Mis tarjetas de tiempo"
   },
   "Footer": {
     "description": "Calculadoras gratuitas para sumar horas trabajadas, pausas, jornadas partidas y horas extra.",
@@ -363,7 +366,25 @@
       "DUPLICATE_THRESHOLD": "Cada límite debe ser único.",
       "INVALID_MULTIPLIER": "Introduce un multiplicador superior a cero.",
       "INVALID_FIXED_RATE": "Introduce una tarifa fija igual o superior a cero."
-    }
+    },
+    "saveTimeCard": "Guardar tarjeta",
+    "saveChanges": "Guardar cambios",
+    "saveTooltip": "Guarda esta tarjeta para abrirla y continuar la próxima vez.",
+    "saveTitlePrompt": "Nombra esta tarjeta",
+    "saveDialogDescription": "Ponle un nombre a esta tarjeta para encontrarla fácilmente más adelante.",
+    "saveTitleLabel": "Nombre de la tarjeta",
+    "saveTitlePlaceholder": "Tarjeta semanal",
+    "defaultWeeklyTimeCardTitle": "Tarjeta semanal",
+    "defaultBiweeklyTimeCardTitle": "Tarjeta quincenal",
+    "cancel": "Cancelar",
+    "saved": "Guardado",
+    "saveError": "No pudimos guardar la tarjeta. Inténtalo de nuevo.",
+    "saving": "Guardando…",
+    "loadingSavedTimeCard": "Cargando tu tarjeta…",
+    "editingSavedTimeCard": "Editando tarjeta guardada",
+    "newTimeCard": "Nueva tarjeta",
+    "loadTimeCardError": "No pudimos cargar esta tarjeta. Inténtalo de nuevo.",
+    "retry": "Intentar de nuevo"
   },
   "ToolPage": {
     "home": "Inicio",
@@ -375,5 +396,26 @@
     "backToHome": "Volver a la calculadora de horas",
     "readRelatedGuide": "Leer la guía relacionada",
     "previewAlt": "Vista previa de {title}"
+  },
+  "MyTimeCards": {
+    "title": "Mis tarjetas de tiempo",
+    "description": "Abre y administra tus tarjetas de tiempo guardadas.",
+    "signInDescription": "Inicia sesión con Google para ver tus tarjetas de tiempo guardadas.",
+    "continueGoogle": "Continuar con Google",
+    "loading": "Cargando…",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "emptyTitle": "Aún no hay tarjetas de tiempo guardadas.",
+    "emptyDescription": "Crea una tarjeta de tiempo y guárdala aquí para volver más tarde y seguir editándola.",
+    "create": "Crear una tarjeta de tiempo",
+    "renamePrompt": "Introduce un nuevo título",
+    "deleteConfirm": "¿Eliminar {title}?",
+    "moreActions": "Más acciones para {title}",
+    "rename": "Renombrar",
+    "duplicate": "Duplicar",
+    "delete": "Eliminar",
+    "hours": "Horas totales",
+    "pay": "Pago total",
+    "updated": "Última actualización",
+    "open": "Abrir"
   }
 }

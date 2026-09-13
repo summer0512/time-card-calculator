@@ -1,3 +1,4 @@
+import Decimal from "decimal.js";
 import type {
   OvertimeTier,
   PaymentConfig,
@@ -7,6 +8,7 @@ import type {
   PaymentValidationError,
   WorkPeriod,
 } from "./types.ts";
+import { hoursToWholeMinutes } from "./parsing.ts";
 import { validatePaymentConfig } from "./validation.ts";
 
 export class InvalidPaymentConfigError extends Error {
@@ -19,22 +21,36 @@ export class InvalidPaymentConfigError extends Error {
   }
 }
 
-const sortTiers = (tiers: OvertimeTier[]): OvertimeTier[] =>
-  [...tiers].sort((left, right) => left.afterHours - right.afterHours);
+interface NormalizedOvertimeTier extends OvertimeTier {
+  afterMinutes: number;
+}
+
+const roundMoney = (value: Decimal): Decimal =>
+  value.toDecimalPlaces(2, Decimal.ROUND_HALF_UP);
+
+const moneyToNumber = (value: Decimal): number => roundMoney(value).toNumber();
+
+const sumMoney = (values: number[]): number =>
+  moneyToNumber(values.reduce((sum, value) => sum.plus(value), new Decimal(0)));
+
+const normalizeAndSortTiers = (tiers: OvertimeTier[]): NormalizedOvertimeTier[] =>
+  tiers
+    .map((tier) => ({ ...tier, afterMinutes: hoursToWholeMinutes(tier.afterHours) }))
+    .sort((left, right) => left.afterMinutes - right.afterMinutes);
 
 const calculatePeriod = (
   periodId: string,
-  totalHours: number,
-  hourlyRate: number,
-  tiers: OvertimeTier[],
+  totalMinutes: number,
+  hourlyRate: Decimal,
+  tiers: NormalizedOvertimeTier[],
 ): PaymentPeriodResult => {
   if (tiers.length === 0) {
-    const regularPay = totalHours * hourlyRate;
+    const regularPay = moneyToNumber(hourlyRate.mul(totalMinutes).div(60));
     return {
       periodId,
-      totalHours,
-      regularHours: totalHours,
-      overtimeHours: 0,
+      totalMinutes,
+      regularMinutes: totalMinutes,
+      overtimeMinutes: 0,
       regularPay,
       overtimePay: 0,
       totalPay: regularPay,
@@ -42,74 +58,90 @@ const calculatePeriod = (
     };
   }
 
-  const regularHours = Math.min(totalHours, tiers[0].afterHours);
+  const regularMinutes = Math.min(totalMinutes, tiers[0].afterMinutes);
   const tierResults = tiers.map<PaymentTierResult>((tier, index) => {
     const nextTier = tiers[index + 1];
-    const segmentEnd = nextTier?.afterHours ?? Number.POSITIVE_INFINITY;
-    const hours = Math.max(Math.min(totalHours, segmentEnd) - tier.afterHours, 0);
+    const segmentEndMinutes = nextTier?.afterMinutes ?? Number.POSITIVE_INFINITY;
+    const minutes = Math.max(
+      Math.min(totalMinutes, segmentEndMinutes) - tier.afterMinutes,
+      0,
+    );
     const effectiveRate = tier.rateType === "multiplier"
-      ? hourlyRate * tier.rateValue
-      : tier.rateValue;
+      ? hourlyRate.mul(new Decimal(tier.rateValue))
+      : new Decimal(tier.rateValue);
 
     return {
-      ...tier,
-      segmentStart: tier.afterHours,
-      segmentEnd: Number.isFinite(segmentEnd) ? segmentEnd : null,
-      hours,
-      effectiveRate,
-      pay: hours * effectiveRate,
+      id: tier.id,
+      afterHours: tier.afterHours,
+      rateType: tier.rateType,
+      rateValue: tier.rateValue,
+      segmentStartMinutes: tier.afterMinutes,
+      segmentEndMinutes: Number.isFinite(segmentEndMinutes) ? segmentEndMinutes : null,
+      minutes,
+      effectiveRate: effectiveRate.toNumber(),
+      pay: moneyToNumber(effectiveRate.mul(minutes).div(60)),
     };
   });
-  const overtimeHours = tierResults.reduce((sum, tier) => sum + tier.hours, 0);
-  const regularPay = regularHours * hourlyRate;
-  const overtimePay = tierResults.reduce((sum, tier) => sum + tier.pay, 0);
+
+  const overtimeMinutes = tierResults.reduce((sum, tier) => sum + tier.minutes, 0);
+  const regularPay = moneyToNumber(hourlyRate.mul(regularMinutes).div(60));
+  const overtimePay = sumMoney(tierResults.map((tier) => tier.pay));
+  const totalPay = sumMoney([regularPay, overtimePay]);
 
   return {
     periodId,
-    totalHours,
-    regularHours,
-    overtimeHours,
+    totalMinutes,
+    regularMinutes,
+    overtimeMinutes,
     regularPay,
     overtimePay,
-    totalPay: regularPay + overtimePay,
+    totalPay,
     tiers: tierResults,
   };
 };
 
-const groupWorkPeriods = (config: PaymentConfig, workPeriods: WorkPeriod[]): Map<string, number> => {
+const groupWorkPeriods = (
+  config: PaymentConfig,
+  workPeriods: WorkPeriod[],
+): Map<string, number> => {
   const groups = new Map<string, number>();
 
   workPeriods.forEach((period) => {
-    if (!Number.isFinite(period.workedHours) || period.workedHours < 0) {
-      throw new RangeError("Worked hours must be a finite, non-negative number");
+    if (!Number.isSafeInteger(period.workedMinutes) || period.workedMinutes < 0) {
+      throw new RangeError("Worked minutes must be a non-negative integer");
     }
 
     const periodId = config.overtime.basis === "daily"
       ? `${period.weekId}:${period.dayId}`
       : period.weekId;
-    groups.set(periodId, (groups.get(periodId) ?? 0) + period.workedHours);
+    groups.set(periodId, (groups.get(periodId) ?? 0) + period.workedMinutes);
   });
 
   return groups;
 };
 
 const combineTierResults = (
-  tiers: OvertimeTier[],
+  tiers: NormalizedOvertimeTier[],
   periods: PaymentPeriodResult[],
-  hourlyRate: number,
+  hourlyRate: Decimal,
 ): PaymentTierResult[] => tiers.map((tier, index) => {
   const nextTier = tiers[index + 1];
   const periodTiers = periods.map((period) => period.tiers[index]);
   const effectiveRate = periodTiers[0]?.effectiveRate
-    ?? (tier.rateType === "fixed" ? tier.rateValue : hourlyRate * tier.rateValue);
+    ?? (tier.rateType === "fixed"
+      ? tier.rateValue
+      : hourlyRate.mul(new Decimal(tier.rateValue)).toNumber());
 
   return {
-    ...tier,
-    segmentStart: tier.afterHours,
-    segmentEnd: nextTier?.afterHours ?? null,
-    hours: periodTiers.reduce((sum, result) => sum + (result?.hours ?? 0), 0),
+    id: tier.id,
+    afterHours: tier.afterHours,
+    rateType: tier.rateType,
+    rateValue: tier.rateValue,
+    segmentStartMinutes: tier.afterMinutes,
+    segmentEndMinutes: nextTier?.afterMinutes ?? null,
+    minutes: periodTiers.reduce((sum, result) => sum + (result?.minutes ?? 0), 0),
     effectiveRate,
-    pay: periodTiers.reduce((sum, result) => sum + (result?.pay ?? 0), 0),
+    pay: sumMoney(periodTiers.map((result) => result?.pay ?? 0)),
   };
 });
 
@@ -122,28 +154,31 @@ export const calculatePayment = (
     throw new InvalidPaymentConfigError(validationErrors);
   }
 
-  const hourlyRate = config.enabled ? (config.hourlyRate ?? 0) : 0;
+  const hourlyRateNumber = config.enabled ? (config.hourlyRate ?? 0) : 0;
+  const hourlyRate = new Decimal(hourlyRateNumber);
   const tiers = config.enabled && config.overtime.enabled
-    ? sortTiers(config.overtime.tiers)
+    ? normalizeAndSortTiers(config.overtime.tiers)
     : [];
-  const groupedHours = groupWorkPeriods(config, workPeriods);
-  const periods = [...groupedHours.entries()].map(([periodId, hours]) =>
-    calculatePeriod(periodId, hours, hourlyRate, tiers));
-  const totalHours = periods.reduce((sum, period) => sum + period.totalHours, 0);
-  const regularHours = periods.reduce((sum, period) => sum + period.regularHours, 0);
-  const overtimeHours = periods.reduce((sum, period) => sum + period.overtimeHours, 0);
-  const regularPay = periods.reduce((sum, period) => sum + period.regularPay, 0);
-  const overtimePay = periods.reduce((sum, period) => sum + period.overtimePay, 0);
+  const groupedMinutes = groupWorkPeriods(config, workPeriods);
+  const periods = [...groupedMinutes.entries()].map(([periodId, minutes]) =>
+    calculatePeriod(periodId, minutes, hourlyRate, tiers));
+
+  const totalMinutes = periods.reduce((sum, period) => sum + period.totalMinutes, 0);
+  const regularMinutes = periods.reduce((sum, period) => sum + period.regularMinutes, 0);
+  const overtimeMinutes = periods.reduce((sum, period) => sum + period.overtimeMinutes, 0);
+  const regularPay = sumMoney(periods.map((period) => period.regularPay));
+  const overtimePay = sumMoney(periods.map((period) => period.overtimePay));
+  const totalPay = sumMoney([regularPay, overtimePay]);
 
   return {
     currency: config.currency,
-    hourlyRate,
-    totalHours,
-    regularHours,
-    overtimeHours,
+    hourlyRate: hourlyRate.toNumber(),
+    totalMinutes,
+    regularMinutes,
+    overtimeMinutes,
     regularPay,
     overtimePay,
-    totalPay: regularPay + overtimePay,
+    totalPay,
     tiers: combineTierResults(tiers, periods, hourlyRate),
     periods,
   };

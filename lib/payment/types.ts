@@ -23,22 +23,22 @@ export interface PaymentConfig {
 export interface WorkPeriod {
   dayId: string;
   weekId: string;
-  workedHours: number;
+  workedMinutes: number;
 }
 
 export interface PaymentTierResult extends OvertimeTier {
-  segmentStart: number;
-  segmentEnd: number | null;
-  hours: number;
+  segmentStartMinutes: number;
+  segmentEndMinutes: number | null;
+  minutes: number;
   effectiveRate: number;
   pay: number;
 }
 
 export interface PaymentPeriodResult {
   periodId: string;
-  totalHours: number;
-  regularHours: number;
-  overtimeHours: number;
+  totalMinutes: number;
+  regularMinutes: number;
+  overtimeMinutes: number;
   regularPay: number;
   overtimePay: number;
   totalPay: number;
@@ -48,9 +48,9 @@ export interface PaymentPeriodResult {
 export interface PaymentResult {
   currency: string;
   hourlyRate: number;
-  totalHours: number;
-  regularHours: number;
-  overtimeHours: number;
+  totalMinutes: number;
+  regularMinutes: number;
+  overtimeMinutes: number;
   regularPay: number;
   overtimePay: number;
   totalPay: number;

@@ -12,11 +12,13 @@ import { getLocalizedToolSlug, isLocalizedToolEnabled } from "@/lib/i18n-slugs";
 import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { LanguageToggle } from "@/components/language-toggle";
 import { getGuidesForLocale } from "@/lib/guides";
+import { authClient } from "@/lib/auth-client";
 
 export default function MobileMenuButton() {
   const locale = useLocale();
   const t = useTranslations("Nav");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = authClient.useSession();
   const lunchSlug = getLocalizedToolSlug(locale as SupportedLocale, "time-card-calculator-with-lunch")!;
   const biweeklySlug = getLocalizedToolSlug(locale as SupportedLocale, "biweekly-time-card-calculator")!;
   const timesheetSlug = getLocalizedToolSlug(locale as SupportedLocale, "timesheet-calculator-with-lunch")!;
@@ -54,6 +56,7 @@ export default function MobileMenuButton() {
             <div className="px-3 py-2 border-b border-gray-100 mb-1">
               <LanguageToggle />
             </div>
+            {session?.user ? <><Link href="/my-time-cards" className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium" onClick={() => setIsMenuOpen(false)}>{t("myTimeCards")}</Link><button className="text-left w-full text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium" onClick={() => { setIsMenuOpen(false); void authClient.signOut(); }}>{t("signOut")}</button></> : <button className="text-left w-full text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium" onClick={() => authClient.signIn.social({ provider: "google", callbackURL: window.location.href })}>{t("signIn")}</button>}
             {menuItems.map((item) => "exactPath" in item ? (
               <a key={item.name} href={item.href} className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {item.name}

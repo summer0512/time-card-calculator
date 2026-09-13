@@ -46,7 +46,7 @@ export default function ToolLandingPage({ locale, config }: ToolLandingPageProps
     <main className="py-6"><div className="max-w-7xl mx-auto px-4 sm:px-6 2xl:px-8">
       <nav className="text-sm text-gray-600 mb-4"><Link href="/" className="hover:text-blue-600">{t("home")}</Link><span className="mx-2">/</span><span>{localizedView.title}</span></nav>
       <section className="mb-4"><h1 className="text-3xl sm:text-4xl font-bold text-gray-900">{localizedView.h1}</h1><p className="text-lg text-gray-600 mt-2">{localizedView.subtitle}</p></section>
-      <TimeCardCalculator {...calculatorProps} />
+      <TimeCardCalculator {...calculatorProps} calculatorType={config.slug} />
       <section className="mt-8 bg-white rounded-lg border p-6"><h2 className="text-2xl font-semibold text-gray-900 mb-3">{t("whoShouldUse", { title: localizedView.title })}</h2><p className="text-gray-700">{localizedView.intro}</p></section>
       <section className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-lg border p-6"><h2 className="text-2xl font-semibold text-gray-900 mb-3">{t("howToUse", { title: localizedView.title })}</h2><ol className="space-y-2 text-gray-700 list-decimal list-inside">{localizedView.howToSteps.map((step) => <li key={step}>{step}</li>)}</ol></div>

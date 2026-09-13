@@ -260,7 +260,10 @@
     "guides": "Guides",
     "guideLunch": "Comment calculer le temps de travail avec pause déjeuner",
     "guideBreaks": "Comment calculer le temps de travail avec pauses",
-    "guideBiweekly": "Guide du calculateur bimensuel"
+    "guideBiweekly": "Guide du calculateur bimensuel",
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "myTimeCards": "Mes fiches horaires"
   },
   "Footer": {
     "description": "Calculateurs gratuits en ligne pour les cartes de temps, les pauses déjeuner, les pointages et les totaux d'heures pour la paie bimensuelle.",
@@ -365,7 +368,25 @@
       "INVALID_MULTIPLIER": "Saisissez un multiplicateur supérieur à zéro.",
       "INVALID_FIXED_RATE": "Saisissez un taux fixe positif ou nul."
     },
-    "addWorkSegment": "Ajouter une plage de travail"
+    "addWorkSegment": "Ajouter une plage de travail",
+    "saveTimeCard": "Enregistrer",
+    "saveChanges": "Enregistrer les modifications",
+    "saveTooltip": "Enregistrez cette fiche pour la rouvrir et continuer plus tard.",
+    "saveTitlePrompt": "Nommer cette fiche",
+    "saveDialogDescription": "Donnez un nom à cette fiche afin de la retrouver facilement plus tard.",
+    "saveTitleLabel": "Nom de la fiche",
+    "saveTitlePlaceholder": "Fiche hebdomadaire",
+    "defaultWeeklyTimeCardTitle": "Fiche hebdomadaire",
+    "defaultBiweeklyTimeCardTitle": "Fiche sur 14 jours",
+    "cancel": "Annuler",
+    "saved": "Enregistrée",
+    "saveError": "Impossible d’enregistrer la fiche. Réessayez.",
+    "saving": "Enregistrement…",
+    "loadingSavedTimeCard": "Chargement de votre fiche…",
+    "editingSavedTimeCard": "Modification de la fiche enregistrée",
+    "newTimeCard": "Nouvelle fiche",
+    "loadTimeCardError": "Impossible de charger cette fiche. Réessayez.",
+    "retry": "Réessayer"
   },
   "ToolPage": {
     "home": "Accueil",
@@ -377,5 +398,26 @@
     "backToHome": "Retour au calculateur d'heures de travail gratuit",
     "readRelatedGuide": "Lire le guide associé",
     "previewAlt": "Aperçu de {title}"
+  },
+  "MyTimeCards": {
+    "title": "Mes fiches horaires",
+    "description": "Ouvrez et gérez vos fiches horaires enregistrées.",
+    "signInDescription": "Connectez-vous avec Google pour voir vos fiches horaires enregistrées.",
+    "continueGoogle": "Continuer avec Google",
+    "loading": "Chargement…",
+    "error": "Une erreur s’est produite. Veuillez réessayer.",
+    "emptyTitle": "Aucune fiche horaire enregistrée pour le moment.",
+    "emptyDescription": "Créez une fiche horaire et enregistrez-la ici pour pouvoir la retrouver et la modifier plus tard.",
+    "create": "Créer une fiche horaire",
+    "renamePrompt": "Saisissez un nouveau titre",
+    "deleteConfirm": "Supprimer {title} ?",
+    "moreActions": "Plus d’actions pour {title}",
+    "rename": "Renommer",
+    "duplicate": "Dupliquer",
+    "delete": "Supprimer",
+    "hours": "Total des heures",
+    "pay": "Rémunération totale",
+    "updated": "Dernière mise à jour",
+    "open": "Ouvrir"
   }
 }

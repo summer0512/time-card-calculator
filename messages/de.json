@@ -260,7 +260,10 @@
     "guides": "Ratgeber",
     "guideLunch": "Arbeitszeit mit Mittagspause berechnen",
     "guideBreaks": "Arbeitszeit mit Pausen berechnen",
-    "guideBiweekly": "2-Wochen-Arbeitszeit Guide"
+    "guideBiweekly": "2-Wochen-Arbeitszeit Guide",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden",
+    "myTimeCards": "Meine Stundenzettel"
   },
   "Footer": {
     "description": "Kostenlose Online-Rechner für Arbeitszeit, Pausen, Stempelzeiten und zweiwöchige Stundenübersichten.",
@@ -365,7 +368,25 @@
       "INVALID_MULTIPLIER": "Geben Sie einen Multiplikator größer als null ein.",
       "INVALID_FIXED_RATE": "Geben Sie einen festen Tarif von null oder mehr ein."
     },
-    "addWorkSegment": "Arbeitsabschnitt hinzufügen"
+    "addWorkSegment": "Arbeitsabschnitt hinzufügen",
+    "saveTimeCard": "Stundenzettel speichern",
+    "saveChanges": "Änderungen speichern",
+    "saveTooltip": "Speichern Sie diesen Stundenzettel, um ihn später wieder zu öffnen.",
+    "saveTitlePrompt": "Stundenzettel benennen",
+    "saveDialogDescription": "Geben Sie diesem Stundenzettel einen Namen, damit Sie ihn später leicht wiederfinden.",
+    "saveTitleLabel": "Name des Stundenzettels",
+    "saveTitlePlaceholder": "Wöchentlicher Stundenzettel",
+    "defaultWeeklyTimeCardTitle": "Wöchentlicher Stundenzettel",
+    "defaultBiweeklyTimeCardTitle": "Zweiwöchiger Stundenzettel",
+    "cancel": "Abbrechen",
+    "saved": "Gespeichert",
+    "saveError": "Der Stundenzettel konnte nicht gespeichert werden.",
+    "saving": "Speichern…",
+    "loadingSavedTimeCard": "Stundenzettel wird geladen…",
+    "editingSavedTimeCard": "Gespeicherten Stundenzettel bearbeiten",
+    "newTimeCard": "Neuer Stundenzettel",
+    "loadTimeCardError": "Der Stundenzettel konnte nicht geladen werden. Bitte versuche es erneut.",
+    "retry": "Erneut versuchen"
   },
   "ToolPage": {
     "home": "Startseite",
@@ -377,5 +398,26 @@
     "backToHome": "Zurück zum Stundenrechner",
     "readRelatedGuide": "Passenden Ratgeber lesen",
     "previewAlt": "Vorschau für {title}"
+  },
+  "MyTimeCards": {
+    "title": "Meine Stundenzettel",
+    "description": "Öffne und verwalte deine gespeicherten Stundenzettel.",
+    "signInDescription": "Melde dich mit Google an, um deine gespeicherten Stundenzettel zu sehen.",
+    "continueGoogle": "Mit Google fortfahren",
+    "loading": "Wird geladen…",
+    "error": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
+    "emptyTitle": "Noch keine Stundenzettel gespeichert.",
+    "emptyDescription": "Erstelle einen Stundenzettel und speichere ihn hier, damit du später zurückkehren und ihn weiter bearbeiten kannst.",
+    "create": "Stundenzettel erstellen",
+    "renamePrompt": "Gib einen neuen Titel ein",
+    "deleteConfirm": "{title} löschen?",
+    "moreActions": "Weitere Aktionen für {title}",
+    "rename": "Umbenennen",
+    "duplicate": "Duplizieren",
+    "delete": "Löschen",
+    "hours": "Gesamtstunden",
+    "pay": "Gesamtvergütung",
+    "updated": "Zuletzt aktualisiert",
+    "open": "Öffnen"
   }
 }

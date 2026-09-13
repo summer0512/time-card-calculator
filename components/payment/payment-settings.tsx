@@ -1,5 +1,6 @@
 "use client";
 
+import Decimal from "decimal.js";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -18,6 +19,7 @@ import type {
   PaymentValidationError,
   PaymentValidationCode,
 } from "@/lib/payment";
+import { parseLocalizedDecimal } from "@/lib/payment";
 
 export interface EditableOvertimeTier {
   id: string;
@@ -94,13 +96,15 @@ export default function PaymentSettings({
   };
 
   const addTier = () => {
-    const previousThreshold = Number(tiers.at(-1)?.afterHours);
-    const afterHours = Number.isFinite(previousThreshold) ? previousThreshold + 10 : 40;
+    const previousThreshold = parseLocalizedDecimal(tiers.at(-1)?.afterHours ?? "");
+    const afterHours = previousThreshold !== null && Number.isFinite(previousThreshold)
+      ? new Decimal(previousThreshold).plus(10).toString()
+      : "40";
     onTiersChange([
       ...tiers,
       {
         id: `tier-${crypto.randomUUID()}`,
-        afterHours: String(afterHours),
+        afterHours,
         rateType: "multiplier",
         rateValue: "1.5",
       },
