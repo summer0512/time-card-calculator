@@ -12,6 +12,7 @@ import {
   Loader2,
   MoreHorizontal,
   Pencil,
+  Share2,
   Trash2,
   WalletCards,
 } from "lucide-react";
@@ -28,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { TimeCardListItem } from "@/lib/time-cards/types";
+import TimeCardShareDialog from "@/components/time-card-share-dialog";
 
 function LoadingState({ label }: { label: string }) {
   return (
@@ -79,6 +81,7 @@ export default function MyTimeCards() {
   const [cards, setCards] = useState<TimeCardListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [shareCardId, setShareCardId] = useState<string | null>(null);
 
   const load = async () => {
     setLoading(true);
@@ -174,6 +177,7 @@ export default function MyTimeCards() {
 
   return (
     <main className="min-h-[70vh] bg-gradient-to-b from-slate-50/80 via-white to-white">
+      <TimeCardShareDialog cardId={shareCardId} open={Boolean(shareCardId)} onOpenChange={(open) => { if (!open) setShareCardId(null); }} onDisabled={() => void load()} />
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex items-start gap-4">
@@ -274,6 +278,10 @@ export default function MyTimeCards() {
                         <DropdownMenuItem onSelect={() => mutate(card, "duplicate")}>
                           <Copy className="mr-2 h-4 w-4" />
                           {t("duplicate")}
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => setShareCardId(card.id)}>
+                          <Share2 className="mr-2 h-4 w-4" />
+                          {t("share")}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-600 focus:text-red-600"

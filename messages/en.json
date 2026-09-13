@@ -399,6 +399,12 @@
     "readRelatedGuide": "Read Related Guide",
     "previewAlt": "{title} tool preview"
   },
+  "TimeCardShare": {
+    "share": "Share", "dialogTitle": "Share time card", "dialogDescription": "Anyone with this link can view this time card, including its hours, notes, and payment information.",
+    "creatingLink": "Creating share link…", "shareLink": "Share link", "copyLink": "Copy link", "copied": "Copied", "copyError": "We couldn't copy the link.", "openLink": "Open link", "stopSharing": "Stop sharing", "stopSharingConfirm": "People with the existing link will no longer be able to view this time card.", "error": "We couldn't update sharing. Please try again.",
+    "signInTitle": "Sign in to share", "signInDescription": "Sign in with Google before sharing. Your current entries will be restored when you return.", "continueGoogle": "Continue with Google", "saveFirstTitle": "Save before sharing", "saveFirstDescription": "Save this time card before creating a shareable link.", "saveChangesTitle": "Save your latest changes", "saveChangesDescription": "Save your latest changes so the shared page shows the current version.",
+    "sharedTitle": "Shared Time Card", "sharedDescription": "This is a read-only time card shared through time-card-calculator.work.", "readOnly": "Read-only", "lastUpdated": "Last updated {date}", "createYourOwn": "Create Your Own Time Card", "start": "Start", "end": "End", "breaks": "Breaks", "dailyTotal": "Daily total", "totalHours": "Total hours", "totalPay": "Total pay", "reportHeader": "Report header", "notes": "Notes"
+  },
   "MyTimeCards": {
     "title": "My Time Cards",
     "description": "Open and manage your saved time cards.",
@@ -414,6 +420,7 @@
     "moreActions": "More actions for {title}",
     "rename": "Rename",
     "duplicate": "Duplicate",
+    "share": "Share",
     "delete": "Delete",
     "hours": "Total hours",
     "pay": "Total pay",

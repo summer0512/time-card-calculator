@@ -399,6 +399,12 @@
     "readRelatedGuide": "Ler guia relacionado",
     "previewAlt": "Prévia de {title}"
   },
+  "TimeCardShare": {
+    "share": "Compartilhar", "dialogTitle": "Compartilhar cartão de ponto", "dialogDescription": "Qualquer pessoa com este link pode ver as horas, observações e informações de pagamento.",
+    "creatingLink": "Criando link…", "shareLink": "Link de compartilhamento", "copyLink": "Copiar link", "copied": "Copiado", "copyError": "Não foi possível copiar o link.", "openLink": "Abrir link", "stopSharing": "Parar de compartilhar", "stopSharingConfirm": "As pessoas com o link não poderão mais ver este cartão.", "error": "Não foi possível atualizar o compartilhamento.",
+    "signInTitle": "Entre para compartilhar", "signInDescription": "Entre com o Google. Seus dados serão restaurados quando você voltar.", "continueGoogle": "Continuar com o Google", "saveFirstTitle": "Salve antes de compartilhar", "saveFirstDescription": "Salve este cartão antes de criar um link.", "saveChangesTitle": "Salve as alterações", "saveChangesDescription": "Salve as alterações para que a página compartilhada mostre a versão atual.",
+    "sharedTitle": "Cartão de ponto compartilhado", "sharedDescription": "Este cartão de ponto compartilhado é somente para leitura.", "readOnly": "Somente leitura", "lastUpdated": "Última atualização: {date}", "createYourOwn": "Criar seu próprio cartão", "start": "Entrada", "end": "Saída", "breaks": "Intervalos", "dailyTotal": "Total diário", "totalHours": "Total de horas", "totalPay": "Pagamento total", "reportHeader": "Cabeçalho", "notes": "Observações"
+  },
   "MyTimeCards": {
     "title": "Meus cartões de ponto",
     "description": "Abra e gerencie seus cartões de ponto salvos.",
@@ -414,6 +420,7 @@
     "moreActions": "Mais ações para {title}",
     "rename": "Renomear",
     "duplicate": "Duplicar",
+    "share": "Compartilhar",
     "delete": "Excluir",
     "hours": "Total de horas",
     "pay": "Pagamento total",

@@ -11,3 +11,11 @@ const valid = { title: "Week 1", reportHeader: "Employee", notes: "", calculator
 test("accepts the normalized V1 calculator persistence contract", () => { assert.equal(timeCardInputSchema.parse(valid).rows[0].breaks[0].minutes, 60); });
 test("rejects external source paths and malformed currency", () => { assert.equal(timeCardInputSchema.safeParse({ ...valid, sourcePath: "//example.com", currency: "$" }).success, false); });
 test("migration is isolated to the application schema", () => { const sql = readFileSync(new URL("../drizzle/0000_illegal_black_cat.sql", import.meta.url), "utf8"); assert.match(sql, /CREATE SCHEMA IF NOT EXISTS "time_card_calculator"/); assert.doesNotMatch(sql, /"public"\./); assert.doesNotMatch(sql, /DROP\s+(TABLE|SCHEMA)/i); assert.equal((sql.match(/CREATE TABLE "time_card_calculator"/g) ?? []).length, 6); });
+test("sharing migration only extends the time card table", () => {
+  const sql = readFileSync(new URL("../drizzle/0001_silky_tattoo.sql", import.meta.url), "utf8");
+  assert.match(sql, /ADD COLUMN "share_id" text/);
+  assert.match(sql, /ADD COLUMN "share_enabled" boolean DEFAULT false NOT NULL/);
+  assert.match(sql, /time_card_share_id_uidx/);
+  assert.doesNotMatch(sql, /"public"\./);
+  assert.doesNotMatch(sql, /DROP\s+(TABLE|SCHEMA)/i);
+});

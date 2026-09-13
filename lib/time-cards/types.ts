@@ -90,6 +90,9 @@ export type TimeCardListItem = {
   cachedTotalPay: string | null;
   createdAt: string;
   updatedAt: string;
+  shareId: string | null;
+  shareEnabled: boolean;
+  sharedAt: string | null;
 };
 
 export type SavedTimeCard = TimeCardListItem &
@@ -105,9 +108,16 @@ export type SavedTimeCard = TimeCardListItem &
     | "currency"
     | "cachedTotalMinutes"
     | "cachedTotalPay"
+    | "reportHeader"
+    | "notes"
+    | "hourlyRate"
   > & {
     reportHeader: string;
     notes: string;
     hourlyRate: string | null;
     schemaVersion: number;
   };
+
+export type SharedTimeCard = Omit<SavedTimeCard, "id" | "shareId" | "shareEnabled"> & {
+  sharedAt: string | null;
+};

@@ -399,6 +399,12 @@
     "readRelatedGuide": "Lire le guide associé",
     "previewAlt": "Aperçu de {title}"
   },
+  "TimeCardShare": {
+    "share": "Partager", "dialogTitle": "Partager la feuille de temps", "dialogDescription": "Toute personne disposant de ce lien peut consulter les heures, les notes et les informations de rémunération.",
+    "creatingLink": "Création du lien…", "shareLink": "Lien de partage", "copyLink": "Copier", "copied": "Copié", "copyError": "Impossible de copier le lien.", "openLink": "Ouvrir", "stopSharing": "Arrêter le partage", "stopSharingConfirm": "Les personnes disposant du lien ne pourront plus consulter cette feuille de temps.", "error": "Impossible de modifier le partage. Réessayez.",
+    "signInTitle": "Connectez-vous pour partager", "signInDescription": "Connectez-vous avec Google. Vos saisies seront restaurées à votre retour.", "continueGoogle": "Continuer avec Google", "saveFirstTitle": "Enregistrer avant de partager", "saveFirstDescription": "Enregistrez cette feuille de temps avant de créer un lien.", "saveChangesTitle": "Enregistrer les modifications", "saveChangesDescription": "Enregistrez les dernières modifications afin que la page partagée soit à jour.",
+    "sharedTitle": "Feuille de temps partagée", "sharedDescription": "Cette feuille de temps partagée est en lecture seule.", "readOnly": "Lecture seule", "lastUpdated": "Dernière mise à jour : {date}", "createYourOwn": "Créer votre feuille de temps", "start": "Début", "end": "Fin", "breaks": "Pauses", "dailyTotal": "Total quotidien", "totalHours": "Total des heures", "totalPay": "Rémunération totale", "reportHeader": "En-tête", "notes": "Notes"
+  },
   "MyTimeCards": {
     "title": "Mes fiches horaires",
     "description": "Ouvrez et gérez vos fiches horaires enregistrées.",
@@ -414,6 +420,7 @@
     "moreActions": "Plus d’actions pour {title}",
     "rename": "Renommer",
     "duplicate": "Dupliquer",
+    "share": "Partager",
     "delete": "Supprimer",
     "hours": "Total des heures",
     "pay": "Rémunération totale",
