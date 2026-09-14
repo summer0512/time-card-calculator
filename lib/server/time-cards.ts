@@ -46,7 +46,21 @@ const serializeCard = (card: typeof timeCard.$inferSelect) => ({
   ...card,
   createdAt: card.createdAt.toISOString(),
   updatedAt: card.updatedAt.toISOString(),
+  sharedAt: card.sharedAt?.toISOString() ?? null,
 });
+
+async function rowsForCard(db: Database, cardId: string) {
+  const rows = await db.select().from(timeCardRow)
+    .where(eq(timeCardRow.timeCardId, cardId))
+    .orderBy(timeCardRow.position);
+  return rows.map((row) => ({
+    position: row.position,
+    workDate: row.workDate,
+    dayLabel: row.dayLabel,
+    punches: Array.isArray(row.punches) ? row.punches.map((x) => punchSchema.parse(x)) : [],
+    breaks: Array.isArray(row.breaks) ? row.breaks.map((x) => savedBreakSchema.parse(x)) : [],
+  }));
+}
 
 export async function listTimeCards(db: Database, userId: string) {
   const cards = await db.select({
@@ -63,6 +77,9 @@ export async function listTimeCards(db: Database, userId: string) {
     cachedTotalPay: timeCard.cachedTotalPay,
     createdAt: timeCard.createdAt,
     updatedAt: timeCard.updatedAt,
+    shareId: timeCard.shareId,
+    shareEnabled: timeCard.shareEnabled,
+    sharedAt: timeCard.sharedAt,
   }).from(timeCard)
     .where(and(eq(timeCard.userId, userId), isNull(timeCard.deletedAt)))
     .orderBy(desc(timeCard.updatedAt));
@@ -71,6 +88,7 @@ export async function listTimeCards(db: Database, userId: string) {
     ...card,
     createdAt: card.createdAt.toISOString(),
     updatedAt: card.updatedAt.toISOString(),
+    sharedAt: card.sharedAt?.toISOString() ?? null,
   }));
 }
 
@@ -89,24 +107,42 @@ export async function getTimeCard(db: Database, userId: string, cardId: string) 
   const card = await owned(db, userId, cardId);
   if (!card) return null;
 
-  const rows = await db.select().from(timeCardRow)
-    .where(eq(timeCardRow.timeCardId, cardId))
-    .orderBy(timeCardRow.position);
-
   return {
     ...serializeCard(card),
     settings: settingsSchema.parse(card.settings),
-    rows: rows.map((row) => ({
-      position: row.position,
-      workDate: row.workDate,
-      dayLabel: row.dayLabel,
-      punches: Array.isArray(row.punches)
-        ? row.punches.map((x) => punchSchema.parse(x))
-        : [],
-      breaks: Array.isArray(row.breaks)
-        ? row.breaks.map((x) => savedBreakSchema.parse(x))
-        : [],
-    })),
+    rows: await rowsForCard(db, cardId),
+  };
+}
+
+export async function enableTimeCardShare(db: Database, userId: string, cardId: string) {
+  const card = await owned(db, userId, cardId);
+  if (!card) return null;
+  const shareId = card.shareId ?? id();
+  const now = new Date();
+  await db.update(timeCard).set({ shareId, shareEnabled: true, sharedAt: now })
+    .where(and(eq(timeCard.id, cardId), eq(timeCard.userId, userId), isNull(timeCard.deletedAt)));
+  return shareId;
+}
+
+export async function disableTimeCardShare(db: Database, userId: string, cardId: string) {
+  const result = await db.update(timeCard).set({ shareEnabled: false })
+    .where(and(eq(timeCard.id, cardId), eq(timeCard.userId, userId), isNull(timeCard.deletedAt)))
+    .returning({ id: timeCard.id });
+  return result.length > 0;
+}
+
+export async function getSharedTimeCard(db: Database, shareId: string) {
+  const [card] = await db.select().from(timeCard).where(and(
+    eq(timeCard.shareId, shareId), eq(timeCard.shareEnabled, true), isNull(timeCard.deletedAt),
+  )).limit(1);
+  if (!card) return null;
+  const { id: cardId, userId: _userId, deletedAt: _deletedAt, shareId: _shareId, shareEnabled: _shareEnabled, ...publicCard } = serializeCard(card);
+  return {
+    ...publicCard,
+    reportHeader: card.reportHeader ?? "",
+    notes: card.notes ?? "",
+    settings: settingsSchema.parse(card.settings),
+    rows: await rowsForCard(db, cardId),
   };
 }
 

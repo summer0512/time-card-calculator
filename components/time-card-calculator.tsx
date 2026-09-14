@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save, Check, Loader2 } from "lucide-react";
+import { AlertCircle, Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save, Check, Loader2, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -33,6 +33,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import { authClient } from "@/lib/auth-client";
 import type { SavedTimeCard } from "@/lib/time-cards/types";
+import TimeCardShareDialog from "@/components/time-card-share-dialog";
 import {
   calculateClockSpanMinutes,
   formatDecimalHoursFromMinutes,
@@ -425,6 +426,7 @@ export default function TimeCardCalculator({
   uiText,
 }: TimeCardCalculatorProps) {
   const tCalculator = useTranslations("Calculator");
+  const tShare = useTranslations("TimeCardShare");
   const locale = useLocale();
   const localizedUiText: Partial<CalculatorUiText> = {
     saveTimeCard: tCalculator("saveTimeCard"),
@@ -571,6 +573,10 @@ export default function TimeCardCalculator({
   const [routeCardId, setRouteCardId] = useState<string | null>(null);
   const [savedCardLoadState, setSavedCardLoadState] = useState<SavedCardLoadState>("idle");
   const [savedCardReloadKey, setSavedCardReloadKey] = useState(0);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareLoginOpen, setShareLoginOpen] = useState(false);
+  const [shareSaveOpen, setShareSaveOpen] = useState(false);
+  const shareAfterSaveRef = useRef(false);
   const isRestoring = useRef(false);
   const skipNextCardLoadRef = useRef<string | null>(null);
 
@@ -899,6 +905,10 @@ export default function TimeCardCalculator({
       setSavedSnapshotKey(currentSnapshotKey);
       setSaveDialogOpen(false);
       setSaveMessage("✓");
+      if (shareAfterSaveRef.current) {
+        shareAfterSaveRef.current = false;
+        setShareDialogOpen(true);
+      }
     } catch {
       setSaveMessage(t.saveError);
     } finally {
@@ -930,6 +940,28 @@ export default function TimeCardCalculator({
       reportHeader.trim() || (isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle),
     );
     setSaveDialogOpen(true);
+  };
+
+  const beginShareSave = async () => {
+    setShareSaveOpen(false);
+    shareAfterSaveRef.current = true;
+    if (savedCardId) {
+      await persistCard(savedTitle);
+      return;
+    }
+    setSaveTitle(reportHeader.trim() || (isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle));
+    setSaveDialogOpen(true);
+  };
+
+  const shareCard = () => {
+    if (!sessionData?.user) { setShareLoginOpen(true); return; }
+    if (!savedCardId || hasUnsavedChanges) { setShareSaveOpen(true); return; }
+    setShareDialogOpen(true);
+  };
+
+  const continueToShareLogin = async () => {
+    sessionStorage.setItem("pending-time-card-share", JSON.stringify({ path: window.location.pathname, state: snapshot() }));
+    await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.pathname}?resumeShare=1` });
   };
 
   useEffect(() => {
@@ -999,6 +1031,20 @@ export default function TimeCardCalculator({
         setResumeReady(true);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionData?.user?.id]);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("resumeShare") !== "1" || !sessionData?.user) return;
+    const raw = sessionStorage.getItem("pending-time-card-share");
+    if (!raw) return;
+    const pending = JSON.parse(raw);
+    restoreSnapshot(pending.state);
+    sessionStorage.removeItem("pending-time-card-share");
+    window.history.replaceState({}, "", pending.path);
+    shareAfterSaveRef.current = true;
+    setSaveTitle(pending.state.reportHeader?.trim() || (pending.state.isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle));
+    setSaveDialogOpen(true);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionData?.user?.id]);
   useEffect(() => { if (resumeReady) { setResumeReady(false); void saveCard(); } }, [resumeReady]);
@@ -1306,10 +1352,20 @@ export default function TimeCardCalculator({
 
   return (
     <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
+      <TimeCardShareDialog cardId={savedCardId} open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
+      <Dialog open={shareLoginOpen} onOpenChange={setShareLoginOpen}>
+        <DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>{tShare("signInTitle")}</DialogTitle><DialogDescription>{tShare("signInDescription")}</DialogDescription></DialogHeader><DialogFooter><Button variant="outline" onClick={() => setShareLoginOpen(false)}>{t.cancel}</Button><Button onClick={() => void continueToShareLogin()}>{tShare("continueGoogle")}</Button></DialogFooter></DialogContent>
+      </Dialog>
+      <Dialog open={shareSaveOpen} onOpenChange={setShareSaveOpen}>
+        <DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>{hasUnsavedChanges ? tShare("saveChangesTitle") : tShare("saveFirstTitle")}</DialogTitle><DialogDescription>{hasUnsavedChanges ? tShare("saveChangesDescription") : tShare("saveFirstDescription")}</DialogDescription></DialogHeader><DialogFooter><Button variant="outline" onClick={() => setShareSaveOpen(false)}>{t.cancel}</Button><Button onClick={() => void beginShareSave()}><Save className="mr-1 h-4 w-4" />{savedCardId ? t.saveChanges : t.saveTimeCard}</Button></DialogFooter></DialogContent>
+      </Dialog>
       <Dialog
         open={saveDialogOpen}
         onOpenChange={(open) => {
-          if (!isSaving) setSaveDialogOpen(open);
+          if (!isSaving) {
+            setSaveDialogOpen(open);
+            if (!open) shareAfterSaveRef.current = false;
+          }
         }}
       >
         <DialogContent className="sm:max-w-md">
@@ -1347,7 +1403,7 @@ export default function TimeCardCalculator({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setSaveDialogOpen(false)}
+                onClick={() => { shareAfterSaveRef.current = false; setSaveDialogOpen(false); }}
                 disabled={isSaving}
               >
                 {t.cancel}
@@ -1489,6 +1545,9 @@ export default function TimeCardCalculator({
                 >
                   <Save className="mr-1 h-4 w-4" />
                   {isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={shareCard} disabled={isSaving}>
+                  <Share2 className="mr-1 h-4 w-4" />{tShare("share")}
                 </Button>
               </div>
             </div>

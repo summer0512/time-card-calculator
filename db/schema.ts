@@ -34,10 +34,13 @@ export const timeCard = appSchema.table("time_card", {
   paymentEnabled: boolean("payment_enabled").default(false).notNull(), currency: varchar("currency", { length: 3 }), hourlyRate: numeric("hourly_rate", { precision: 12, scale: 4 }),
   settings: jsonb("settings").notNull(), cachedTotalMinutes: integer("cached_total_minutes").default(0).notNull(),
   cachedTotalPay: numeric("cached_total_pay", { precision: 14, scale: 4 }), schemaVersion: integer("schema_version").default(1).notNull(),
+  shareId: text("share_id"), shareEnabled: boolean("share_enabled").default(false).notNull(),
+  sharedAt: timestamp("shared_at", { withTimezone: true }),
   ...timestamps, deletedAt: timestamp("deleted_at", { withTimezone: true }),
 }, (table) => [
   index("time_card_user_updated_idx").on(table.userId, table.updatedAt), index("time_card_user_deleted_updated_idx").on(table.userId, table.deletedAt, table.updatedAt),
   index("time_card_active_user_idx").on(table.userId).where(sql`${table.deletedAt} is null`),
+  uniqueIndex("time_card_share_id_uidx").on(table.shareId),
 ]);
 export const timeCardRow = appSchema.table("time_card_row", {
   id: text("id").primaryKey(), timeCardId: text("time_card_id").notNull().references(() => timeCard.id, { onDelete: "cascade" }),

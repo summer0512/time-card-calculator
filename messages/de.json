@@ -399,6 +399,12 @@
     "readRelatedGuide": "Passenden Ratgeber lesen",
     "previewAlt": "Vorschau für {title}"
   },
+  "TimeCardShare": {
+    "share": "Teilen", "dialogTitle": "Stundenzettel teilen", "dialogDescription": "Jeder mit diesem Link kann Stunden, Notizen und Vergütungsinformationen ansehen.",
+    "creatingLink": "Freigabelink wird erstellt…", "shareLink": "Freigabelink", "copyLink": "Link kopieren", "copied": "Kopiert", "copyError": "Der Link konnte nicht kopiert werden.", "openLink": "Link öffnen", "stopSharing": "Freigabe beenden", "stopSharingConfirm": "Personen mit dem bisherigen Link können diesen Stundenzettel nicht mehr ansehen.", "error": "Die Freigabe konnte nicht aktualisiert werden.",
+    "signInTitle": "Zum Teilen anmelden", "signInDescription": "Melden Sie sich mit Google an. Ihre Eingaben werden nach der Rückkehr wiederhergestellt.", "continueGoogle": "Mit Google fortfahren", "saveFirstTitle": "Vor dem Teilen speichern", "saveFirstDescription": "Speichern Sie diesen Stundenzettel, bevor Sie einen Freigabelink erstellen.", "saveChangesTitle": "Änderungen speichern", "saveChangesDescription": "Speichern Sie die neuesten Änderungen, damit die geteilte Seite aktuell ist.",
+    "sharedTitle": "Geteilter Stundenzettel", "sharedDescription": "Dieser geteilte Stundenzettel ist schreibgeschützt.", "readOnly": "Schreibgeschützt", "lastUpdated": "Zuletzt aktualisiert: {date}", "createYourOwn": "Eigenen Stundenzettel erstellen", "start": "Beginn", "end": "Ende", "breaks": "Pausen", "dailyTotal": "Tagessumme", "totalHours": "Gesamtstunden", "totalPay": "Gesamtvergütung", "reportHeader": "Berichtskopf", "notes": "Notizen"
+  },
   "MyTimeCards": {
     "title": "Meine Stundenzettel",
     "description": "Öffne und verwalte deine gespeicherten Stundenzettel.",
@@ -414,6 +420,7 @@
     "moreActions": "Weitere Aktionen für {title}",
     "rename": "Umbenennen",
     "duplicate": "Duplizieren",
+    "share": "Teilen",
     "delete": "Löschen",
     "hours": "Gesamtstunden",
     "pay": "Gesamtvergütung",

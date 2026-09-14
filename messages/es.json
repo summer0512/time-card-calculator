@@ -397,6 +397,12 @@
     "readRelatedGuide": "Leer la guía relacionada",
     "previewAlt": "Vista previa de {title}"
   },
+  "TimeCardShare": {
+    "share": "Compartir", "dialogTitle": "Compartir tarjeta de horas", "dialogDescription": "Cualquier persona con este enlace puede ver las horas, notas e información de pago.",
+    "creatingLink": "Creando enlace…", "shareLink": "Enlace para compartir", "copyLink": "Copiar enlace", "copied": "Copiado", "copyError": "No se pudo copiar el enlace.", "openLink": "Abrir enlace", "stopSharing": "Dejar de compartir", "stopSharingConfirm": "Las personas con el enlace dejarán de poder ver esta tarjeta.", "error": "No se pudo actualizar el uso compartido.",
+    "signInTitle": "Inicia sesión para compartir", "signInDescription": "Inicia sesión con Google. Tus datos se restaurarán cuando vuelvas.", "continueGoogle": "Continuar con Google", "saveFirstTitle": "Guarda antes de compartir", "saveFirstDescription": "Guarda esta tarjeta antes de crear un enlace.", "saveChangesTitle": "Guarda los últimos cambios", "saveChangesDescription": "Guarda los cambios para que la página compartida muestre la versión actual.",
+    "sharedTitle": "Tarjeta de horas compartida", "sharedDescription": "Esta tarjeta de horas compartida es de solo lectura.", "readOnly": "Solo lectura", "lastUpdated": "Última actualización: {date}", "createYourOwn": "Crear tu propia tarjeta", "start": "Inicio", "end": "Fin", "breaks": "Descansos", "dailyTotal": "Total diario", "totalHours": "Horas totales", "totalPay": "Pago total", "reportHeader": "Encabezado", "notes": "Notas"
+  },
   "MyTimeCards": {
     "title": "Mis tarjetas de tiempo",
     "description": "Abre y administra tus tarjetas de tiempo guardadas.",
@@ -412,6 +418,7 @@
     "moreActions": "Más acciones para {title}",
     "rename": "Renombrar",
     "duplicate": "Duplicar",
+    "share": "Compartir",
     "delete": "Eliminar",
     "hours": "Horas totales",
     "pay": "Pago total",
