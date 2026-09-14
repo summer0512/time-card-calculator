@@ -1,9 +1,11 @@
 import { CalendarDays, Clock3, LockKeyhole, WalletCards } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import TimeCardResults, { type TimeCardResultsLabels } from "@/components/time-card-results";
 import type { SharedTimeCard } from "@/lib/time-cards/types";
 import { calculateClockSpanMinutes, formatDurationMinutes } from "@/lib/time-cards/time";
+import { calculatePayment, formatPaymentAmount, formatPaymentHoursFromMinutes, type WorkPeriod } from "@/lib/payment";
 
-type Labels = {
+type Labels = TimeCardResultsLabels & {
   readOnly: string; start: string; end: string; breaks: string; dailyTotal: string;
   totalHours: string; totalPay: string; reportHeader: string; notes: string;
 };
@@ -13,6 +15,21 @@ export default function SharedTimeCardView({ card, locale, labels }: { card: Sha
     row.punches.reduce((sum, punch) => sum + (calculateClockSpanMinutes(punch.start, punch.end) ?? 0), 0)
       - row.breaks.reduce((sum, item) => sum + item.minutes, 0),
   ));
+  const breakMinutes = card.rows.reduce((sum, row) => sum + row.breaks.reduce((rowSum, item) => rowSum + item.minutes, 0), 0);
+  const workedDays = card.settings.mode === "split-shift" ? (card.cachedTotalMinutes > 0 ? 1 : 0) : dailyMinutes.filter((value) => value > 0).length;
+  const averageDayMinutes = workedDays > 0 ? Math.round(card.cachedTotalMinutes / workedDays) : 0;
+  const weeklyMinuteTotals: number[] = [];
+  if (card.settings.mode === "hours" || card.settings.mode === "split-shift") weeklyMinuteTotals.push(card.cachedTotalMinutes);
+  else for (let index = 0; index < dailyMinutes.length; index += 7) weeklyMinuteTotals.push(dailyMinutes.slice(index, index + 7).reduce((sum, value) => sum + value, 0));
+  const workPeriods: WorkPeriod[] = dailyMinutes.map((workedMinutes, index) => ({
+    dayId: card.settings.mode === "split-shift" ? "split-day" : String(index % 7),
+    weekId: card.settings.mode === "hours" ? "shift" : card.settings.mode === "split-shift" ? "week-1" : String(Math.floor(index / 7)),
+    workedMinutes,
+  }));
+  const paymentResult = calculatePayment({ enabled: card.paymentEnabled, currency: card.currency ?? "USD",
+    hourlyRate: card.hourlyRate === null ? null : Number(card.hourlyRate), overtime: card.settings.overtime }, workPeriods);
+  const formatAmount = (amount: number) => formatPaymentAmount(amount, card.currency ?? "USD", locale);
+  const formatPaymentMinutes = (minutes: number) => formatPaymentHoursFromMinutes(minutes, locale);
   const pay = card.paymentEnabled && card.cachedTotalPay !== null
     ? new Intl.NumberFormat(locale, { style: "currency", currency: card.currency ?? "USD" }).format(Number(card.cachedTotalPay))
     : null;
@@ -52,10 +69,10 @@ export default function SharedTimeCardView({ card, locale, labels }: { card: Sha
             </tr>)}</tbody>
           </table>
         </div>
-        <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-lg bg-blue-50 p-4"><dt className="text-xs font-medium text-blue-700">{labels.totalHours}</dt><dd className="mt-1 text-2xl font-semibold text-slate-900">{formatDurationMinutes(card.cachedTotalMinutes)}</dd></div>
-          {pay && <div className="rounded-lg bg-emerald-50 p-4"><dt className="text-xs font-medium text-emerald-700">{labels.totalPay}</dt><dd className="mt-1 text-2xl font-semibold text-slate-900">{pay}</dd></div>}
-        </dl>
+        <TimeCardResults breakMinutes={breakMinutes} averageDayMinutes={averageDayMinutes} weeklyMinuteTotals={weeklyMinuteTotals}
+          showOvertime overtimeEnabled={card.settings.overtime.enabled} includePayment={card.paymentEnabled} paymentValid
+          paymentResult={paymentResult} formatDuration={formatDurationMinutes} formatAmount={formatAmount}
+          formatPaymentMinutes={formatPaymentMinutes} labels={labels} />
       </CardContent>
     </Card>
   );

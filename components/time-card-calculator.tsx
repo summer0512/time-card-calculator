@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import PaymentBreakdown from "@/components/payment/payment-breakdown";
+import TimeCardResults from "@/components/time-card-results";
 import PaymentSettings, { type EditableOvertimeTier } from "@/components/payment/payment-settings";
 import {
   calculatePayment,
@@ -1736,51 +1736,15 @@ export default function TimeCardCalculator({
             </table>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 mt-4">
-            <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">{t.totalBreakTime}</p>
-              <p className="text-lg font-semibold text-gray-900">{minutesToHours(totals.breakMinutes)}</p>
-            </div>
-            <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">{t.averageDailyPaidTime}</p>
-              <p className="text-lg font-semibold text-gray-900">{minutesToHours(totals.averageDayMinutes)}</p>
-            </div>
-            <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">{t.weeklyTotals}</p>
-              <p className="text-lg font-semibold text-gray-900">
-                {totals.weeklyMinuteTotals.map((value) => minutesToHours(value)).join(" / ")}
-              </p>
-            </div>
-            <div className="rounded-lg border p-3 bg-gray-50">
-              <p className="text-xs text-gray-500">{t.overtimeSummary}</p>
-              <p className="text-lg font-semibold text-gray-900">
-                {showOvertime && overtimeEnabled
-                  ? `${minutesToHours(paymentResult.overtimeMinutes)} (${formatPaymentMinutes(paymentResult.overtimeMinutes)})`
-                  : '-'}
-              </p>
-            </div>
-          </div>
-
-          {includePayment && paymentValidationErrors.length === 0 && (
-            <PaymentBreakdown
-              result={paymentResult}
-              formatAmount={formatAmount}
-              formatMinutes={formatPaymentMinutes}
-              labels={{
-                paymentBreakdown: t.paymentBreakdown,
-                totalHours: t.totalHours,
-                regularHours: t.regularHours,
-                overtimeHours: t.overtimeHours,
-                hourlyPayRate: t.hourlyPayRate,
-                regularPay: t.regularPay,
-                overtimeTier: t.overtimeTier,
-                totalOvertimePay: t.totalOvertimePay,
-                estimatedTotalPay: t.estimatedTotalPay,
-                after: t.after,
-                hours: t.hours,
-              }}
-            />
-          )}
+          <TimeCardResults breakMinutes={totals.breakMinutes} averageDayMinutes={totals.averageDayMinutes}
+            weeklyMinuteTotals={totals.weeklyMinuteTotals} showOvertime={showOvertime} overtimeEnabled={overtimeEnabled}
+            includePayment={includePayment} paymentValid={paymentValidationErrors.length === 0} paymentResult={paymentResult}
+            formatDuration={minutesToHours} formatAmount={formatAmount} formatPaymentMinutes={formatPaymentMinutes}
+            labels={{ totalBreakTime: t.totalBreakTime, averageDailyPaidTime: t.averageDailyPaidTime, weeklyTotals: t.weeklyTotals,
+              overtimeSummary: t.overtimeSummary, paymentBreakdown: t.paymentBreakdown, totalHours: t.totalHours,
+              regularHours: t.regularHours, overtimeHours: t.overtimeHours, hourlyPayRate: t.hourlyPayRate,
+              regularPay: t.regularPay, overtimeTier: t.overtimeTier, totalOvertimePay: t.totalOvertimePay,
+              estimatedTotalPay: t.estimatedTotalPay, after: t.after, hours: t.hours }} />
         </CardContent>
       </Card>
     </div>
