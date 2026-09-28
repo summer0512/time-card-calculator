@@ -11,19 +11,23 @@ import { getLocalizedToolView } from "@/lib/localized-tool-content";
 import { getGuidesForLocale } from "@/lib/guides";
 
 const friendLinks = [
-  { name: "Time Card Calculator", href: "https://link.zhihu.com/?target=https://time-card-calculator.work", follow: true },
-  { name: "Morse Code Kit", href: "https://morsecodekit.com/", follow: true },
-  { name: "PrintableGen", href: "https://printablegen.com/", follow: true },
-  { name: "Generate Org Chart", href: "https://generateorgchart.com/", follow: true },
-  { name: "Size Chart Kit", href: "https://sizechartkit.com/", follow: true },
-  { name: "Device Test Tools", href: "https://devicetesttools.com/", follow: true },
-  { name: "IBAN Tools", href: "https://ibantools.net/", follow: true },
-  { name: "Randlyx", href: "https://randlyx.com/", follow: true },
-  { name: "Subnautica Hub", href: "https://subnauticahub.com/", follow: true },
-  { name: "Test Score Hub", href: "https://testscorehub.com/", follow: true },
-  { name: "EasyPdfNow", href: "https://easypdfnow.com/", follow: true },
-  { name: "Solarpunk Hub", href: "https://solarpunkhub.com/", follow: true },
-  { name: "GAG2Hub", href: "https://gag2hub.com/", follow: true },
+  // { name: "Time Card Calculator", href: "https://link.zhihu.com/?target=https://time-card-calculator.work", follow: true },
+  // { name: "Morse Code Kit", href: "https://morsecodekit.com/", follow: true },
+  // { name: "PrintableGen", href: "https://printablegen.com/", follow: true },
+  { name: 'Generate Org Chart', href: 'https://generateorgchart.com/', follow: true },
+  { name: 'VizVero', href: 'https://vizvero.app/', follow: true },
+  { name: 'RandomVerseNow', href: 'https://randomversenow.com/', follow: true },
+  { name: 'SudokuAgora', href: 'https://sudokuagora.com/', follow: false },
+  { name: 'SudokuDefi', href: 'https://sudokudefi.com/', follow: false },
+  // { name: "Size Chart Kit", href: "https://sizechartkit.com/", follow: true },
+  // { name: "Device Test Tools", href: "https://devicetesttools.com/", follow: true },
+  // { name: "IBAN Tools", href: "https://ibantools.net/", follow: true },
+  // { name: "Randlyx", href: "https://randlyx.com/", follow: true },
+  // { name: "Subnautica Hub", href: "https://subnauticahub.com/", follow: true },
+  // { name: "Test Score Hub", href: "https://testscorehub.com/", follow: true },
+  // { name: "EasyPdfNow", href: "https://easypdfnow.com/", follow: true },
+  // { name: "Solarpunk Hub", href: "https://solarpunkhub.com/", follow: true },
+  // { name: "GAG2Hub", href: "https://gag2hub.com/", follow: true },
 ];
 
 export default function Footer() {
@@ -119,7 +123,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {guideLinks.length > 0 && <div className="col-span-1 md:col-span-3">
+          {guideLinks.length > 0 && <div className="col-span-1 md:col-span-2">
             <h4 className="text-sm font-semibold text-white mb-2">{t("guides")}</h4>
             <div className="flex flex-wrap gap-3">
               {guideLinks.map((guide) => (
@@ -129,9 +133,9 @@ export default function Footer() {
               ))}
             </div>
           </div>}
-          {/* <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1 md:col-span-1">
             <h4 className="text-sm font-semibold text-white mb-2">{t("friendLinks")}</h4>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-1">
               {friendLinks.map((link) => (
                 <a
                   key={link.href}
@@ -144,7 +148,7 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-          </div> */}
+          </div>
         </div>
 
         <div className="mt-8 pt-6 border-t border-gray-800">
