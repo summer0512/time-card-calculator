@@ -3,7 +3,7 @@
     "slug": "calculadora-de-horas",
     "title": "Calculadora de Horas",
     "metaTitle": "Calculadora de Horas Online Grátis | Somar e Calcular Horas",
-    "metaDescription": "Calcule horas trabalhadas online grátis. Some e subtraia horas e minutos, calcule jornada diária e total semanal com resultado instantâneo.",
+    "metaDescription": "Calcule horas trabalhadas por dia e semana com esta ferramenta gratuita. Informe entrada, saída e intervalo, confira os totais e imprima seu espelho de ponto.",
     "h1": "Calculadora de Horas",
     "subtitle": "Some e subtraia horas com intervalo, total diário e total semanal em um só lugar.",
     "intro": "Use esta calculadora de horas para calcular jornada de trabalho com precisão, incluindo pausas, totais e conferência rápida para folha.",
@@ -49,7 +49,7 @@
     "slug": "calculadora-de-horas-trabalhadas",
     "title": "Calculadora de Horas Trabalhadas",
     "metaTitle": "Calculadora de Horas Trabalhadas | Jornada Diária e Semanal",
-    "metaDescription": "Calcule horas trabalhadas por dia e por semana. Desconte intervalo, compare jornada prevista e acompanhe o total de horas com precisão.",
+    "metaDescription": "Calcule horas trabalhadas descontando almoço e várias pausas por dia. Informe entrada e saída, confira os totais diários e semanais e imprima seu registro.",
     "h1": "Calculadora de Horas Trabalhadas",
     "subtitle": "Calcule jornada líquida com pausas e acompanhe totais diários e semanais.",
     "intro": "Ideal para quem precisa conferir horas trabalhadas com detalhamento de pausas e consistência para fechamento de ponto.",
@@ -88,7 +88,7 @@
     "slug": "calculadora-de-banco-de-horas",
     "title": "Calculadora de Banco de Horas",
     "metaTitle": "Calculadora de Banco de Horas | Saldo, Débito e Compensação",
-    "metaDescription": "Calcule saldo de banco de horas com facilidade. Registre créditos e débitos, acompanhe compensações e veja o total atualizado por período.",
+    "metaDescription": "Some as horas trabalhadas por dia e semana para conferir seu banco de horas. Informe entrada, saída e almoço, veja horas extras e imprima o espelho de ponto.",
     "h1": "Calculadora de Banco de Horas",
     "subtitle": "Controle saldo de banco de horas com visão clara de créditos, débitos e compensações.",
     "intro": "Ideal para acompanhar saldo de banco de horas por período e validar compensações antes do fechamento com RH.",
@@ -127,7 +127,7 @@
     "slug": "calculadora-de-horas-extras",
     "title": "Calculadora de Horas Extras",
     "metaTitle": "Calculadora de Horas Extras | Cálculo Rápido e Preciso",
-    "metaDescription": "Calcule horas extras de forma simples. Compare horas trabalhadas com a jornada contratual e veja o total excedente no dia ou na semana.",
+    "metaDescription": "Calcule horas trabalhadas e extras com entrada, saída e intervalo de almoço. Confira os totais diários e semanais e imprima seu registro para revisão.",
     "h1": "Calculadora de Horas Extras",
     "subtitle": "Compare jornada prevista e realizada para apurar horas excedentes.",
     "intro": "Use esta calculadora para identificar horas extras diárias e semanais com base na jornada contratual.",
@@ -166,7 +166,7 @@
     "slug": "calculadora-de-minutos-para-horas",
     "title": "Calculadora de Minutos para Horas",
     "metaTitle": "Calculadora de Minutos para Horas | Converter Minutos em Horas",
-    "metaDescription": "Converta minutos em horas e horas decimais rapidamente. Ideal para jornada de trabalho, banco de horas e conferência de tempo.",
+    "metaDescription": "Converta o tempo trabalhado em horas decimais e horas:minutos. Informe início, fim e almoço para conferir a duração da jornada com esta calculadora gratuita.",
     "h1": "Calculadora de Minutos para Horas",
     "subtitle": "Converta tempo em minutos para horas no formato HH:MM e decimal.",
     "intro": "Página focada em conversão de minutos para horas para facilitar relatórios de jornada e conferências de banco de horas.",
@@ -211,13 +211,13 @@
     "slug": "calculadora-de-intervalo-de-30-minutos",
     "title": "Calculadora de Intervalo de 30 Minutos",
     "metaTitle": "Calculadora de Intervalo de 30 Minutos",
-    "metaDescription": "Calcule horas trabalhadas com desconto automático de 30 minutos de almoço."
+    "metaDescription": "Calcule horas trabalhadas com desconto de 30 minutos de almoço. Informe entrada e saída de cada dia, confira o total semanal e imprima seu espelho de ponto."
   },
   "time-punch-calculator": {
     "slug": "calculadora-de-ponto",
     "title": "Calculadora de Ponto",
     "metaTitle": "Calculadora de Ponto | Entrada, Saída e Total de Horas",
-    "metaDescription": "Calcule horas por marcações de ponto (entrada/saída), com desconto de pausas e total diário ou semanal."
+    "metaDescription": "Calcule horas com marcações de entrada e saída, descontando almoço e pausas. Confira totais diários, semanais e horas extras e imprima seu espelho de ponto."
   },
   "punch-clock-calculator": {
     "slug": "calculadora-cartao-de-ponto",
@@ -229,7 +229,13 @@
     "slug": "calculadora-de-horas-formato-24h",
     "title": "Calculadora de Horas em Formato 24h",
     "metaTitle": "Calculadora de Horas em Formato 24h",
-    "metaDescription": "Calcule horas trabalhadas usando formato 24 horas (hora militar), com pausas e totais.",
+    "metaDescription": "Calcule horas trabalhadas no formato de 24 horas. Informe entrada, saída e intervalo de almoço, confira os totais por dia e semana e imprima seu registro.",
     "h1": "Calculadora de Horas em Formato 24h"
+  },
+  "time-card-calculator-with-multiple-in-and-out": {
+    "metaDescription": "Calcule horas de jornadas com várias entradas e saídas. Adicione períodos de trabalho, confira o total de horas, estime o pagamento e imprima seu registro."
+  },
+  "timesheet-calculator-with-breaks": {
+    "metaDescription": "Crie um espelho de ponto semanal com almoço e várias pausas. Informe entrada e saída, confira horas trabalhadas e extras e imprima seu registro de jornada."
   }
 }

@@ -1,7 +1,7 @@
 {
   "HomePage": {
     "title": "Calculadora de Horas Online Grátis com Intervalo e Horas Extras",
-    "description": "Calcule horas trabalhadas por semana ou quinzena com intervalos, múltiplas marcações de ponto, horas extras e espelho de ponto para impressão.",
+    "description": "Calcule horas trabalhadas por semana ou quinzena com almoço e várias entradas e saídas. Confira horas extras, estime o pagamento e imprima seu espelho de ponto.",
     "keywords": "calculadora de horas, calculadora de horas trabalhadas, calculadora de horas extras, calculadora de minutos para horas, calculadora de banco de horas",
     "ogImageAlt": "Prévia da calculadora de horas online",
     "heroTitle": "Calculadora de Horas Online Grátis",
@@ -36,12 +36,12 @@
   },
   "ContactPage": {
     "title": "Contact Us - Time Card Calculator Support",
-    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "description": "Entre em contato com o Time Card Calculator para tirar dúvidas sobre horas e ponto. Relate erros, sugira recursos ou envie comentários pelo formulário online.",
     "keywords": "time card calculator support, contact time card calculator, time tracking help"
   },
   "PrivacyPage": {
     "title": "Privacy Policy - Time Card Calculator",
-    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "description": "Saiba como o Time Card Calculator usa dados, cookies e publicidade. Consulte detalhes sobre serviços externos, segurança e contato para questões de privacidade.",
     "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
     "heading": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",

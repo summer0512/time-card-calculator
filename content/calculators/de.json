@@ -3,7 +3,7 @@
     "slug": "stundenrechner",
     "title": "Stundenrechner",
     "metaTitle": "Stundenrechner: Arbeitszeit einfach online berechnen",
-    "metaDescription": "Kostenloser Stundenrechner für tägliche und wöchentliche Arbeitszeit mit Pausenabzug und Überstunden.",
+    "metaDescription": "Berechne tägliche und wöchentliche Arbeitsstunden kostenlos. Trage Beginn, Ende und Mittagspausen ein, prüfe Überstunden und drucke deinen Stundenzettel aus.",
     "h1": "Stundenrechner",
     "subtitle": "Arbeitszeit online berechnen mit Startzeit, Endzeit, Pause und Wochenübersicht.",
     "intro": "Berechne deine Arbeitszeit schnell und korrekt für Alltag, Schichtarbeit und Zeiterfassung.",
@@ -42,7 +42,7 @@
     "slug": "stundenrechner-mit-pause",
     "title": "Stundenrechner mit Pause",
     "metaTitle": "Stundenrechner mit Pause - Arbeitszeit korrekt berechnen",
-    "metaDescription": "Berechne Netto-Arbeitszeit mit automatischem Pausenabzug, inkl. mehreren Pausen pro Tag.",
+    "metaDescription": "Berechne deine Netto-Arbeitszeit mit mehreren Pausen pro Tag. Trage Beginn, Ende und Pausenzeiten ein, prüfe Wochensummen und drucke deinen Stundenzettel aus.",
     "h1": "Stundenrechner mit Pause",
     "subtitle": "Ziehe Pausen automatisch von deiner Arbeitszeit ab.",
     "intro": "Ideal für Arbeitszeitmodelle mit Mittagspause und zusätzlichen kurzen Pausen.",
@@ -81,7 +81,7 @@
     "slug": "stundenrechner-dezimal",
     "title": "Stundenrechner Dezimal",
     "metaTitle": "Stundenrechner Dezimal - Stunden in Dezimal umrechnen",
-    "metaDescription": "Wandle Uhrzeiten in Dezimalstunden um und berechne Arbeitszeit für Lohnabrechnung.",
+    "metaDescription": "Berechne Arbeitsstunden aus Beginn und Ende deiner Schicht und ziehe die Mittagspause ab. Sieh die bezahlte Zeit als Dezimalstunden und in Stunden und Minuten.",
     "h1": "Stundenrechner Dezimal",
     "subtitle": "Zeitspannen als Dezimalstunden und hh:mm anzeigen.",
     "intro": "Praktisch für Lohn, Gehalt und Auswertungen in Tabellen.",
@@ -120,7 +120,7 @@
     "slug": "stundenrechner-uhrzeit",
     "title": "Stundenrechner Uhrzeit",
     "metaTitle": "Stundenrechner Uhrzeit - Start und Endzeit berechnen",
-    "metaDescription": "Berechne Arbeitsstunden aus Start- und Endzeit inklusive Pausen und Schichtwechsel über Mitternacht.",
+    "metaDescription": "Berechne Arbeitsstunden aus Start- und Endzeiten, auch über Mitternacht. Ziehe Mittagspausen ab, prüfe Tages- und Wochensummen und drucke deinen Nachweis aus.",
     "h1": "Stundenrechner für Uhrzeiten",
     "subtitle": "Arbeitsstunden aus Uhrzeiten in Sekunden berechnen.",
     "intro": "Für Zeiterfassung mit Uhrzeit-Eingaben im 12h- oder 24h-Format.",
@@ -159,7 +159,7 @@
     "slug": "stundenrechner-woche",
     "title": "Wochen-Stundenrechner",
     "metaTitle": "Stundenrechner Woche - Wochenarbeitszeit berechnen",
-    "metaDescription": "Summiere tägliche Arbeitszeiten zur Wochenarbeitszeit und prüfe Überstunden auf einen Blick.",
+    "metaDescription": "Erstelle einen Wochen-Stundenzettel mit Beginn, Ende und Mittagspausen. Berechne tägliche Arbeitsstunden und Wochensummen, prüfe Überstunden und drucke ihn aus.",
     "h1": "Wochen-Stundenrechner",
     "subtitle": "Wochenstunden mit Pausen und Überstunden berechnen.",
     "intro": "Geeignet für Wochenplanung, Stundenzettel und Team-Auswertungen.",
@@ -235,22 +235,28 @@
   },
   "lunch-break-calculator": {
     "title": "Pausenrechner",
-    "metaDescription": "Berechne bezahlte Arbeitszeit nach Abzug von Mittagspause oder anderen unbezahlten Pausen."
+    "metaDescription": "Berechne bezahlte Arbeitsstunden nach Abzug der Pause. Gib Beginn, Ende und Pausendauer ein und sieh die Nettozeit als Dezimalstunden sowie Stunden:Minuten."
   },
   "30-minute-lunch-break-calculator": {
     "title": "30-Minuten-Pausenrechner",
-    "metaDescription": "Berechne Arbeitszeit mit voreingestellter 30-Minuten-Mittagspause."
+    "metaDescription": "Berechne Arbeitsstunden mit einer voreingestellten Mittagspause von 30 Minuten. Trage Beginn und Ende ein, prüfe Wochensummen und drucke deinen Stundenzettel."
   },
   "time-punch-calculator": {
     "title": "Stempelzeit-Rechner",
-    "metaDescription": "Berechne Arbeitsstunden aus Kommen-/Gehen-Stempelzeiten mit Pausenabzug."
+    "metaDescription": "Berechne Arbeitsstunden aus Kommen- und Gehen-Zeiten. Ziehe Mittagspausen ab, prüfe Tages- und Wochensummen sowie Überstunden und drucke deinen Stundenzettel."
   },
   "punch-clock-calculator": {
     "title": "Stempeluhr-Rechner",
-    "metaDescription": "Summiere Stempeluhrzeiten und ziehe Pausen für Tages- oder Wochenstunden ab."
+    "metaDescription": "Summiere deine Stempeluhrzeiten mit diesem kostenlosen Rechner. Ziehe Pausen ab, prüfe tägliche und wöchentliche Arbeitsstunden und drucke den Stundenzettel."
   },
   "military-time-card-calculator": {
     "title": "24h-Arbeitszeit-Rechner",
-    "metaDescription": "Berechne Arbeitszeit im 24-Stunden-Format mit Pausenabzug und Summen."
+    "metaDescription": "Berechne Arbeitsstunden im 24-Stunden-Format. Trage Schichtbeginn, Schichtende und Mittagspause ein, prüfe Tages- und Wochensummen und drucke den Stundenzettel."
+  },
+  "time-card-calculator-with-multiple-in-and-out": {
+    "metaDescription": "Berechne Arbeitsstunden für geteilte Schichten mit mehreren Start- und Endzeiten. Summiere die Arbeitszeiten, schätze den Lohn und drucke deinen Stundenzettel."
+  },
+  "timesheet-calculator-with-breaks": {
+    "metaDescription": "Erstelle einen Wochen-Stundenzettel mit mehreren Pausen pro Tag. Ziehe Mittagspausen ab, prüfe Tages- und Wochensummen sowie Überstunden und drucke ihn aus."
   }
 }

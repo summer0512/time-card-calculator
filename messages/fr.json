@@ -36,12 +36,12 @@
   },
   "ContactPage": {
     "title": "Contact Us - Time Card Calculator Support",
-    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "description": "Contactez Time Card Calculator pour vos questions sur les heures et les relevés. Signalez un bug, proposez une fonction ou envoyez votre avis via le formulaire.",
     "keywords": "time card calculator support, contact time card calculator, time tracking help"
   },
   "PrivacyPage": {
     "title": "Privacy Policy - Time Card Calculator",
-    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "description": "Voyez comment Time Card Calculator utilise les données, les cookies et la publicité. Consultez des informations sur les services tiers et la confidentialité.",
     "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
     "heading": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",
@@ -145,7 +145,7 @@
   },
   "TermsPage": {
     "title": "Terms of Service - Time Card Calculator",
-    "description": "Review the Terms of Service governing your use of the Time Card Calculator website and tools.",
+    "description": "Consultez les conditions de Time Card Calculator : utilisation autorisée, services tiers, publicité, limites de responsabilité et contact pour toute question.",
     "keywords": "terms of service, time card calculator terms, legal, acceptable use policy",
     "heading": "Terms of Service",
     "lastUpdatedLabel": "Effective as of",

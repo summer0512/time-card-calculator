@@ -81,7 +81,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Free Time Card Calculator with Lunch Breaks",
     metaTitle: "Free Time Card Calculator with Lunch Breaks",
     metaDescription:
-      "Free online time card calculator with lunch breaks. Enter clock in/out times, deduct 30-minute or 1-hour lunch, and total weekly overtime.",
+      "Free time card calculator with lunch breaks. Enter clock in and out times, deduct unpaid lunch, total daily and weekly work hours, and print your timesheet.",
     h1: "Free Time Card Calculator with Lunch Breaks",
     subtitle:
       "Deduct unpaid lunch breaks automatically and see daily, weekly, and overtime totals in one printable view.",
@@ -235,7 +235,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Time Card Calculator with Breaks",
     metaTitle: "Time Card Calculator with Breaks",
     metaDescription:
-      "Calculate work hours with multiple breaks using this free time card calculator. Add lunch, rest breaks, split shifts, daily totals, and weekly hours.",
+      "Calculate work hours with multiple breaks using this free time card calculator. Deduct lunch and rest breaks, total daily and weekly hours, and print results.",
     h1: "Time Card Calculator with Breaks",
     subtitle:
       "Track more than lunch by adding multiple break columns for morning, lunch, and afternoon deductions.",
@@ -305,7 +305,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Time Card Calculator with Multiple In and Out Times",
     metaTitle: "Time Card Calculator with Multiple In/Out Times",
     metaDescription:
-      "Calculate work hours with multiple in and out times, lunch breaks, split shifts, and daily totals using this free time card calculator.",
+      "Calculate work hours across multiple in and out times. Add work segments for split shifts, check the total hours, estimate pay, and print your time record.",
     h1: "Time Card Calculator with Multiple In and Out Times",
     subtitle:
       "Total split shifts, multiple punch periods, lunch breaks, and extra unpaid breaks in one printable time card.",
@@ -381,7 +381,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Timesheet Calculator with Lunch Breaks",
     metaTitle: "Timesheet Calculator with Lunch Breaks",
     metaDescription:
-      "Create a printable timesheet with lunch breaks, daily work hours, weekly totals, and overtime using this free timesheet calculator.",
+      "Create a weekly timesheet with lunch breaks using this free calculator. Enter daily start and end times, check paid hours and overtime, and print your record.",
     h1: "Timesheet Calculator with Lunch Breaks",
     subtitle:
       "Build a payroll-ready weekly timesheet with lunch deductions, totals, and print support.",
@@ -449,7 +449,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Free Timesheet Calculator with Breaks",
     metaTitle: "Free Timesheet Calculator with Breaks and Lunch",
     metaDescription:
-      "Create a printable weekly timesheet with breaks, lunch deductions, daily hours, weekly totals, and overtime using this free online calculator.",
+      "Create a printable weekly timesheet with multiple breaks. Enter shift times, deduct lunch and rest breaks, and review daily hours, weekly totals, and overtime.",
     h1: "Free Timesheet Calculator with Breaks",
     subtitle:
       "Build a payroll-ready weekly timesheet that subtracts lunch, rest breaks, and multiple unpaid breaks from each day.",
@@ -525,7 +525,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Free Time Clock Calculator with Lunch Breaks",
     metaTitle: "Free Time Clock Calculator with Lunch Breaks",
     metaDescription:
-      "Free time clock calculator with lunch breaks. Enter clock in and clock out times, subtract lunch or breaks, and calculate daily or weekly hours.",
+      "Free time clock calculator with lunch breaks. Enter clock in and out times, deduct unpaid breaks, and review daily hours, weekly totals, and printable results.",
     h1: "Free Time Clock Calculator with Lunch Breaks",
     subtitle:
       "Use clock-in and clock-out entries to calculate work hours after lunch, breaks, and weekly overtime.",
@@ -596,7 +596,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Hours Calculator with Lunch Break",
     metaTitle: "Hours Calculator with Lunch Break",
     metaDescription:
-      "Calculate work hours between two times and subtract lunch breaks. Get total hours in decimal and hours:minutes format.",
+      "Calculate work hours between start and end times, then subtract unpaid lunch breaks. View paid time in decimal hours and hours:minutes with this free tool.",
     h1: "Hours Calculator with Lunch Break",
     subtitle:
       "Quick one-shift calculator for start time, end time, lunch, and paid-hour output.",
@@ -663,7 +663,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Lunch Break Calculator",
     metaTitle: "Lunch Break Calculator",
     metaDescription:
-      "Calculate paid work hours after subtracting lunch or break time. Enter shift start, shift end, and lunch duration to get total hours.",
+      "Calculate paid work hours after an unpaid lunch break. Enter shift start and end times, adjust your break duration, and view totals in hours and minutes.",
     h1: "Lunch Break Calculator",
     subtitle:
       "Calculate shift length, unpaid lunch deductions, and paid hours in seconds.",
@@ -731,7 +731,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "30 Minute Lunch Break Calculator",
     metaTitle: "30 Minute Lunch Break Calculator",
     metaDescription:
-      "Calculate work hours after a 30-minute lunch break. Enter your start and end times to get paid hours, daily totals, and weekly hours.",
+      "Calculate paid work hours with a 30-minute lunch break. Enter daily start and end times, review weekly totals, and print a timesheet with lunch deducted.",
     h1: "30 Minute Lunch Break Calculator",
     subtitle:
       "Fast calculator pre-set to a 30-minute lunch break for common payroll scenarios.",
@@ -797,7 +797,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Free Time Punch Calculator",
     metaTitle: "Free Time Punch Calculator - Punch In/Out Hours with Lunch",
     metaDescription:
-      "Free time punch calculator for punch in and punch out hours. Add lunch breaks, multiple punches, daily totals, weekly totals, and overtime.",
+      "Free time punch calculator for punch in and out times. Deduct lunch and breaks, check daily hours, weekly totals, and overtime, then print your time record.",
     h1: "Free Time Punch Calculator",
     subtitle:
       "Calculate punch in and punch out hours with lunch deductions, multiple punch periods, and weekly totals.",
@@ -869,7 +869,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Punch Clock Calculator",
     metaTitle: "Punch Clock Calculator",
     metaDescription:
-      "Use this free punch clock calculator to total punch in/out times, subtract breaks, and calculate daily or weekly work hours.",
+      "Use this free punch clock calculator to total clock in and out times. Deduct unpaid breaks, check daily and weekly work hours, and print your timesheet.",
     h1: "Punch Clock Calculator",
     subtitle:
       "Total punch card records quickly with break deductions and weekly totals.",
@@ -937,7 +937,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     title: "Military Time Card Calculator",
     metaTitle: "Military Time Card Calculator | 24 Hour Timesheet Calculator",
     metaDescription:
-      "Calculate work hours using military time or 24-hour time format. Enter start, end, lunch breaks, and get printable daily or weekly totals.",
+      "Calculate work hours using military time or the 24-hour clock. Enter shift start and end times, deduct lunch, and print daily hours and weekly timesheet totals.",
     h1: "Military Time Card Calculator",
     subtitle:
       "Use 24-hour clock entries like 08:00 and 17:00 with lunch deductions and automatic decimal-hour conversion.",
@@ -1010,7 +1010,7 @@ export const toolCalculators: ToolCalculatorConfig[] = [
     slug: "time-card-calculator-with-overtime",
     title: "Time Card Calculator with Overtime",
     metaTitle: "Time Card Calculator with Overtime | Free Weekly Pay Calculator",
-    metaDescription: "Calculate regular hours, overtime hours, and total pay with customizable weekly overtime thresholds, rates, and tiers.",
+    metaDescription: "Calculate regular hours, overtime, and estimated pay. Set daily or weekly thresholds, customize overtime rates and tiers, and print your completed timesheet.",
     h1: "Time Card Calculator with Overtime",
     subtitle: "Calculate regular hours, overtime hours, and total pay with customizable overtime thresholds and rates.",
     intro: "This free time card calculator with overtime helps employees and employers separate regular and overtime hours, apply custom overtime rates, and estimate total weekly pay.",
