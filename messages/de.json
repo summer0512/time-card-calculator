@@ -1,7 +1,7 @@
 {
   "HomePage": {
     "title": "Stundenrechner online mit Pause und Überstunden",
-    "description": "Kostenloser Stundenrechner für tägliche und wöchentliche Arbeitszeit mit Pausen, Überstunden und Ausdruck.",
+    "description": "Berechne Arbeitsstunden pro Woche oder für zwei Wochen. Ziehe Mittagspausen ab, erfasse mehrere Arbeitszeiten, prüfe Überstunden und drucke den Stundenzettel.",
     "keywords": "stundenrechner, arbeitszeit stundenrechner, stundenrechner mit pause, stundenrechner dezimal, stundenrechner uhrzeit",
     "ogImageAlt": "Vorschau des Stundenrechners",
     "heroTitle": "Kostenloser Stundenrechner",
@@ -36,12 +36,12 @@
   },
   "ContactPage": {
     "title": "Contact Us - Time Card Calculator Support",
-    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "description": "Kontaktiere Time Card Calculator bei Fragen zu Arbeitsstunden und Stundenzetteln. Melde Fehler, schlage Funktionen vor oder sende Feedback über das Formular.",
     "keywords": "time card calculator support, contact time card calculator, time tracking help"
   },
   "PrivacyPage": {
     "title": "Privacy Policy - Time Card Calculator",
-    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "description": "Lies, wie Time Card Calculator Daten, Cookies und Werbung verwendet. Erfahre mehr über externe Dienste, Datenschutz und deine Möglichkeiten zur Kontaktaufnahme.",
     "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
     "heading": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",
@@ -145,7 +145,7 @@
   },
   "TermsPage": {
     "title": "Terms of Service - Time Card Calculator",
-    "description": "Review the Terms of Service governing your use of the Time Card Calculator website and tools.",
+    "description": "Lies Nutzungsbedingungen von Time Card Calculator. Informiere dich über erlaubte Nutzung, externe Dienste, Werbung, Haftungsgrenzen und Kontaktmöglichkeiten.",
     "keywords": "terms of service, time card calculator terms, legal, acceptable use policy",
     "heading": "Terms of Service",
     "lastUpdatedLabel": "Effective as of",

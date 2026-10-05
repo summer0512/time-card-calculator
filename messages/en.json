@@ -1,7 +1,7 @@
 {
   "HomePage": {
     "title": "Free Time Card Calculator with Lunch Breaks & Overtime",
-    "description": "Calculate weekly or biweekly work hours with lunch breaks, multiple in/out punches, overtime totals, and printable timesheets.",
+    "description": "Calculate weekly or biweekly work hours with lunch breaks and multiple in and out times. Review overtime, estimate pay, and print a timesheet for your records.",
     "keywords": "free time card calculator, time card calculator with lunch, biweekly time card calculator, timesheet calculator, work hours calculator, overtime calculator",
     "ogImageAlt": "Free time card calculator dashboard preview",
     "heroTitle": "Free Time Card Calculator",
@@ -36,12 +36,12 @@
   },
   "ContactPage": {
     "title": "Contact Us - Time Card Calculator Support",
-    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "description": "Contact Time Card Calculator for help with work hours and timesheets. Report a bug, suggest a feature, or send questions and feedback through our contact form.",
     "keywords": "time card calculator support, contact time card calculator, time tracking help"
   },
   "PrivacyPage": {
     "title": "Privacy Policy - Time Card Calculator",
-    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "description": "Read how Time Card Calculator handles your information, cookies, and advertising. Learn about data use, third-party services, security, and privacy contacts.",
     "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
     "heading": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",

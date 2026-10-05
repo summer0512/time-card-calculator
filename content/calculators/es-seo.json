@@ -52,7 +52,7 @@
   },
   "calcular-horas-jornada-partida": {
     "title": "Calcular Horas de una Jornada Partida",
-    "description": "Calcula una jornada partida sumando varios tramos de entrada y salida. Añade períodos de trabajo y obtén las horas totales y el pago estimado.",
+    "description": "Calcula las horas de una jornada partida con varias entradas y salidas. Añade períodos de trabajo, revisa el total, estima el pago e imprime tu registro.",
     "keywords": "calcular horas jornada partida, calculadora jornada partida, sumar tramos de trabajo, calcular horario partido, entrada salida trabajo",
     "h1": "Calcular Horas de una Jornada Partida",
     "subtitle": "Suma dos o más tramos de trabajo, como una jornada de mañana y tarde, sin contar el intervalo entre ambos.",

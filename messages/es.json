@@ -1,7 +1,7 @@
 {
   "HomePage": {
     "title": "Calculadora de Horas Trabajadas Gratis",
-    "description": "Calcula horas trabajadas, descansos, jornadas partidas y horas extra con una calculadora gratuita en español.",
+    "description": "Calcula horas trabajadas por semana o quincena con descansos y varias entradas y salidas. Revisa horas extra, estima el pago e imprime tu registro de jornada.",
     "keywords": "calculadora de horas, calcular horas trabajadas, calculadora horas trabajadas, horas extra",
     "ogImageAlt": "Vista previa de la calculadora de horas",
     "heroTitle": "Calculadora de Horas",
@@ -34,12 +34,12 @@
   },
   "ContactPage": {
     "title": "Contact Us - Time Card Calculator Support",
-    "description": "Get help with our time card calculator. Report bugs, request features, or contact our support team for assistance.",
+    "description": "Contacta con Time Card Calculator para resolver dudas sobre horas y registros. Informa de errores, sugiere funciones o envía comentarios mediante el formulario.",
     "keywords": "time card calculator support, contact time card calculator, time tracking help"
   },
   "PrivacyPage": {
     "title": "Privacy Policy - Time Card Calculator",
-    "description": "Learn how Time Card Calculator collects, uses, and protects information, including details required for Google AdSense compliance.",
+    "description": "Descubre cómo Time Card Calculator utiliza tus datos, las cookies y la publicidad. Consulta información sobre servicios externos, seguridad y privacidad.",
     "keywords": "privacy policy, time card calculator privacy, google adsense privacy compliance, data protection, cookies",
     "heading": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",
@@ -143,7 +143,7 @@
   },
   "TermsPage": {
     "title": "Terms of Service - Time Card Calculator",
-    "description": "Review the Terms for Time Card Calculator, including acceptable use, third-party services, advertising, liability limits, updates, and support contact details.",
+    "description": "Consulta las condiciones de Time Card Calculator: uso permitido, servicios externos, publicidad, límites de responsabilidad y contacto para resolver tus dudas.",
     "keywords": "terms of service, time card calculator terms, legal, acceptable use policy",
     "heading": "Terms of Service",
     "lastUpdatedLabel": "Effective as of",
