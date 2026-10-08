@@ -27,6 +27,7 @@ export default function MobileMenuButton() {
   const toolMenuItems = [
     ["time-card-calculator-with-lunch", lunchSlug],
     [periodSlug, biweeklySlug],
+    ...(locale === "en" ? [["biweekly-time-card-calculator", "biweekly-time-card-calculator"] as const] : []),
     ["timesheet-calculator-with-lunch", timesheetSlug],
     ["time-punch-calculator", punchSlug],
   ] as const;

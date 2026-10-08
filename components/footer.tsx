@@ -36,6 +36,7 @@ export default function Footer() {
   const brand = useTranslations("Header");
   const popularTools = [
     "time-card-calculator-with-lunch",
+    ...(locale === "en" ? ["biweekly-time-card-calculator"] : []),
     isLocalizedToolEnabled(locale as SupportedLocale, "monthly-time-card-calculator") ? "monthly-time-card-calculator" : "biweekly-time-card-calculator",
     "timesheet-calculator-with-lunch",
     "lunch-break-calculator",
