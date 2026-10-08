@@ -20,12 +20,13 @@ export default function MobileMenuButton() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = authClient.useSession();
   const lunchSlug = getLocalizedToolSlug(locale as SupportedLocale, "time-card-calculator-with-lunch")!;
-  const biweeklySlug = getLocalizedToolSlug(locale as SupportedLocale, "biweekly-time-card-calculator")!;
+  const periodSlug = isLocalizedToolEnabled(locale as SupportedLocale, "monthly-time-card-calculator") ? "monthly-time-card-calculator" : "biweekly-time-card-calculator";
+  const biweeklySlug = getLocalizedToolSlug(locale as SupportedLocale, periodSlug)!;
   const timesheetSlug = getLocalizedToolSlug(locale as SupportedLocale, "timesheet-calculator-with-lunch")!;
   const punchSlug = getLocalizedToolSlug(locale as SupportedLocale, "time-punch-calculator")!;
   const toolMenuItems = [
     ["time-card-calculator-with-lunch", lunchSlug],
-    ["biweekly-time-card-calculator", biweeklySlug],
+    [periodSlug, biweeklySlug],
     ["timesheet-calculator-with-lunch", timesheetSlug],
     ["time-punch-calculator", punchSlug],
   ] as const;

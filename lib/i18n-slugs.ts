@@ -9,6 +9,7 @@ const allEnglishTools = Object.fromEntries(
 
 export const localizedToolRegistry: LocalizedToolRegistry = {
   ...allEnglishTools,
+  "monthly-time-card-calculator": { de: "stundenrechner-monat", fr: "calcul-temps-de-travail-par-mois" },
   "time-card-calculator-with-overtime": {
     en: "time-card-calculator-with-overtime",
     es: "calculadora-de-horas-extras",
@@ -18,8 +19,8 @@ export const localizedToolRegistry: LocalizedToolRegistry = {
     "pt-br": "calculadora-de-horas", fr: "calcul-temps-de-travail", es: "calculadora-de-horas",
   },
   "biweekly-time-card-calculator": {
-    en: "biweekly-time-card-calculator", de: "stundenrechner-monat",
-    "pt-br": "calculadora-de-horas-quinzenais", fr: "calcul-temps-de-travail-par-mois",
+    en: "biweekly-time-card-calculator",
+    "pt-br": "calculadora-de-horas-quinzenais",
   },
   "time-card-calculator-with-breaks": {
     en: "time-card-calculator-with-breaks", de: "stundenrechner-mit-pause",

@@ -3,6 +3,7 @@ import type { OvertimeBasis, OvertimeTier } from "@/lib/payment";
 export type ToolSlug =
   | "time-card-calculator-with-overtime"
   | "time-card-calculator-with-lunch"
+  | "monthly-time-card-calculator"
   | "biweekly-time-card-calculator"
   | "time-card-calculator-with-breaks"
   | "time-card-calculator-with-multiple-in-and-out"
@@ -20,6 +21,7 @@ export type CalculatorMode = "time-card" | "hours" | "split-shift";
 
 export interface CalculatorPropsConfig {
   mode?: CalculatorMode;
+  periodMode?: "monthly";
   defaultBreakMinutes?: number;
   showLunchBreak?: boolean;
   showMultipleBreaks?: boolean;
@@ -76,6 +78,14 @@ export interface ToolCalculatorConfig {
 }
 
 export const toolCalculators: ToolCalculatorConfig[] = [
+  {
+    slug: "monthly-time-card-calculator", title: "Monthly Time Card Calculator", metaTitle: "Monthly Time Card Calculator",
+    metaDescription: "Record working hours for a full calendar month with daily start and end times, unpaid breaks, calendar-week subtotals, decimal hours, and printable results.",
+    h1: "Monthly Time Card Calculator", subtitle: "Track a complete calendar month.", intro: "Record actual working hours by date.",
+    howToSteps: [], example: { title: "", calculation: "", result: "" }, faqs: [],
+    relatedSlugs: ["time-card-calculator-with-lunch", "timesheet-calculator-with-lunch", "time-card-calculator-with-breaks"],
+    calculatorProps: { periodMode: "monthly", timeFormat: "24h", defaultBreakMinutes: 0, showBreakDeduction: true, showLunchBreak: false, showBiweekly: false, showOvertime: false, showPrintableTimesheet: true, paymentDefaults: { enabled: false, overtime: { enabled: false } } },
+  },
   {
     slug: "time-card-calculator-with-lunch",
     title: "Free Time Card Calculator with Lunch Breaks",

@@ -426,5 +426,25 @@
     "pay": "Gesamtvergütung",
     "updated": "Zuletzt aktualisiert",
     "open": "Öffnen"
+  },
+  "MonthlyCalculator": {
+    "title": "Monats-Stundenzettel",
+    "month": "Monat",
+    "fillTitle": "Arbeitstage ausfüllen",
+    "start": "Beginn",
+    "end": "Ende",
+    "breakMinutes": "Pause (Minuten)",
+    "fill": "Leere Tage ausfüllen",
+    "fillHint": "Nur leere Zeilen an den gewählten Wochentagen werden ausgefüllt. Einzelne Tage kannst du anschließend ändern oder leeren.",
+    "calendarHint": "Nachtschichten zählen zum Startdatum. Freie Tage, Feiertage und Abwesenheiten bleiben leer. Wochensummen enthalten nur Tage dieses Monats.",
+    "averageTitle": "Durchschnittliche Monatsstunden",
+    "weeklyHours": "Stunden pro Woche",
+    "hoursPerMonth": "Stunden / Monat",
+    "averageHint": "Durchschnitt = Wochenstunden × 52 ÷ 12. Diese Schätzung ist unabhängig von deinen tatsächlichen Monatsstunden.",
+    "changeMonthConfirm": "Beim Monatswechsel wird dieser Stundenzettel geleert. Speichere ihn vorher, wenn du ihn behalten möchtest. Fortfahren?",
+    "legacyNotice": "Dies ist ein vorhandener Wochen- oder Zweiwochen-Stundenzettel. Das ursprüngliche Format bleibt erhalten. Wähle Neuer Stundenzettel für einen ganzen Monat.",
+    "partialWeek": "Teilwoche",
+    "date": "Datum",
+    "total": "Monatssumme"
   }
 }

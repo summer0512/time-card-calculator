@@ -76,6 +76,7 @@ function LoadingState({ label }: { label: string }) {
 export default function MyTimeCards() {
   const t = useTranslations("MyTimeCards");
   const locale = useLocale();
+  const tm = useTranslations("MonthlyCalculator");
   const { data: session, isPending } = authClient.useSession();
 
   const [cards, setCards] = useState<TimeCardListItem[]>([]);
@@ -255,7 +256,7 @@ export default function MyTimeCards() {
                       </h2>
                       <div className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 text-xs font-medium capitalize text-slate-600 shadow-sm">
                         <CalendarDays className="h-3.5 w-3.5 text-slate-500" />
-                        {card.periodType.replaceAll("_", " ")}
+                        {card.periodType === "monthly" ? tm("title") : card.periodType.replaceAll("_", " ")}
                       </div>
                     </div>
 

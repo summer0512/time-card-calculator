@@ -77,42 +77,50 @@
       }
     ]
   },
-  "biweekly-time-card-calculator": {
+  "monthly-time-card-calculator": {
     "slug": "calcul-temps-de-travail-par-mois",
     "title": "Calcul du temps de travail par mois",
-    "metaTitle": "Calcul du temps de travail par mois",
-    "metaDescription": "Suivez vos heures de travail par semaine et par mois avec pauses, totaux de période et calcul des heures supplémentaires.",
+    "metaTitle": "Calcul des heures de travail par mois avec pauses",
+    "metaDescription": "Calculez les heures de travail pour un mois complet : horaires quotidiens, pauses, sous-totaux par semaine et total mensuel. Enregistrez ou imprimez la feuille.",
     "h1": "Calcul du temps de travail par mois",
-    "subtitle": "Visualisez vos heures de travail mensuelles avec un suivi simple des semaines et du total de période.",
-    "intro": "Idéal pour calculer combien d'heures de travail vous effectuez par mois, avec une vue claire des totaux hebdomadaires et du cumul mensuel.",
-    "keywords": "heure de travail par mois, combien d'heures de travail par mois, nombre d'heure de travail par mois, calcul heure de travail par semaine, temps de travail mensuel",
+    "subtitle": "Choisissez un mois et suivez vos horaires, vos pauses et le total des heures réellement travaillées.",
+    "intro": "Cette feuille mensuelle additionne les heures de travail saisies pour chaque date du mois. Elle permet de conserver un relevé personnel avec des sous-totaux hebdomadaires. Un module distinct convertit les heures par semaine en moyenne mensuelle.",
+    "keywords": "calcul temps de travail par mois, heures de travail mensuelles, feuille de temps mensuelle, calcul heures avec pauses",
     "howToSteps": [
-      "Activez le mode de période pour afficher vos jours de travail sur 14 jours.",
-      "Saisissez vos heures de début, de fin et vos pauses si besoin.",
-      "Comparez les totaux hebdomadaires pour voir votre rythme de travail.",
-      "Utilisez le total de période pour estimer votre volume mensuel."
+      "Choisissez une année et un mois pour afficher les 28 à 31 dates du calendrier.",
+      "Remplissez les jours travaillés avec des horaires réguliers ou saisissez chaque journée séparément.",
+      "Déduisez les pauses et laissez les jours de repos ou les absences vides. Vérifiez les sous-totaux et le total mensuel.",
+      "Enregistrez, partagez ou imprimez votre feuille mensuelle."
     ],
     "example": {
-      "title": "Exemple de total mensuel",
-      "calculation": "Semaine 1 = 42:00, Semaine 2 = 38:00",
-      "result": "Total de période = 80:00. Projection mensuelle = environ 160:00 sur 4 semaines."
+      "title": "Exemple : 20 journées travaillées",
+      "calculation": "De 09:00 à 17:00, moins 30 minutes de pause = 7:30 par jour. Pour 20 journées identiques : 20 × 7:30.",
+      "result": "Total mensuel = 150:00, soit 150,00 heures décimales."
     },
     "faqs": [
       {
         "question": "Comment calculer mes heures de travail par mois ?",
-        "answer": "Additionnez vos heures hebdomadaires ou vos périodes de paie, puis projetez le total sur le mois pour obtenir une estimation mensuelle."
+        "answer": "Choisissez le mois, saisissez les horaires de début et de fin de chaque journée et déduisez les pauses non travaillées. Le total additionne les durées nettes saisies."
       },
       {
-        "question": "Combien d'heures de travail par mois pour un temps plein ?",
-        "answer": "Le total dépend de votre contrat, mais beaucoup de postes à temps plein se situent autour de 151 à 160 heures par mois."
+        "question": "Comment convertir 35 heures par semaine en moyenne mensuelle ?",
+        "answer": "Le calcul 35 × 52 ÷ 12 donne environ 151,67 heures. Cette moyenne annuelle est distincte des heures réellement travaillées pendant un mois précis."
       },
       {
-        "question": "Puis-je comparer mes heures par semaine et par mois ?",
-        "answer": "Oui. Cette page met en évidence les totaux hebdomadaires pour faciliter le calcul mensuel."
+        "question": "Les jours fériés et les congés sont-ils calculés automatiquement ?",
+        "answer": "Non. Laissez ces jours vides ou effacez les horaires saisis. Cette version ne gère ni les calendriers régionaux ni les droits à congés."
       },
       {
-        "question": "Cette page sert-elle aussi pour le suivi des heures supplémentaires ?",
-        "answer": "Oui. Vous pouvez suivre les heures supplémentaires en parallèle du total mensuel pour votre paie ou votre planning."
+        "question": "Comment sont traités les horaires de nuit et les semaines partielles ?",
+        "answer": "Un horaire qui passe minuit est rattaché à sa date de début. Les semaines vont du lundi au dimanche ; les sous-totaux ne comprennent que les dates du mois choisi."
+      },
+      {
+        "question": "La moyenne mensuelle détermine-t-elle les heures supplémentaires ?",
+        "answer": "Non. Le module de moyenne est une simple conversion. La feuille mensuelle ne définit pas de seuil automatique ni de règle contractuelle pour les heures supplémentaires."
+      },
+      {
+        "question": "Puis-je enregistrer et imprimer ma feuille mensuelle ?",
+        "answer": "Oui. Vous pouvez imprimer la feuille et, après connexion, la sauvegarder ou partager une vue en lecture seule."
       }
     ]
   }

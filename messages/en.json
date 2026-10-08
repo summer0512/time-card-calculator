@@ -426,5 +426,25 @@
     "pay": "Total pay",
     "updated": "Last updated",
     "open": "Open"
+  },
+  "MonthlyCalculator": {
+    "title": "Monthly time card",
+    "month": "Month",
+    "fillTitle": "Fill working days",
+    "start": "Start",
+    "end": "End",
+    "breakMinutes": "Break (minutes)",
+    "fill": "Fill empty days",
+    "fillHint": "Only empty rows on the selected weekdays are filled. Edit or clear individual days afterwards.",
+    "calendarHint": "Overnight shifts count on their start date. Leave rest days, holidays and absences empty. Weekly subtotals include only dates in this month.",
+    "averageTitle": "Average monthly hours",
+    "weeklyHours": "Hours per week",
+    "hoursPerMonth": "hours / month",
+    "averageHint": "Average = weekly hours × 52 ÷ 12. This estimate is separate from your actual monthly total.",
+    "changeMonthConfirm": "Changing the month clears this record. Save it first if you want to keep it. Continue?",
+    "legacyNotice": "This is an existing weekly or biweekly record. Its original format is preserved. Choose New Time Card to start a full month.",
+    "partialWeek": "partial week",
+    "date": "Date",
+    "total": "Monthly total"
   }
 }

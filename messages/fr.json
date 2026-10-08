@@ -426,5 +426,25 @@
     "pay": "Rémunération totale",
     "updated": "Dernière mise à jour",
     "open": "Ouvrir"
+  },
+  "MonthlyCalculator": {
+    "title": "Feuille de temps mensuelle",
+    "month": "Mois",
+    "fillTitle": "Remplir les jours travaillés",
+    "start": "Début",
+    "end": "Fin",
+    "breakMinutes": "Pause (minutes)",
+    "fill": "Remplir les jours vides",
+    "fillHint": "Seules les lignes vides des jours sélectionnés sont remplies. Vous pouvez ensuite modifier ou vider chaque journée.",
+    "calendarHint": "Les horaires de nuit sont rattachés à la date de début. Laissez les jours de repos, fériés et absences vides. Les sous-totaux hebdomadaires portent uniquement sur ce mois.",
+    "averageTitle": "Moyenne des heures mensuelles",
+    "weeklyHours": "Heures par semaine",
+    "hoursPerMonth": "heures / mois",
+    "averageHint": "Moyenne = heures hebdomadaires × 52 ÷ 12. Cette estimation est distincte du total réellement travaillé dans le mois.",
+    "changeMonthConfirm": "Changer de mois efface cette feuille. Enregistrez-la avant de continuer si vous souhaitez la conserver. Continuer ?",
+    "legacyNotice": "Cette feuille existante couvre une ou deux semaines. Son format initial est conservé. Choisissez Nouvelle feuille pour commencer un mois complet.",
+    "partialWeek": "semaine partielle",
+    "date": "Date",
+    "total": "Total mensuel"
   }
 }

@@ -16,6 +16,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import MonthlyTimeCardControls from "@/components/monthly-time-card-controls";
+import { monthDates, formatWorkDate, calendarWeekId, calendarWeekTotals, dateFromISO } from "@/lib/time-cards/monthly";
 import TimeCardResults from "@/components/time-card-results";
 import PaymentSettings, { type EditableOvertimeTier } from "@/components/payment/payment-settings";
 import {
@@ -43,6 +45,7 @@ import {
 } from "@/lib/time-cards/time";
 
 interface DayEntry {
+  workDate?: string;
   date: string;
   from: string;
   to: string;
@@ -73,6 +76,7 @@ export interface PaymentDefaults {
 }
 
 interface TimeCardCalculatorProps {
+  periodMode?: "monthly";
   calculatorType?: string;
   mode?: "time-card" | "hours" | "split-shift";
   defaultBreakMinutes?: number;
@@ -405,6 +409,7 @@ const createDays = (
 };
 
 export default function TimeCardCalculator({
+  periodMode,
   calculatorType = "time-card-calculator",
   mode = "time-card",
   defaultBreakMinutes = 30,
@@ -428,6 +433,13 @@ export default function TimeCardCalculator({
   const tCalculator = useTranslations("Calculator");
   const tShare = useTranslations("TimeCardShare");
   const locale = useLocale();
+  const tm = useTranslations("MonthlyCalculator");
+  const [monthly, setMonthly] = useState(periodMode === "monthly");
+  const effectiveShowOvertime = periodMode === "monthly" && !monthly ? true : showOvertime;
+  const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth() + 1);
+  const calendarTitle = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(calendarYear, calendarMonth - 1, 1)));
+  const makeMonthlyDays = (year = calendarYear, month = calendarMonth): DayEntry[] => monthDates(year, month).map(workDate => ({ workDate, date: formatWorkDate(workDate, locale), from: "", to: "", breakDeduction: "", breaks: Array.from({ length: initialBreakColumns }, () => ""), lunch: showLunchBreak ? "" : undefined }));
   const localizedUiText: Partial<CalculatorUiText> = {
     saveTimeCard: tCalculator("saveTimeCard"),
     saveChanges: tCalculator("saveChanges"),
@@ -559,7 +571,7 @@ export default function TimeCardCalculator({
   );
 
   const [days, setDays] = useState<DayEntry[]>(
-    createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
+    periodMode === "monthly" ? makeMonthlyDays() : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
   );
   const { data: sessionData } = authClient.useSession();
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
@@ -584,7 +596,8 @@ export default function TimeCardCalculator({
     setShowLunchColumn(showLunchBreak);
     setBreakColumns(initialBreakColumns);
     setIsBiweekly(mode === "time-card" && showBiweekly);
-    setDays(createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+    setDays(periodMode === "monthly" ? makeMonthlyDays() : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, showLunchBreak, showBiweekly, showMultipleBreaks, defaultBreakMinutes, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   useEffect(() => {
@@ -594,7 +607,13 @@ export default function TimeCardCalculator({
 
   useEffect(() => {
     if (isRestoring.current) { isRestoring.current = false; return; }
+    if (monthly) {
+      setDays(previous => previous.map(day => ({ ...day, lunch: showLunchColumn ? day.lunch ?? "" : undefined, breaks: Array.from({ length: breakColumns }, (_, index) => day.breaks[index] ?? "") })));
+      return;
+    }
     setDays(createDays(mode, isBiweekly, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+  // Month selection and restore generate their own dated rows.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBiweekly, mode, breakColumns, showLunchColumn, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
   const totals = useMemo(() => {
@@ -612,7 +631,9 @@ export default function TimeCardCalculator({
       : dayTotals.filter((value) => value > 0).length;
 
     const weeklyMinuteTotals: number[] = [];
-    if (mode === "hours" || mode === "split-shift") {
+    if (monthly) {
+      weeklyMinuteTotals.push(...calendarWeekTotals(days, dayTotals).map(group => group.minutes));
+    } else if (mode === "hours" || mode === "split-shift") {
       weeklyMinuteTotals.push(totalMinutes);
     } else {
       for (let i = 0; i < dayTotals.length; i += 7) {
@@ -629,19 +650,19 @@ export default function TimeCardCalculator({
       averageDayMinutes: workedDays > 0 ? Math.round(totalMinutes / workedDays) : 0,
       weeklyMinuteTotals
     };
-  }, [days, breakColumns, showBreakDeduction, showLunchColumn, mode]);
+  }, [days, breakColumns, showBreakDeduction, showLunchColumn, mode, monthly]);
 
   const workPeriods = useMemo<WorkPeriod[]>(() => totals.dayTotals.map((workedMinutes, index) => ({
-    dayId: mode === "split-shift" ? "split-day" : String(index % 7),
-    weekId: mode === "hours" ? "shift" : mode === "split-shift" ? "week-1" : String(Math.floor(index / 7)),
+    dayId: monthly && days[index].workDate ? days[index].workDate! : mode === "split-shift" ? "split-day" : String(index % 7),
+    weekId: monthly && days[index].workDate ? calendarWeekId(days[index].workDate!) : mode === "hours" ? "shift" : mode === "split-shift" ? "week-1" : String(Math.floor(index / 7)),
     workedMinutes,
-  })), [mode, totals.dayTotals]);
+  })), [mode, totals.dayTotals, monthly, days]);
   const paymentConfig = useMemo<PaymentConfig>(() => ({
     enabled: includePayment,
     currency,
     hourlyRate: parseLocalizedDecimal(basePay),
     overtime: {
-      enabled: includePayment && showOvertime && overtimeEnabled,
+      enabled: includePayment && effectiveShowOvertime && overtimeEnabled,
       basis: overtimeBasis,
       tiers: overtimeTiers.map((tier) => ({
         id: tier.id,
@@ -650,7 +671,7 @@ export default function TimeCardCalculator({
         rateValue: parseLocalizedDecimal(tier.rateValue) ?? Number.NaN,
       })),
     },
-  }), [basePay, currency, includePayment, overtimeBasis, overtimeEnabled, overtimeTiers, showOvertime]);
+  }), [basePay, currency, includePayment, overtimeBasis, overtimeEnabled, overtimeTiers, effectiveShowOvertime]);
   const paymentValidationErrors = useMemo(
     () => validatePaymentConfig(paymentConfig),
     [paymentConfig],
@@ -668,6 +689,7 @@ export default function TimeCardCalculator({
   }, [paymentConfig, paymentValidationErrors.length, workPeriods]);
   const currentSnapshotKey = useMemo(() => JSON.stringify({
     days,
+    monthly, calendarYear, calendarMonth,
     showLunchColumn,
     breakColumns,
     isBiweekly,
@@ -681,6 +703,7 @@ export default function TimeCardCalculator({
     overtimeTiers,
   }), [
     days,
+    monthly, calendarYear, calendarMonth,
     showLunchColumn,
     breakColumns,
     isBiweekly,
@@ -704,7 +727,7 @@ export default function TimeCardCalculator({
       onHourlyRateChange={setBasePay}
       currency={currency}
       onCurrencyChange={setCurrency}
-      overtimeAvailable={showOvertime}
+      overtimeAvailable={effectiveShowOvertime}
       overtimeEnabled={overtimeEnabled}
       onOvertimeEnabledChange={setOvertimeEnabled}
       basis={overtimeBasis}
@@ -735,15 +758,17 @@ export default function TimeCardCalculator({
   );
 
   const normalizeTime = (value: string) => normalizeTimeTo24Hour(value);
-  const snapshot = () => ({ days, showLunchColumn, breakColumns, isBiweekly, reportHeader, reportNotes, includePayment, basePay, currency, overtimeEnabled, overtimeBasis, overtimeTiers });
+  const snapshot = () => ({ days, monthly, calendarYear, calendarMonth, showLunchColumn, breakColumns, isBiweekly, reportHeader, reportNotes, includePayment, basePay, currency, overtimeEnabled, overtimeBasis, overtimeTiers });
   const restoreSnapshot = (state: ReturnType<typeof snapshot>) => {
     isRestoring.current = true;
+    setMonthly(state.monthly ?? false); setCalendarYear(state.calendarYear ?? calendarYear); setCalendarMonth(state.calendarMonth ?? calendarMonth);
     setDays(state.days); setShowLunchColumn(state.showLunchColumn); setBreakColumns(state.breakColumns); setIsBiweekly(state.isBiweekly);
     setReportHeader(state.reportHeader); setReportNotes(state.reportNotes); setIncludePayment(state.includePayment); setBasePay(state.basePay); setCurrency(state.currency);
     setOvertimeEnabled(state.overtimeEnabled); setOvertimeBasis(state.overtimeBasis); setOvertimeTiers(state.overtimeTiers);
   };
   const resetToNewCalculator = () => {
     isRestoring.current = true;
+    setMonthly(periodMode === "monthly");
     setSavedCardId(null);
     setSavedTitle("");
     setSaveDialogOpen(false);
@@ -761,7 +786,7 @@ export default function TimeCardCalculator({
     setOvertimeEnabled(paymentDefaults?.overtime?.enabled ?? false);
     setOvertimeBasis(paymentDefaults?.overtime?.basis ?? "weekly");
     setOvertimeTiers(toEditableTiers(paymentDefaults?.overtime?.tiers));
-    setDays(createDays(
+    setDays(periodMode === "monthly" ? makeMonthlyDays() : createDays(
       mode,
       mode === "time-card" && showBiweekly,
       initialBreakColumns,
@@ -797,6 +822,7 @@ export default function TimeCardCalculator({
       rateValue: String(tier.rateValue),
     }));
     const restoredDays = card.rows.map((row: {
+      workDate?: string | null;
       dayLabel: string;
       punches: Array<{ start: string; end: string }>;
       breaks: Array<{ kind: "break" | "lunch"; position: number; minutes: number }>;
@@ -807,7 +833,8 @@ export default function TimeCardCalculator({
         .filter((item) => item.kind === "break")
         .sort((a, b) => a.position - b.position);
       return {
-        date: row.dayLabel,
+        workDate: row.workDate ?? undefined,
+        date: row.workDate ? formatWorkDate(row.workDate, locale) : row.dayLabel,
         from: row.punches[0]?.start ?? "",
         to: row.punches[0]?.end ?? "",
         breakDeduction: regular[0] ? asDuration(regular[0].minutes) : "",
@@ -822,6 +849,9 @@ export default function TimeCardCalculator({
     });
     const restoredState = {
       days: restoredDays,
+      monthly: card.periodType === "monthly",
+      calendarYear: card.periodType === "monthly" ? Number(card.periodStart?.slice(0, 4)) : calendarYear,
+      calendarMonth: card.periodType === "monthly" ? Number(card.periodStart?.slice(5, 7)) : calendarMonth,
       showLunchColumn: settings.showLunchColumn,
       breakColumns: settings.breakColumnCount,
       isBiweekly: settings.isBiweekly,
@@ -836,6 +866,7 @@ export default function TimeCardCalculator({
     };
 
     isRestoring.current = true;
+    setMonthly(restoredState.monthly); setCalendarYear(restoredState.calendarYear); setCalendarMonth(restoredState.calendarMonth);
     setSavedCardId(card.id);
     setSavedTitle(card.title);
     setReportHeader(restoredState.reportHeader);
@@ -853,22 +884,22 @@ export default function TimeCardCalculator({
     setSavedSnapshotKey(JSON.stringify(restoredState));
   };
   const buildPayload = (title: string) => ({
-    title, reportHeader, notes: reportNotes, calculatorType, sourcePath: window.location.pathname,
-    periodType: mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly",
-    periodStart: null, periodEnd: null, paymentEnabled: includePayment, currency: includePayment ? normalizeCurrencyCode(currency) : null,
+    title, reportHeader, notes: reportNotes, calculatorType: periodMode === "monthly" && !monthly ? "biweekly-time-card-calculator" : calculatorType, sourcePath: window.location.pathname,
+    periodType: monthly ? "monthly" : mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly",
+    periodStart: monthly ? monthDates(calendarYear, calendarMonth)[0] : null, periodEnd: monthly ? monthDates(calendarYear, calendarMonth).at(-1) : null, paymentEnabled: includePayment, currency: includePayment ? normalizeCurrencyCode(currency) : null,
     hourlyRate: includePayment && paymentConfig.hourlyRate !== null && Number.isFinite(paymentConfig.hourlyRate)
       ? paymentConfig.hourlyRate
       : null,
     settings: {
       mode, timeFormat, showLunchColumn, breakColumnCount: breakColumns, showBreakDeduction, isBiweekly, copyVariant,
       overtime: {
-        enabled: includePayment && showOvertime && overtimeEnabled,
+        enabled: includePayment && effectiveShowOvertime && overtimeEnabled,
         basis: overtimeBasis,
         tiers: paymentConfig.overtime.tiers,
       },
     },
     cachedTotalMinutes: totals.totalMinutes, cachedTotalPay: includePayment && paymentValidationErrors.length === 0 ? totalPay : null,
-    rows: days.map((day, position) => ({ position, workDate: null, dayLabel: day.date, punches: [{ start: normalizeTime(day.from), end: normalizeTime(day.to) }],
+    rows: days.map((day, position) => ({ position, workDate: day.workDate ?? null, dayLabel: day.date, punches: [{ start: normalizeTime(day.from), end: normalizeTime(day.to) }],
       breaks: [
         ...(showBreakDeduction && day.breakDeduction ? [{ kind: "break" as const, position: 0, minutes: parseDurationToMinutes(day.breakDeduction) ?? 0 }] : []),
         ...(showLunchColumn && day.lunch ? [{ kind: "lunch" as const, position: 1, minutes: parseDurationToMinutes(day.lunch) ?? 0 }] : []),
@@ -937,7 +968,7 @@ export default function TimeCardCalculator({
     }
 
     setSaveTitle(
-      reportHeader.trim() || (isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle),
+      reportHeader.trim() || (monthly ? `${tm("title")} — ${calendarTitle}` : isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle),
     );
     setSaveDialogOpen(true);
   };
@@ -949,7 +980,7 @@ export default function TimeCardCalculator({
       await persistCard(savedTitle);
       return;
     }
-    setSaveTitle(reportHeader.trim() || (isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle));
+    setSaveTitle(reportHeader.trim() || (monthly ? `${tm("title")} — ${calendarTitle}` : isBiweekly ? t.defaultBiweeklyTimeCardTitle : t.defaultWeeklyTimeCardTitle));
     setSaveDialogOpen(true);
   };
 
@@ -1174,7 +1205,7 @@ export default function TimeCardCalculator({
   const printReport = () => {
     if (typeof window === "undefined") return;
 
-    const reportTitle = t.printReportTitles[copyVariant] ?? t.printReportTitles["time-card"];
+    const reportTitle = monthly ? `${tm("title")} — ${calendarTitle}` : t.printReportTitles[copyVariant] ?? t.printReportTitles["time-card"];
     const rowsHtml = days
       .map((day, index) => {
         const dayTotal = totals.dayTotals[index];
@@ -1247,8 +1278,9 @@ export default function TimeCardCalculator({
           </tbody>
         </table>
         <div class="total">${t.totalHours}: ${formatDecimalHoursFromMinutes(totals.totalMinutes, locale)} (${minutesToHours(totals.totalMinutes)})</div>
+        ${monthly ? calendarWeekTotals(days, totals.dayTotals).map(group => `<div>${formatWorkDate(group.start, locale)} – ${formatWorkDate(group.end, locale)}${group.partial ? ` (${tm("partialWeek")})` : ""}: ${minutesToHours(group.minutes)}</div>`).join("") : ""}
         <div class="total">${t.totalBreakTime}: ${minutesToHours(totals.breakMinutes)}</div>
-        ${showOvertime && overtimeEnabled ? `<div class="total">${t.overtime}: ${minutesToHours(paymentResult.overtimeMinutes)}</div>` : ""}
+        ${effectiveShowOvertime && overtimeEnabled ? `<div class="total">${t.overtime}: ${minutesToHours(paymentResult.overtimeMinutes)}</div>` : ""}
         ${paymentHtml}
         ${reportNotes ? `<div class="notes"><strong>${t.notes}:</strong><br/>${reportNotes.replace(/\n/g, "<br/>")}</div>` : ""}
       </body>
@@ -1438,6 +1470,17 @@ export default function TimeCardCalculator({
                 </Button>
               </div>
             )}
+            {monthly && <MonthlyTimeCardControls year={calendarYear} month={calendarMonth} onMonthChange={(year, month) => {
+              if (year === calendarYear && month === calendarMonth) return;
+              if ((days.some(day => day.from || day.to || day.breakDeduction || day.lunch || day.breaks.some(Boolean)) || reportHeader || reportNotes) && !window.confirm(tm("changeMonthConfirm"))) return;
+              setCalendarYear(year); setCalendarMonth(month); setDays(makeMonthlyDays(year, month));
+              setSavedCardId(null); setSavedTitle(""); setSavedSnapshotKey(null); setSaveMessage(""); setReportHeader(""); setReportNotes("");
+              if (routeCardId) setCardLocation(null);
+            }} onFill={(weekdays, start, end, breakMinutes) => {
+              setDays(previous => previous.map(day => day.workDate && weekdays.includes(dateFromISO(day.workDate).getUTCDay()) && !day.from && !day.to
+                ? { ...day, from: start, to: end, breakDeduction: formatDurationMinutes(breakMinutes), breaks: Array.from({ length: breakColumns }, (_, index) => index === 0 ? formatDurationMinutes(breakMinutes) : ""), lunch: showLunchColumn ? "" : undefined } : day));
+            }} />}
+            {periodMode === "monthly" && !monthly && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm">{tm("legacyNotice")}</p>}
             <div className="flex flex-wrap items-center gap-2">
               <Button variant="outline" onClick={clearAll} size="sm">
                 <RotateCcw className="h-4 w-4 mr-1" />
@@ -1451,7 +1494,7 @@ export default function TimeCardCalculator({
                 </Button>
               )}
 
-              {mode === "time-card" && (
+              {mode === "time-card" && !monthly && (
                 <Button variant="outline" onClick={copyFirstRowDown} size="sm">
                   <Copy className="h-4 w-4 mr-1" />
                   {t.copyFirstRow}
@@ -1646,9 +1689,9 @@ export default function TimeCardCalculator({
 
               <tbody>
                 {days.map((day, index) => (
-                  <tr key={`${day.date}-${index}`} className="hover:bg-gray-50">
+                  <tr key={`${day.date}-${index}`} className={day.workDate && [0, 6].includes(dateFromISO(day.workDate).getUTCDay()) ? "bg-slate-50 hover:bg-slate-100" : "hover:bg-gray-50"}>
                     <td className="border border-gray-300 p-1">
-                      <Input value={day.date} onChange={(e) => updateDay(index, "date", e.target.value)} className="w-full h-9" />
+                      <Input readOnly={Boolean(day.workDate)} value={day.date} onChange={(e) => updateDay(index, "date", e.target.value)} className="w-full h-9" />
                     </td>
 
                     <td className="border border-gray-300 p-1">
@@ -1723,7 +1766,7 @@ export default function TimeCardCalculator({
                     className="border border-gray-300 p-2 text-right"
                     colSpan={3 + (showBreakDeduction ? breakColumns : 0) + (showLunchColumn ? 1 : 0)}
                   >
-                    {t.totalPaidHours}
+                    {monthly ? tm("total") : t.totalPaidHours}
                   </td>
                   <td className="border border-gray-300 p-2 text-center font-mono text-green-700">
                     {formatDecimalHoursFromMinutes(totals.totalMinutes, locale)}h / {minutesToHours(totals.totalMinutes)}
@@ -1736,8 +1779,8 @@ export default function TimeCardCalculator({
             </table>
           </div>
 
-          <TimeCardResults breakMinutes={totals.breakMinutes} averageDayMinutes={totals.averageDayMinutes}
-            weeklyMinuteTotals={totals.weeklyMinuteTotals} showOvertime={showOvertime} overtimeEnabled={overtimeEnabled}
+          <TimeCardResults weeklyLabels={monthly ? calendarWeekTotals(days, totals.dayTotals).map(group => `${formatWorkDate(group.start, locale)} – ${formatWorkDate(group.end, locale)}${group.partial ? ` (${tm("partialWeek")})` : ""}`) : undefined} breakMinutes={totals.breakMinutes} averageDayMinutes={totals.averageDayMinutes}
+            weeklyMinuteTotals={totals.weeklyMinuteTotals} showOvertime={effectiveShowOvertime} overtimeEnabled={overtimeEnabled}
             includePayment={includePayment} paymentValid={paymentValidationErrors.length === 0} paymentResult={paymentResult}
             formatDuration={minutesToHours} formatAmount={formatAmount} formatPaymentMinutes={formatPaymentMinutes}
             labels={{ totalBreakTime: t.totalBreakTime, averageDailyPaidTime: t.averageDailyPaidTime, weeklyTotals: t.weeklyTotals,

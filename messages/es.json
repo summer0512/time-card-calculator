@@ -424,5 +424,25 @@
     "pay": "Pago total",
     "updated": "Última actualización",
     "open": "Abrir"
+  },
+  "MonthlyCalculator": {
+    "title": "Hoja de horas mensual",
+    "month": "Mes",
+    "fillTitle": "Rellenar días laborables",
+    "start": "Inicio",
+    "end": "Fin",
+    "breakMinutes": "Descanso (minutos)",
+    "fill": "Rellenar días vacíos",
+    "fillHint": "Solo se rellenan las filas vacías de los días seleccionados. Después puedes editar o borrar cada día.",
+    "calendarHint": "Los turnos nocturnos se asignan a la fecha de inicio. Deja vacíos los días de descanso, festivos y ausencias. Los subtotales semanales solo incluyen fechas de este mes.",
+    "averageTitle": "Promedio de horas mensuales",
+    "weeklyHours": "Horas por semana",
+    "hoursPerMonth": "horas / mes",
+    "averageHint": "Promedio = horas semanales × 52 ÷ 12. Esta estimación es independiente del total mensual real.",
+    "changeMonthConfirm": "Cambiar el mes borra esta hoja. Guárdala primero si quieres conservarla. ¿Continuar?",
+    "legacyNotice": "Esta hoja existente abarca una o dos semanas. Se conserva su formato original. Elige Nueva hoja para iniciar un mes completo.",
+    "partialWeek": "semana parcial",
+    "date": "Fecha",
+    "total": "Total mensual"
   }
 }

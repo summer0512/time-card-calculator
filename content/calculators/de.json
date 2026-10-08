@@ -194,45 +194,6 @@
       }
     ]
   },
-  "biweekly-time-card-calculator": {
-    "slug": "stundenrechner-monat",
-    "title": "Monats-Stundenrechner",
-    "metaTitle": "Stundenrechner Monat - Monatsarbeitszeit berechnen",
-    "metaDescription": "Berechne die gesamte Arbeitszeit pro Monat auf Basis täglicher oder wöchentlicher Eingaben.",
-    "h1": "Monats-Stundenrechner",
-    "subtitle": "Monatliche Arbeitszeit strukturiert erfassen und vergleichen.",
-    "intro": "Für Monatsauswertungen mit klaren Summen je Zeitraum.",
-    "keywords": "stundenrechner monat, monats stundenrechner, stundenrechner arbeitszeit monat",
-    "howToSteps": [
-      "Aktiviere zweiwöchig, um 14 Tage (Woche 1 + Woche 2) zu sehen.",
-      "Trage tägliche Arbeitszeiten und Mittagspausen ein.",
-      "Prüfe die Summen von Woche 1 und Woche 2 getrennt.",
-      "Nutze Gesamtzeitraum und Überstunden für die Abrechnung."
-    ],
-    "example": {
-      "title": "Beispiel für 2-Wochen-Zeitraum",
-      "calculation": "Woche 1 = 42:00, Woche 2 = 38:00",
-      "result": "Gesamtzeitraum = 80:00. Überstunden fallen nur in Woche 1 mit 2:00 an."
-    },
-    "faqs": [
-      {
-        "question": "Wie berechne ich einen 2-Wochen-Stundenzettel?",
-        "answer": "Trage alle 14 Tage ein und nutze Wochen-Teilsummen sowie die Gesamtsumme für den Zeitraum."
-      },
-      {
-        "question": "Werden Überstunden wöchentlich oder zweiwöchig berechnet?",
-        "answer": "Dieser Rechner weist Überstunden wöchentlich aus (über 40 Stunden/Woche)."
-      },
-      {
-        "question": "Kann ich Mittagspausen im 2-Wochen-Modell erfassen?",
-        "answer": "Ja. Mittagspausen lassen sich für beide Wochen pro Tag bearbeiten."
-      },
-      {
-        "question": "Kann ich einen 2-Wochen-Nachweis drucken?",
-        "answer": "Ja. Nutze die Druckfunktion für einen sauberen 2-Wochen-Ausdruck."
-      }
-    ]
-  },
   "lunch-break-calculator": {
     "title": "Pausenrechner",
     "metaDescription": "Berechne bezahlte Arbeitsstunden nach Abzug der Pause. Gib Beginn, Ende und Pausendauer ein und sieh die Nettozeit als Dezimalstunden sowie Stunden:Minuten."
@@ -258,5 +219,52 @@
   },
   "timesheet-calculator-with-breaks": {
     "metaDescription": "Erstelle einen Wochen-Stundenzettel mit mehreren Pausen pro Tag. Ziehe Mittagspausen ab, prüfe Tages- und Wochensummen sowie Überstunden und drucke ihn aus."
+  },
+  "monthly-time-card-calculator": {
+    "slug": "stundenrechner-monat",
+    "title": "Monats-Stundenrechner",
+    "metaTitle": "Stundenrechner Monat: Arbeitszeit mit Pausen berechnen",
+    "metaDescription": "Berechne deine Arbeitszeit für einen ganzen Monat. Erfasse Beginn, Ende und Pausen, prüfe Tages- und Wochensummen und drucke deinen monatlichen Stundenzettel.",
+    "h1": "Stundenrechner für einen ganzen Monat",
+    "subtitle": "Wähle einen Monat und erfasse deine Arbeitszeiten mit Pausen, Wochensummen und einer klaren Monatssumme.",
+    "intro": "Dieser Monats-Stundenrechner summiert deine tatsächlich erfasste Arbeitszeit für jeden Kalendertag. Er eignet sich für persönliche Arbeitszeitnachweise und monatliche Übersichten. Die zusätzliche Umrechnung von Wochenstunden liefert einen getrennten Monatsdurchschnitt.",
+    "keywords": "stundenrechner monat, monatliche arbeitszeit berechnen, monatlicher stundenzettel, arbeitsstunden mit pause",
+    "howToSteps": [
+      "Wähle Jahr und Monat. Der Rechner zeigt alle 28 bis 31 Kalendertage.",
+      "Fülle leere Arbeitstage mit festen Zeiten aus oder trage Beginn, Ende und Pausen einzeln ein.",
+      "Lasse freie Tage und Abwesenheiten leer. Prüfe Tageswerte, Kalenderwochen und die Monatssumme.",
+      "Speichere, teile oder drucke deinen monatlichen Stundenzettel."
+    ],
+    "example": {
+      "title": "Beispiel: 20 erfasste Arbeitstage",
+      "calculation": "09:00 bis 17:00, abzüglich 30 Minuten Pause = 7:30 pro Tag. Bei 20 solchen Tagen: 20 × 7:30.",
+      "result": "Monatssumme = 150:00 Stunden beziehungsweise 150,00 Dezimalstunden."
+    },
+    "faqs": [
+      {
+        "question": "Wie berechne ich meine Arbeitsstunden pro Monat?",
+        "answer": "Wähle den Monat und erfasse täglich Beginn, Ende und unbezahlte Pausen. Der Rechner addiert die Nettozeiten aller erfassten Tage."
+      },
+      {
+        "question": "Wie viele Stunden pro Monat ergeben 40 Wochenstunden?",
+        "answer": "Als Jahresdurchschnitt ergeben 40 × 52 ÷ 12 rund 173,33 Stunden pro Monat. Das ist eine Schätzung, nicht die tatsächlich erfasste Arbeitszeit eines bestimmten Monats."
+      },
+      {
+        "question": "Werden Feiertage automatisch abgezogen?",
+        "answer": "Nein. Lasse Feiertage, freie Tage und Abwesenheiten leer oder entferne die eingetragenen Zeiten. Regionale Feiertagskalender sind nicht enthalten."
+      },
+      {
+        "question": "Wie werden Nachtschichten und Teilwochen behandelt?",
+        "answer": "Eine Schicht über Mitternacht zählt zum Startdatum. Wochensummen laufen von Montag bis Sonntag und enthalten nur die Tage innerhalb des gewählten Monats."
+      },
+      {
+        "question": "Kann ich Überstunden oder Vertrags-Sollstunden berechnen?",
+        "answer": "Diese Monatsansicht erfasst tatsächliche Arbeitsstunden. Sie berechnet keine vertraglichen Sollstunden und verwendet keine automatische Überstundengrenze."
+      },
+      {
+        "question": "Kann ich meinen Monats-Stundenzettel speichern und drucken?",
+        "answer": "Ja. Du kannst ihn drucken sowie nach Anmeldung speichern und als schreibgeschützte Ansicht teilen."
+      }
+    ]
   }
 }
