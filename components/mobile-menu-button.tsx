@@ -62,7 +62,7 @@ export default function MobileMenuButton() {
                 {item.name}
               </a>
             ) : (
-              <Link key={item.name} href={item.href} className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+              <Link key={item.name} href={item.href} locale={item.href === "/contact" ? "en" : undefined} className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {item.name}
               </Link>
             ))}

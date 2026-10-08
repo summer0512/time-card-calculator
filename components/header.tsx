@@ -88,6 +88,7 @@ export default function Header() {
               <Link
                 key={item.name}
                 href={item.href}
+                locale={item.href === "/contact" ? "en" : undefined}
                 className={cn(
                   "px-3 py-2 rounded-md text-sm font-medium transition-colors",
                   isActive(item.href) ? "text-blue-600 bg-blue-50" : "text-gray-700 hover:text-blue-600"

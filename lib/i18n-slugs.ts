@@ -26,18 +26,18 @@ export const localizedToolRegistry: LocalizedToolRegistry = {
     "pt-br": "calculadora-de-horas-trabalhadas", fr: "calcul-temps-de-travail-avec-pause",
   },
   "time-card-calculator-with-multiple-in-and-out": {
-    en: "time-card-calculator-with-multiple-in-and-out", de: "time-card-calculator-with-multiple-in-and-out",
-    "pt-br": "time-card-calculator-with-multiple-in-and-out", es: "calcular-horas-jornada-partida",
+    en: "time-card-calculator-with-multiple-in-and-out",
+    es: "calcular-horas-jornada-partida",
   },
   "timesheet-calculator-with-lunch": { en: "timesheet-calculator-with-lunch", de: "stundenrechner-woche", "pt-br": "calculadora-de-banco-de-horas" },
-  "timesheet-calculator-with-breaks": { en: "timesheet-calculator-with-breaks", de: "timesheet-calculator-with-breaks", "pt-br": "timesheet-calculator-with-breaks" },
+  "timesheet-calculator-with-breaks": { en: "timesheet-calculator-with-breaks" },
   "time-clock-calculator-with-lunch": { en: "time-clock-calculator-with-lunch", de: "stundenrechner-uhrzeit", "pt-br": "calculadora-de-horas-extras" },
   "hours-calculator-with-lunch": { en: "hours-calculator-with-lunch", de: "stundenrechner-dezimal", "pt-br": "calculadora-de-minutos-para-horas" },
-  "lunch-break-calculator": { en: "lunch-break-calculator", de: "lunch-break-calculator", "pt-br": "calculadora-de-intervalo" },
-  "30-minute-lunch-break-calculator": { en: "30-minute-lunch-break-calculator", de: "30-minute-lunch-break-calculator", "pt-br": "calculadora-de-intervalo-de-30-minutos" },
-  "time-punch-calculator": { en: "time-punch-calculator", de: "time-punch-calculator", "pt-br": "calculadora-de-ponto" },
-  "punch-clock-calculator": { en: "punch-clock-calculator", de: "punch-clock-calculator", "pt-br": "calculadora-cartao-de-ponto" },
-  "military-time-card-calculator": { en: "military-time-card-calculator", de: "military-time-card-calculator", "pt-br": "calculadora-de-horas-formato-24h" },
+  "lunch-break-calculator": { en: "lunch-break-calculator", "pt-br": "calculadora-de-intervalo" },
+  "30-minute-lunch-break-calculator": { en: "30-minute-lunch-break-calculator", "pt-br": "calculadora-de-intervalo-de-30-minutos" },
+  "time-punch-calculator": { en: "time-punch-calculator", "pt-br": "calculadora-de-ponto" },
+  "punch-clock-calculator": { en: "punch-clock-calculator", "pt-br": "calculadora-cartao-de-ponto" },
+  "military-time-card-calculator": { en: "military-time-card-calculator", "pt-br": "calculadora-de-horas-formato-24h" },
 };
 
 export const isToolAvailableInLocale = (canonicalSlug: ToolSlug, locale: SupportedLocale) =>

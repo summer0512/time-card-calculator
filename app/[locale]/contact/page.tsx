@@ -93,6 +93,7 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
         <HeadInfo
           locale={params.locale}
           page="contact"
+        alternatePaths={{ en: "/contact", "x-default": "/contact" }}
           title={t('title')}
           description={t('description')}
           keywords={t('keywords')}
@@ -130,6 +131,7 @@ export default function ContactPage(props: {params: Promise<{locale: string}>}) 
       <HeadInfo
         locale={params.locale}
         page="contact"
+        alternatePaths={{ en: "/contact", "x-default": "/contact" }}
         title={t('title')}
         description={t('description')}
         keywords={t('keywords')}
