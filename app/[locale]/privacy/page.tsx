@@ -22,6 +22,7 @@ export default function PrivacyPage(props: { params: Promise<{ locale: string }>
       <HeadInfo
         locale={params.locale}
         page="privacy"
+        alternatePaths={{ en: "/privacy", "x-default": "/privacy" }}
         title={t("title")}
         description={t("description")}
         keywords={t("keywords")}
@@ -68,6 +69,7 @@ export default function PrivacyPage(props: { params: Promise<{ locale: string }>
               <p className="text-gray-700 leading-relaxed">{t("contact.description")}</p>
               <Link
                 href="/contact"
+                locale="en"
                 className="inline-flex items-center text-blue-600 hover:text-blue-700 font-semibold"
               >
                 {t("contact.linkLabel")}

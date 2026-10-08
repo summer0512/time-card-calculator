@@ -1,5 +1,6 @@
 "use client";
 
+import { isAuxiliaryPage } from "@/lib/auxiliary-pages";
 import { Languages } from "lucide-react";
 import { useLocale } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
@@ -16,7 +17,7 @@ export function LanguageToggle() {
   const canonicalTool = resolveLocalizedToolSlug(locale, slug);
   const localizedPathname = locale === "en" || pathname.startsWith(`/${locale}/`) ? pathname : `/${locale}${pathname}`;
   const canonicalGuide = resolveGuideByPath(localizedPathname);
-  const availableLocales = canonicalTool ? getAvailableToolLocales(canonicalTool) : canonicalGuide ? getAvailableGuideLocales(canonicalGuide.id) : languages.map(({ value }) => value);
+  const availableLocales = isAuxiliaryPage(slug) ? ["en"] : canonicalTool ? getAvailableToolLocales(canonicalTool) : canonicalGuide ? getAvailableGuideLocales(canonicalGuide.id) : languages.map(({ value }) => value);
 
   const handleLocaleChange = (newLocale: string) => {
     const targetLocale = newLocale as SupportedLocale;
