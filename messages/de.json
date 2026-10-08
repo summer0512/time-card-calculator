@@ -446,5 +446,28 @@
     "partialWeek": "Teilwoche",
     "date": "Datum",
     "total": "Monatssumme"
+  },
+  "TimeCardCsv": {
+    "export": "CSV exportieren",
+    "rowType": "Zeilentyp",
+    "date": "Datum",
+    "day": "Tag / Schicht",
+    "start": "Beginn",
+    "end": "Ende",
+    "breakTime": "Unbezahlte Pausen (HH:MM)",
+    "netTime": "Nettozeit (HH:MM)",
+    "decimalHours": "Dezimalstunden",
+    "entry": "Eintrag",
+    "week": "Wochensumme",
+    "total": "Gesamt",
+    "report": "Berichtskopf",
+    "notes": "Notizen",
+    "currency": "Währung",
+    "hourlyRate": "Stundensatz",
+    "regularHours": "Reguläre Stunden",
+    "overtimeHours": "Überstunden",
+    "regularPay": "Regulärer Lohn",
+    "overtimePay": "Überstundenvergütung",
+    "totalPay": "Gesamtvergütung"
   }
 }

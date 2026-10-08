@@ -446,5 +446,28 @@
     "partialWeek": "semaine partielle",
     "date": "Date",
     "total": "Total mensuel"
+  },
+  "TimeCardCsv": {
+    "export": "Exporter CSV",
+    "rowType": "Type de ligne",
+    "date": "Date",
+    "day": "Jour / plage horaire",
+    "start": "Début",
+    "end": "Fin",
+    "breakTime": "Pauses non rémunérées (HH:MM)",
+    "netTime": "Durée nette (HH:MM)",
+    "decimalHours": "Heures décimales",
+    "entry": "Entrée",
+    "week": "Sous-total hebdomadaire",
+    "total": "Total",
+    "report": "En-tête du rapport",
+    "notes": "Notes",
+    "currency": "Devise",
+    "hourlyRate": "Taux horaire",
+    "regularHours": "Heures normales",
+    "overtimeHours": "Heures supplémentaires",
+    "regularPay": "Rémunération normale",
+    "overtimePay": "Rémunération des heures supplémentaires",
+    "totalPay": "Rémunération totale"
   }
 }

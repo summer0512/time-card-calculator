@@ -444,5 +444,28 @@
     "partialWeek": "semana parcial",
     "date": "Fecha",
     "total": "Total mensual"
+  },
+  "TimeCardCsv": {
+    "export": "Exportar CSV",
+    "rowType": "Tipo de fila",
+    "date": "Fecha",
+    "day": "Día / turno",
+    "start": "Inicio",
+    "end": "Fin",
+    "breakTime": "Descansos no remunerados (HH:MM)",
+    "netTime": "Horas netas (HH:MM)",
+    "decimalHours": "Horas decimales",
+    "entry": "Registro",
+    "week": "Subtotal semanal",
+    "total": "Total",
+    "report": "Encabezado del informe",
+    "notes": "Notas",
+    "currency": "Moneda",
+    "hourlyRate": "Tarifa por hora",
+    "regularHours": "Horas ordinarias",
+    "overtimeHours": "Horas extra",
+    "regularPay": "Pago ordinario",
+    "overtimePay": "Pago de horas extra",
+    "totalPay": "Pago total"
   }
 }

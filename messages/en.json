@@ -446,5 +446,28 @@
     "partialWeek": "partial week",
     "date": "Date",
     "total": "Monthly total"
+  },
+  "TimeCardCsv": {
+    "export": "Export CSV",
+    "rowType": "Row type",
+    "date": "Date",
+    "day": "Day / shift",
+    "start": "Start",
+    "end": "End",
+    "breakTime": "Unpaid breaks (HH:MM)",
+    "netTime": "Net hours (HH:MM)",
+    "decimalHours": "Decimal hours",
+    "entry": "Entry",
+    "week": "Week subtotal",
+    "total": "Total",
+    "report": "Report header",
+    "notes": "Notes",
+    "currency": "Currency",
+    "hourlyRate": "Hourly rate",
+    "regularHours": "Regular hours",
+    "overtimeHours": "Overtime hours",
+    "regularPay": "Regular pay",
+    "overtimePay": "Overtime pay",
+    "totalPay": "Total pay"
   }
 }

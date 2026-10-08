@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save, Check, Loader2, Share2 } from "lucide-react";
+import { AlertCircle, Trash2, Copy, RotateCcw, CreditCard, Printer, Plus, Eraser, ChevronDown, Save, Check, Loader2, Share2, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { buildTimesheetCsv, timesheetCsvFilename, type CsvTimesheetLabels } from "@/lib/time-cards/csv";
 import MonthlyTimeCardControls from "@/components/monthly-time-card-controls";
 import { monthDates, formatWorkDate, calendarWeekId, calendarWeekTotals, dateFromISO } from "@/lib/time-cards/monthly";
 import TimeCardResults from "@/components/time-card-results";
@@ -432,6 +433,7 @@ export default function TimeCardCalculator({
 }: TimeCardCalculatorProps) {
   const tCalculator = useTranslations("Calculator");
   const tShare = useTranslations("TimeCardShare");
+  const tCsv = useTranslations("TimeCardCsv");
   const locale = useLocale();
   const tm = useTranslations("MonthlyCalculator");
   const [monthly, setMonthly] = useState(periodMode === "monthly");
@@ -1202,6 +1204,34 @@ export default function TimeCardCalculator({
     );
   };
 
+  const exportCsv = () => {
+    const labels = Object.fromEntries([
+      "rowType", "date", "day", "start", "end", "breakTime", "netTime", "decimalHours",
+      "entry", "week", "total", "report", "notes", "currency", "hourlyRate",
+      "regularHours", "overtimeHours", "regularPay", "overtimePay", "totalPay",
+    ].map(key => [key, tCsv(key)])) as unknown as CsvTimesheetLabels;
+    const csv = buildTimesheetCsv({
+      rows: days.map((day, index) => ({
+        date: day.workDate, label: day.date,
+        start: normalizeTime(day.from) || day.from, end: normalizeTime(day.to) || day.to,
+        breakMinutes: Math.max(0, calculateRawShiftMinutes(day) - totals.dayTotals[index]),
+        netMinutes: totals.dayTotals[index],
+      })),
+      weeks: mode !== "time-card" ? undefined : monthly
+        ? calendarWeekTotals(days, totals.dayTotals).map(week => ({ label: `${week.start} – ${week.end}${week.partial ? ` (${tm("partialWeek")})` : ""}`, minutes: week.minutes }))
+        : totals.weeklyMinuteTotals.map((minutes, index) => ({ label: `${t.weekLabel} ${index + 1}`, minutes })),
+      totalMinutes: totals.totalMinutes, breakMinutes: totals.breakMinutes,
+      reportHeader, notes: reportNotes,
+      payment: includePayment && paymentValidationErrors.length === 0 ? paymentResult : undefined,
+    }, labels);
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = timesheetCsvFilename(monthly ? "monthly" : mode === "hours" ? "single" : mode === "split-shift" ? "split-shift" : isBiweekly ? "biweekly" : "weekly", monthly ? calendarYear : undefined, monthly ? calendarMonth : undefined);
+    document.body.appendChild(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+
   const printReport = () => {
     if (typeof window === "undefined") return;
 
@@ -1487,13 +1517,6 @@ export default function TimeCardCalculator({
                 {t.clearAll}
               </Button>
 
-              {showPrintableTimesheet && (
-                <Button variant="outline" onClick={printReport} size="sm">
-                  <Printer className="h-4 w-4 mr-1" />
-                  {t.print}
-                </Button>
-              )}
-
               {mode === "time-card" && !monthly && (
                 <Button variant="outline" onClick={copyFirstRowDown} size="sm">
                   <Copy className="h-4 w-4 mr-1" />
@@ -1570,7 +1593,7 @@ export default function TimeCardCalculator({
                 </Popover>
               )}
 
-              <div className="ml-auto flex items-center gap-2">
+              <div className="flex w-full flex-wrap items-center justify-end gap-2 border-t border-blue-100 pt-2 sm:ml-auto sm:w-auto sm:border-0 sm:pt-0">
                 {saveMessage === "✓" && !hasUnsavedChanges ? (
                   <span className="flex items-center gap-1 text-sm font-medium text-green-700" role="status">
                     <Check className="h-4 w-4" />
@@ -1592,6 +1615,12 @@ export default function TimeCardCalculator({
                 <Button type="button" variant="outline" size="sm" onClick={shareCard} disabled={isSaving}>
                   <Share2 className="mr-1 h-4 w-4" />{tShare("share")}
                 </Button>
+                <Button type="button" variant="outline" size="sm" onClick={exportCsv} className="border-blue-500 text-blue-700 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-800">
+                  <Download className="mr-1 h-4 w-4" />{tCsv("export")}
+                </Button>
+                {showPrintableTimesheet && <Button type="button" variant="outline" onClick={printReport} size="sm" className="border-blue-500 text-blue-700 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-800">
+                  <Printer className="mr-1 h-4 w-4" />{t.print}
+                </Button>}
               </div>
             </div>
 
