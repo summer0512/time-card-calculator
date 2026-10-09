@@ -428,6 +428,13 @@
     "open": "Öffnen"
   },
   "MonthlyCalculator": {
+    "year": "Jahr",
+    "previousYear": "Vorheriges Jahr",
+    "nextYear": "Nächstes Jahr",
+    "chooseTime": "Uhrzeit wählen",
+    "hour": "Stunde",
+    "minute": "Minute",
+    "done": "Fertig",
     "title": "Monats-Stundenzettel",
     "month": "Monat",
     "fillTitle": "Arbeitstage ausfüllen",

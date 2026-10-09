@@ -428,6 +428,13 @@
     "open": "Open"
   },
   "MonthlyCalculator": {
+    "year": "Year",
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "chooseTime": "Choose time",
+    "hour": "Hour",
+    "minute": "Minute",
+    "done": "Done",
     "title": "Monthly time card",
     "month": "Month",
     "fillTitle": "Fill working days",

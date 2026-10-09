@@ -426,6 +426,13 @@
     "open": "Abrir"
   },
   "MonthlyCalculator": {
+    "year": "Año",
+    "previousYear": "Año anterior",
+    "nextYear": "Año siguiente",
+    "chooseTime": "Elegir hora",
+    "hour": "Hora",
+    "minute": "Minuto",
+    "done": "Listo",
     "title": "Hoja de horas mensual",
     "month": "Mes",
     "fillTitle": "Rellenar días laborables",

@@ -428,6 +428,13 @@
     "open": "Abrir"
   },
   "MonthlyCalculator": {
+    "year": "Ano",
+    "previousYear": "Ano anterior",
+    "nextYear": "Próximo ano",
+    "chooseTime": "Escolher horário",
+    "hour": "Hora",
+    "minute": "Minuto",
+    "done": "Concluir",
     "title": "Folha de horas mensal",
     "month": "Mês",
     "fillTitle": "Preencher dias de trabalho",
