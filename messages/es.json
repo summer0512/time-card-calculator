@@ -1,11 +1,11 @@
 {
   "HomePage": {
     "title": "Calculadora de Horas Trabajadas Gratis",
-    "description": "Calcula horas trabajadas por semana o quincena con descansos y varias entradas y salidas. Revisa horas extra, estima el pago e imprime tu registro de jornada.",
+    "description": "Calcula horas por semana o quincena, descuenta descansos y revisa horas extra y pago. Exporta tu registro en CSV para Excel o imprímelo sin iniciar sesión.",
     "keywords": "calculadora de horas, calcular horas trabajadas, calculadora horas trabajadas, horas extra",
     "ogImageAlt": "Vista previa de la calculadora de horas",
     "heroTitle": "Calculadora de Horas",
-    "heroDescription": "Calcula tus horas trabajadas, descansos y pago estimado con formato de 24 horas.",
+    "heroDescription": "Calcula tus horas trabajadas, descansos y pago estimado con formato de 24 horas. Exporta CSV para Excel sin iniciar sesión.",
     "popularTitle": "Calculadoras de horas",
     "openCalculator": "Abrir calculadora",
     "whyTitle": "¿Por qué usar esta calculadora?",
@@ -14,7 +14,9 @@
       "Calcula jornadas semanales y partidas.",
       "Admite descansos y varios tramos de trabajo.",
       "Permite configurar horas extra y pago estimado.",
-      "Utiliza el formato horario de 24 horas."
+      "Utiliza el formato horario de 24 horas.",
+      "Exporta las entradas y los totales actuales en CSV para Excel sin iniciar sesión.",
+      "Inicia sesión para guardar, volver a abrir y compartir tu registro."
     ],
     "relatedGuides": "Guías relacionadas",
     "guideLunch": "Cómo calcular horas con descanso",

@@ -81,7 +81,7 @@
     "slug": "calcul-temps-de-travail-par-mois",
     "title": "Calcul du temps de travail par mois",
     "metaTitle": "Calcul des heures de travail par mois avec pauses",
-    "metaDescription": "Calculez les heures de travail pour un mois complet : horaires quotidiens, pauses, sous-totaux par semaine et total mensuel. Enregistrez ou imprimez la feuille.",
+    "metaDescription": "Calculez les heures du mois avec dates réelles, horaires quotidiens et pauses. Consultez les sous-totaux par semaine et le total mensuel, puis exportez en CSV.",
     "h1": "Calcul du temps de travail par mois",
     "subtitle": "Choisissez un mois et suivez vos horaires, vos pauses et le total des heures réellement travaillées.",
     "intro": "Cette feuille mensuelle additionne les heures de travail saisies pour chaque date du mois. Elle permet de conserver un relevé personnel avec des sous-totaux hebdomadaires. Un module distinct convertit les heures par semaine en moyenne mensuelle.",

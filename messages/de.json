@@ -1,11 +1,11 @@
 {
   "HomePage": {
     "title": "Stundenrechner online mit Pause und Überstunden",
-    "description": "Berechne Arbeitsstunden pro Woche oder für zwei Wochen. Ziehe Mittagspausen ab, erfasse mehrere Arbeitszeiten, prüfe Überstunden und drucke den Stundenzettel.",
+    "description": "Berechne Arbeitszeit für eine oder zwei Wochen mit Pausen, Überstunden und Lohn. Exportiere den Stundenzettel als CSV für Excel oder drucke ihn ohne Anmeldung.",
     "keywords": "stundenrechner, arbeitszeit stundenrechner, stundenrechner mit pause, stundenrechner dezimal, stundenrechner uhrzeit",
     "ogImageAlt": "Vorschau des Stundenrechners",
     "heroTitle": "Kostenloser Stundenrechner",
-    "heroDescription": "Berechne tägliche oder wöchentliche Arbeitszeit mit Pausen, Überstunden und druckbarer Übersicht.",
+    "heroDescription": "Berechne tägliche oder wöchentliche Arbeitszeit mit Pausen, Überstunden und druckbarer Übersicht. Exportiere CSV-Dateien für Excel ohne Anmeldung.",
     "popularTitle": "Beliebte Arbeitszeit-Rechner",
     "openCalculator": "Rechner öffnen",
     "whyTitle": "Warum diesen Rechner nutzen?",
@@ -16,7 +16,9 @@
       "Unterstützt verschiedene Stempel- und Zeitformate.",
       "Zeigt Überstunden je Woche.",
       "Mit druckbarer Übersicht für Ablage oder Abrechnung.",
-      "Unterstützt 12h-, 24h- und Dezimal-Eingaben."
+      "Unterstützt 12h-, 24h- und Dezimal-Eingaben.",
+      "Exportiere aktuelle Einträge und Summen ohne Anmeldung als CSV für Excel.",
+      "Melde dich an, um Stundenzettel zu speichern, erneut zu öffnen und zu teilen."
     ],
     "relatedGuides": "Passende Ratgeber",
     "guideLunch": "Arbeitszeit mit Mittagspause berechnen",

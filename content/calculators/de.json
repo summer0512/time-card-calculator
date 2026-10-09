@@ -224,7 +224,7 @@
     "slug": "stundenrechner-monat",
     "title": "Monats-Stundenrechner",
     "metaTitle": "Stundenrechner Monat: Arbeitszeit mit Pausen berechnen",
-    "metaDescription": "Berechne deine Arbeitszeit für einen ganzen Monat. Erfasse Beginn, Ende und Pausen, prüfe Tages- und Wochensummen und drucke deinen monatlichen Stundenzettel.",
+    "metaDescription": "Berechne Arbeitsstunden für den ganzen Monat mit echten Daten, täglichen Zeiten und Pausen. Prüfe Wochen- und Monatssummen, exportiere CSV oder drucke sie.",
     "h1": "Stundenrechner für einen ganzen Monat",
     "subtitle": "Wähle einen Monat und erfasse deine Arbeitszeiten mit Pausen, Wochensummen und einer klaren Monatssumme.",
     "intro": "Dieser Monats-Stundenrechner summiert deine tatsächlich erfasste Arbeitszeit für jeden Kalendertag. Er eignet sich für persönliche Arbeitszeitnachweise und monatliche Übersichten. Die zusätzliche Umrechnung von Wochenstunden liefert einen getrennten Monatsdurchschnitt.",

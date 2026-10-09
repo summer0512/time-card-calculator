@@ -1,11 +1,11 @@
 {
   "HomePage": {
     "title": "Calculateur d'heures de travail gratuit avec pause déjeuner et heures supplémentaires",
-    "description": "Calculez les heures de travail hebdomadaires ou bimensuelles avec pause déjeuner, plusieurs pointages entrée/sortie, heures supplémentaires et feuilles de temps imprimables.",
+    "description": "Calculez vos heures sur une ou deux semaines avec pauses, heures supplémentaires et salaire. Exportez en CSV pour Excel ou imprimez la feuille sans connexion.",
     "keywords": "calculateur d'heures de travail gratuit, calculateur d'heures de travail avec pause déjeuner, calculateur bihebdomadaire, calculateur de feuille de temps, calculateur d'heures supplémentaires, calculateur de temps de travail",
     "ogImageAlt": "Aperçu du tableau de bord du calculateur d'heures de travail gratuit",
     "heroTitle": "Calculateur d'heures de travail gratuit",
-    "heroDescription": "Calculez les heures de travail hebdomadaires ou bimensuelles avec pause déjeuner, plusieurs pointages entrée/sortie, heures supplémentaires et feuilles de temps imprimables.",
+    "heroDescription": "Calculez les heures de travail hebdomadaires ou bimensuelles avec pause déjeuner, plusieurs pointages entrée/sortie, heures supplémentaires et feuilles de temps imprimables. Exportez en CSV pour Excel sans connexion.",
     "popularTitle": "Calculateurs d'heures de travail populaires",
     "openCalculator": "Ouvrir le calculateur",
     "whyTitle": "Pourquoi utiliser ce calculateur ?",
@@ -16,7 +16,9 @@
       "Gère plusieurs workflows de pointage entrée/sortie.",
       "Affiche le total des heures supplémentaires par semaine.",
       "Inclut l'impression de feuilles de temps.",
-      "Prend en charge la saisie en format 12 h, 24 h et militaire."
+      "Prend en charge la saisie en format 12 h, 24 h et militaire.",
+      "Exportez les saisies et les totaux actuels en CSV pour Excel sans connexion.",
+      "Connectez-vous pour sauvegarder, rouvrir et partager votre feuille de temps."
     ],
     "relatedGuides": "Guides associés",
     "guideLunch": "Comment calculer le temps de travail avec pause déjeuner",

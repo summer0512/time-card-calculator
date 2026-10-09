@@ -1,11 +1,11 @@
 {
   "HomePage": {
     "title": "Calculadora de Horas Online Grátis com Intervalo e Horas Extras",
-    "description": "Calcule horas trabalhadas por semana ou quinzena com almoço e várias entradas e saídas. Confira horas extras, estime o pagamento e imprima seu espelho de ponto.",
+    "description": "Calcule horas por semana ou quinzena, desconte pausas e confira horas extras e pagamento. Exporte o ponto em CSV para Excel ou imprima sem precisar fazer login.",
     "keywords": "calculadora de horas, calculadora de horas trabalhadas, calculadora de horas extras, calculadora de minutos para horas, calculadora de banco de horas",
     "ogImageAlt": "Prévia da calculadora de horas online",
     "heroTitle": "Calculadora de Horas Online Grátis",
-    "heroDescription": "Some e subtraia horas e minutos, calcule jornada diária e semanal e acompanhe horas extras em um só lugar.",
+    "heroDescription": "Some e subtraia horas e minutos, calcule jornada diária e semanal e acompanhe horas extras em um só lugar. Exporte CSV para o Excel sem fazer login.",
     "popularTitle": "Calculadoras Populares",
     "openCalculator": "Abrir calculadora",
     "whyTitle": "Por que usar esta calculadora?",
@@ -16,7 +16,9 @@
       "Funciona com diferentes rotinas de marcação de ponto.",
       "Mostra horas extras por semana.",
       "Permite imprimir o espelho de ponto.",
-      "Aceita formatos de hora 12h, 24h e militar."
+      "Aceita formatos de hora 12h, 24h e militar.",
+      "Exporte os registros e totais atuais em CSV para o Excel sem fazer login.",
+      "Faça login para salvar, reabrir e compartilhar seu registro de ponto."
     ],
     "relatedGuides": "Guias Relacionados",
     "guideLunch": "Como calcular horas com intervalo de almoço",

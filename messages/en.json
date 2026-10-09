@@ -1,11 +1,11 @@
 {
   "HomePage": {
     "title": "Free Time Card Calculator with Lunch Breaks & Overtime",
-    "description": "Calculate weekly or biweekly work hours with lunch breaks and multiple in and out times. Review overtime, estimate pay, and print a timesheet for your records.",
+    "description": "Calculate weekly or biweekly work hours, deduct breaks, review overtime and estimate pay. Export a timesheet as CSV for Excel or print it, without signing in.",
     "keywords": "free time card calculator, time card calculator with lunch, biweekly time card calculator, timesheet calculator, work hours calculator, overtime calculator",
     "ogImageAlt": "Free time card calculator dashboard preview",
     "heroTitle": "Free Time Card Calculator",
-    "heroDescription": "Calculate weekly or biweekly work hours with lunch breaks, multiple in/out punches, overtime, and printable timesheets.",
+    "heroDescription": "Calculate weekly or biweekly work hours with lunch breaks, multiple in/out punches, overtime, and printable timesheets. Export CSV for Excel without signing in.",
     "popularTitle": "Popular Time Card Calculators",
     "openCalculator": "Open calculator",
     "whyTitle": "Why Use This Calculator?",
@@ -16,7 +16,9 @@
       "Handles multiple in/out punch workflows.",
       "Shows overtime totals by week.",
       "Includes printable timesheet support.",
-      "Supports 12-hour, 24-hour, and military time entry."
+      "Supports 12-hour, 24-hour, and military time entry.",
+      "Export current entries and totals as CSV for Excel without signing in.",
+      "Sign in to save, reopen, and share your time card."
     ],
     "relatedGuides": "Related Guides",
     "guideLunch": "How to Use a Time Card Calculator with Lunch",
