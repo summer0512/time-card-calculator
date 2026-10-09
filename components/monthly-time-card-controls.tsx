@@ -49,6 +49,7 @@ export default function MonthlyTimeCardControls({ year, month, onMonthChange, on
           </PopoverContent>
         </Popover>
         <p className="text-xs text-slate-500">{dateFormat.format(selectedDate)} – {dateFormat.format(dateFromISO(dates.at(-1)!))}</p>
+        <p className="text-xs leading-relaxed text-slate-600">{t("calendarHint")}</p>
       </div>
       <fieldset className="min-w-0 space-y-3"><legend className="mb-3 text-sm font-semibold text-slate-900">{t("fillTitle")}</legend>
         <div className="grid grid-cols-7 gap-1.5">{[1, 2, 3, 4, 5, 6, 0].map(day => <Button key={day} type="button" variant="outline" aria-pressed={weekdays.includes(day)} className={`h-9 min-w-0 px-1 text-xs ${weekdays.includes(day) ? "border-blue-500 bg-blue-50 text-blue-800 hover:bg-blue-100" : "border-slate-200 text-slate-500"}`} onClick={() => setWeekdays(previous => previous.includes(day) ? previous.filter(value => value !== day) : [...previous, day])}>{new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2024, 0, 7 + day)))}</Button>)}</div>
@@ -61,7 +62,6 @@ export default function MonthlyTimeCardControls({ year, month, onMonthChange, on
         <p className="text-xs leading-relaxed text-slate-500">{t("fillHint")}</p>
       </fieldset>
     </div>
-    <p className="border-t border-slate-100 pt-4 text-xs leading-relaxed text-slate-600">{t("calendarHint")}</p>
     <details className="border-t border-slate-100 pt-3"><summary className="cursor-pointer text-sm font-medium">{t("averageTitle")}</summary><div className="mt-3 flex flex-wrap items-center gap-3"><label className="text-sm">{t("weeklyHours")}<Input inputMode="decimal" value={weeklyHours} onChange={event => setWeeklyHours(event.target.value)} className="w-28" /></label><output className="font-semibold">{weeklyHours.trim() && Number.isFinite(weekly) && weekly >= 0 ? new Intl.NumberFormat(locale, { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(averageMonthlyHours(weekly)) : "—"} {t("hoursPerMonth")}</output></div><p className="mt-2 text-xs text-slate-500">{t("averageHint")}</p></details>
   </div>;
 }

@@ -1524,7 +1524,7 @@ export default function TimeCardCalculator({
                 {t.clearAll}
               </Button>
 
-              {mode === "time-card" && (
+              {mode === "time-card" && !monthly && (
                 <Button variant="outline" onClick={copyFirstRowDown} size="sm">
                   <Copy className="h-4 w-4 mr-1" />
                   {t.copyFirstRow}
