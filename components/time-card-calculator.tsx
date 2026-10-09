@@ -34,7 +34,8 @@ import {
   type WorkPeriod,
 } from "@/lib/payment";
 import { useLocale, useTranslations } from "next-intl";
-import { authClient } from "@/lib/auth-client";
+import { analyticsContext, trackEvent } from "@/lib/analytics";
+import { authClient, signInWithGoogle } from "@/lib/auth-client";
 import type { SavedTimeCard } from "@/lib/time-cards/types";
 import TimeCardShareDialog from "@/components/time-card-share-dialog";
 import {
@@ -908,12 +909,16 @@ export default function TimeCardCalculator({
         ...day.breaks.slice(1, breakColumns).flatMap((value, index) => value ? [{ kind: "break" as const, position: index + 2, minutes: parseDurationToMinutes(value) ?? 0 }] : []),
       ] })),
   });
+  const eventContext = analyticsContext(locale, periodMode === "monthly" && !monthly ? "biweekly-time-card-calculator" : calculatorType,
+    monthly ? "monthly" : mode === "split-shift" ? "split_shift" : mode === "hours" ? "single" : isBiweekly ? "biweekly" : "weekly");
   const persistCard = async (title: string) => {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) return;
 
     setSaveMessage("");
     setIsSaving(true);
+    const operation = savedCardId ? "update" : "create";
+    trackEvent("time_card_save_start", eventContext, { operation });
 
     try {
       const isNewCard = !savedCardId;
@@ -938,11 +943,13 @@ export default function TimeCardCalculator({
       setSavedSnapshotKey(currentSnapshotKey);
       setSaveDialogOpen(false);
       setSaveMessage("✓");
+      trackEvent("time_card_save_success", eventContext, { operation });
       if (shareAfterSaveRef.current) {
         shareAfterSaveRef.current = false;
         setShareDialogOpen(true);
       }
     } catch {
+      trackEvent("time_card_save_error", eventContext, { operation });
       setSaveMessage(t.saveError);
     } finally {
       setIsSaving(false);
@@ -957,10 +964,7 @@ export default function TimeCardCalculator({
         "pending-time-card-save",
         JSON.stringify({ path: window.location.pathname, state: snapshot() }),
       );
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: `${window.location.pathname}?resumeSave=1`,
-      });
+      await signInWithGoogle(`${window.location.pathname}?resumeSave=1`, eventContext, "save");
       return;
     }
 
@@ -987,6 +991,7 @@ export default function TimeCardCalculator({
   };
 
   const shareCard = () => {
+    trackEvent("time_card_share_start", eventContext, { method: "link" });
     if (!sessionData?.user) { setShareLoginOpen(true); return; }
     if (!savedCardId || hasUnsavedChanges) { setShareSaveOpen(true); return; }
     setShareDialogOpen(true);
@@ -994,7 +999,7 @@ export default function TimeCardCalculator({
 
   const continueToShareLogin = async () => {
     sessionStorage.setItem("pending-time-card-share", JSON.stringify({ path: window.location.pathname, state: snapshot() }));
-    await authClient.signIn.social({ provider: "google", callbackURL: `${window.location.pathname}?resumeShare=1` });
+    await signInWithGoogle(`${window.location.pathname}?resumeShare=1`, eventContext, "share");
   };
 
   useEffect(() => {
@@ -1230,6 +1235,7 @@ export default function TimeCardCalculator({
     link.download = timesheetCsvFilename(monthly ? "monthly" : mode === "hours" ? "single" : mode === "split-shift" ? "split-shift" : isBiweekly ? "biweekly" : "weekly", monthly ? calendarYear : undefined, monthly ? calendarMonth : undefined);
     document.body.appendChild(link); link.click(); link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
+    trackEvent("time_card_export", eventContext, { method: "csv" });
   };
 
   const printReport = () => {
@@ -1332,6 +1338,7 @@ export default function TimeCardCalculator({
     doc.open();
     doc.write(html);
     doc.close();
+    trackEvent("time_card_print", eventContext, { method: "print" });
 
     frame.onload = () => {
       frame.contentWindow?.print();
@@ -1414,7 +1421,7 @@ export default function TimeCardCalculator({
 
   return (
     <div className="w-full mx-auto py-2 xl:py-6" id="calculator">
-      <TimeCardShareDialog cardId={savedCardId} open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
+      <TimeCardShareDialog analytics={eventContext} cardId={savedCardId} open={shareDialogOpen} onOpenChange={setShareDialogOpen} />
       <Dialog open={shareLoginOpen} onOpenChange={setShareLoginOpen}>
         <DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>{tShare("signInTitle")}</DialogTitle><DialogDescription>{tShare("signInDescription")}</DialogDescription></DialogHeader><DialogFooter><Button variant="outline" onClick={() => setShareLoginOpen(false)}>{t.cancel}</Button><Button onClick={() => void continueToShareLogin()}>{tShare("continueGoogle")}</Button></DialogFooter></DialogContent>
       </Dialog>

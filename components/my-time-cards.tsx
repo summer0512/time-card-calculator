@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import { authClient } from "@/lib/auth-client";
+import { analyticsContext, trackEvent } from "@/lib/analytics";
+import { authClient, signInWithGoogle } from "@/lib/auth-client";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -83,6 +84,9 @@ export default function MyTimeCards() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [shareCardId, setShareCardId] = useState<string | null>(null);
+
+  const sharedCard = cards.find(card => card.id === shareCardId);
+  const shareAnalytics = analyticsContext(locale, sharedCard?.calculatorType, sharedCard?.periodType);
 
   const load = async () => {
     setLoading(true);
@@ -157,10 +161,7 @@ export default function MyTimeCards() {
               <Button
                 className="mt-7 min-w-44"
                 onClick={() =>
-                  authClient.signIn.social({
-                    provider: "google",
-                    callbackURL: window.location.href,
-                  })
+                  signInWithGoogle(window.location.href, analyticsContext(locale), "my_time_cards")
                 }
               >
                 {t("continueGoogle")}
@@ -178,7 +179,7 @@ export default function MyTimeCards() {
 
   return (
     <main className="min-h-[70vh] bg-gradient-to-b from-slate-50/80 via-white to-white">
-      <TimeCardShareDialog cardId={shareCardId} open={Boolean(shareCardId)} onOpenChange={(open) => { if (!open) setShareCardId(null); }} onDisabled={() => void load()} />
+      <TimeCardShareDialog analytics={shareAnalytics} cardId={shareCardId} open={Boolean(shareCardId)} onOpenChange={(open) => { if (!open) setShareCardId(null); }} onDisabled={() => void load()} />
       <div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="mb-8 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex items-start gap-4">
@@ -280,7 +281,7 @@ export default function MyTimeCards() {
                           <Copy className="mr-2 h-4 w-4" />
                           {t("duplicate")}
                         </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setShareCardId(card.id)}>
+                        <DropdownMenuItem onSelect={() => { trackEvent("time_card_share_start", analyticsContext(locale, card.calculatorType, card.periodType), { method: "link" }); setShareCardId(card.id); }}>
                           <Share2 className="mr-2 h-4 w-4" />
                           {t("share")}
                         </DropdownMenuItem>

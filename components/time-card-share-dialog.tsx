@@ -3,13 +3,16 @@
 import { useEffect, useState } from "react";
 import { Check, Copy, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { trackEvent, type AnalyticsContext } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export default function TimeCardShareDialog({ cardId, open, onOpenChange, onDisabled }: {
+export default function TimeCardShareDialog({ cardId, open, onOpenChange, onDisabled, analytics }: {
+  analytics: AnalyticsContext;
   cardId: string | null; open: boolean; onOpenChange: (open: boolean) => void; onDisabled?: () => void;
 }) {
+  const { locale, calculator_type, period_type } = analytics;
   const t = useTranslations("TimeCardShare");
   const [shareUrl, setShareUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,15 +25,15 @@ export default function TimeCardShareDialog({ cardId, open, onOpenChange, onDisa
     setLoading(true); setError(""); setCopied(false);
     void fetch(`/api/time-cards/${encodeURIComponent(cardId)}/share`, { method: "POST", signal: controller.signal })
       .then(async (response) => { if (!response.ok) throw new Error(); return response.json(); })
-      .then(({ sharePath }) => setShareUrl(new URL(sharePath, window.location.origin).toString()))
-      .catch((cause) => { if (!(cause instanceof DOMException && cause.name === "AbortError")) setError(t("error")); })
+      .then(({ sharePath }) => { if (controller.signal.aborted) return; setShareUrl(new URL(sharePath, window.location.origin).toString()); trackEvent("time_card_share_link", { locale, calculator_type, period_type }, { method: "link", operation: "generate" }); })
+      .catch((cause) => { if (!(cause instanceof DOMException && cause.name === "AbortError")) { setError(t("error")); trackEvent("time_card_share_error", { locale, calculator_type, period_type }, { operation: "generate" }); } })
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
-  }, [cardId, open, t]);
+  }, [cardId, open, t, locale, calculator_type, period_type]);
 
   const copy = async () => {
-    try { await navigator.clipboard.writeText(shareUrl); setCopied(true); }
-    catch { setError(t("copyError")); }
+    try { await navigator.clipboard.writeText(shareUrl); setCopied(true); trackEvent("time_card_share_copy", analytics, { method: "clipboard", operation: "copy" }); }
+    catch { setError(t("copyError")); trackEvent("time_card_share_error", analytics, { operation: "copy" }); }
   };
   const stop = async () => {
     if (!cardId || !window.confirm(t("stopSharingConfirm"))) return;
@@ -38,8 +41,9 @@ export default function TimeCardShareDialog({ cardId, open, onOpenChange, onDisa
     try {
       const response = await fetch(`/api/time-cards/${encodeURIComponent(cardId)}/share`, { method: "DELETE" });
       if (!response.ok) throw new Error();
+      trackEvent("time_card_share_stop", analytics, { operation: "stop" });
       setShareUrl(""); onOpenChange(false); onDisabled?.();
-    } catch { setError(t("error")); }
+    } catch { setError(t("error")); trackEvent("time_card_share_error", analytics, { operation: "stop" }); }
     finally { setLoading(false); }
   };
 
