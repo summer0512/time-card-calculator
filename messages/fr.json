@@ -428,6 +428,7 @@
     "open": "Ouvrir"
   },
   "MonthlyCalculator": {
+    "defaultHoursHint": "Des horaires par défaut ont été renseignés. Adaptez-les à vos horaires réels.",
     "year": "Année",
     "previousYear": "Année précédente",
     "nextYear": "Année suivante",

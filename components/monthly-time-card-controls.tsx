@@ -10,8 +10,8 @@ import MonthlyTimePicker from "@/components/monthly-time-picker";
 import { averageMonthlyHours, monthDates, dateFromISO } from "@/lib/time-cards/monthly";
 import { normalizeTimeTo24Hour } from "@/lib/time-cards/time";
 
-export default function MonthlyTimeCardControls({ year, month, onMonthChange, onFill }: {
-  year: number; month: number;
+export default function MonthlyTimeCardControls({ year, month, onMonthChange, onFill, prefilled = false }: {
+  year: number; month: number; prefilled?: boolean;
   onMonthChange: (year: number, month: number) => void;
   onFill: (weekdays: number[], start: string, end: string, breakMinutes: number) => void;
 }) {
@@ -50,6 +50,7 @@ export default function MonthlyTimeCardControls({ year, month, onMonthChange, on
         </Popover>
         <p className="text-xs text-slate-500">{dateFormat.format(selectedDate)} – {dateFormat.format(dateFromISO(dates.at(-1)!))}</p>
         <p className="text-xs leading-relaxed text-slate-600">{t("calendarHint")}</p>
+        {prefilled && <p className="text-xs leading-relaxed text-blue-700" role="status">{t("defaultHoursHint")}</p>}
       </div>
       <fieldset className="min-w-0 space-y-3"><legend className="mb-3 text-sm font-semibold text-slate-900">{t("fillTitle")}</legend>
         <div className="grid grid-cols-7 gap-1.5">{[1, 2, 3, 4, 5, 6, 0].map(day => <Button key={day} type="button" variant="outline" aria-pressed={weekdays.includes(day)} className={`h-9 min-w-0 px-1 text-xs ${weekdays.includes(day) ? "border-blue-500 bg-blue-50 text-blue-800 hover:bg-blue-100" : "border-slate-200 text-slate-500"}`} onClick={() => setWeekdays(previous => previous.includes(day) ? previous.filter(value => value !== day) : [...previous, day])}>{new Intl.DateTimeFormat(locale, { weekday: "short", timeZone: "UTC" }).format(new Date(Date.UTC(2024, 0, 7 + day)))}</Button>)}</div>

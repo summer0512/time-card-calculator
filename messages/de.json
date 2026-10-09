@@ -428,6 +428,7 @@
     "open": "Öffnen"
   },
   "MonthlyCalculator": {
+    "defaultHoursHint": "Standardarbeitszeiten wurden eingetragen. Passen Sie sie an Ihre tatsächlichen Schichten an.",
     "year": "Jahr",
     "previousYear": "Vorheriges Jahr",
     "nextYear": "Nächstes Jahr",

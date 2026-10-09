@@ -438,11 +438,17 @@ export default function TimeCardCalculator({
   const locale = useLocale();
   const tm = useTranslations("MonthlyCalculator");
   const [monthly, setMonthly] = useState(periodMode === "monthly");
+  const [monthlyPrefilled, setMonthlyPrefilled] = useState(periodMode === "monthly");
+  const skipNewResetRef = useRef(false);
   const effectiveShowOvertime = periodMode === "monthly" && !monthly ? true : showOvertime;
   const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
   const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth() + 1);
   const calendarTitle = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(calendarYear, calendarMonth - 1, 1)));
-  const makeMonthlyDays = (year = calendarYear, month = calendarMonth): DayEntry[] => monthDates(year, month).map(workDate => ({ workDate, date: formatWorkDate(workDate, locale), from: "", to: "", breakDeduction: "", breaks: Array.from({ length: initialBreakColumns }, () => ""), lunch: showLunchBreak ? "" : undefined }));
+  const makeMonthlyDays = (year = calendarYear, month = calendarMonth, prefill = false): DayEntry[] => monthDates(year, month).map(workDate => {
+    const weekday = dateFromISO(workDate).getUTCDay();
+    const filled = prefill && weekday >= 1 && weekday <= 5;
+    return { workDate, date: formatWorkDate(workDate, locale), from: filled ? "09:00" : "", to: filled ? "17:00" : "", breakDeduction: filled ? "0:30" : "", breaks: Array.from({ length: initialBreakColumns }, (_, index) => filled && index === 0 ? "0:30" : ""), lunch: showLunchBreak ? "" : undefined };
+  });
   const localizedUiText: Partial<CalculatorUiText> = {
     saveTimeCard: tCalculator("saveTimeCard"),
     saveChanges: tCalculator("saveChanges"),
@@ -574,7 +580,7 @@ export default function TimeCardCalculator({
   );
 
   const [days, setDays] = useState<DayEntry[]>(
-    periodMode === "monthly" ? makeMonthlyDays() : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
+    periodMode === "monthly" ? makeMonthlyDays(calendarYear, calendarMonth, true) : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel)
   );
   const { data: sessionData } = authClient.useSession();
   const [savedCardId, setSavedCardId] = useState<string | null>(null);
@@ -596,10 +602,11 @@ export default function TimeCardCalculator({
   const skipNextCardLoadRef = useRef<string | null>(null);
 
   useEffect(() => {
+    setMonthlyPrefilled(periodMode === "monthly");
     setShowLunchColumn(showLunchBreak);
     setBreakColumns(initialBreakColumns);
     setIsBiweekly(mode === "time-card" && showBiweekly);
-    setDays(periodMode === "monthly" ? makeMonthlyDays() : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
+    setDays(periodMode === "monthly" ? makeMonthlyDays(calendarYear, calendarMonth, true) : createDays(mode, mode === "time-card" && showBiweekly, initialBreakColumns, showLunchBreak, breakDefault, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, showLunchBreak, showBiweekly, showMultipleBreaks, defaultBreakMinutes, timeFormat, t.weekDays, t.weekLabel, t.shiftLabel]);
 
@@ -765,6 +772,7 @@ export default function TimeCardCalculator({
   const restoreSnapshot = (state: ReturnType<typeof snapshot>) => {
     isRestoring.current = true;
     setMonthly(state.monthly ?? false); setCalendarYear(state.calendarYear ?? calendarYear); setCalendarMonth(state.calendarMonth ?? calendarMonth);
+    setMonthlyPrefilled(false);
     setDays(state.days); setShowLunchColumn(state.showLunchColumn); setBreakColumns(state.breakColumns); setIsBiweekly(state.isBiweekly);
     setReportHeader(state.reportHeader); setReportNotes(state.reportNotes); setIncludePayment(state.includePayment); setBasePay(state.basePay); setCurrency(state.currency);
     setOvertimeEnabled(state.overtimeEnabled); setOvertimeBasis(state.overtimeBasis); setOvertimeTiers(state.overtimeTiers);
@@ -778,6 +786,7 @@ export default function TimeCardCalculator({
     setSaveTitle("");
     setSaveMessage("");
     setSavedSnapshotKey(null);
+    setMonthlyPrefilled(periodMode === "monthly");
     setShowLunchColumn(showLunchBreak);
     setBreakColumns(initialBreakColumns);
     setIsBiweekly(mode === "time-card" && showBiweekly);
@@ -789,7 +798,7 @@ export default function TimeCardCalculator({
     setOvertimeEnabled(paymentDefaults?.overtime?.enabled ?? false);
     setOvertimeBasis(paymentDefaults?.overtime?.basis ?? "weekly");
     setOvertimeTiers(toEditableTiers(paymentDefaults?.overtime?.tiers));
-    setDays(periodMode === "monthly" ? makeMonthlyDays() : createDays(
+    setDays(periodMode === "monthly" ? makeMonthlyDays(calendarYear, calendarMonth, true) : createDays(
       mode,
       mode === "time-card" && showBiweekly,
       initialBreakColumns,
@@ -818,6 +827,7 @@ export default function TimeCardCalculator({
     setCardLocation(null, "push");
   };
   const restoreSavedCard = (card: SavedTimeCard) => {
+    setMonthlyPrefilled(false);
     const settings = card.settings;
     const restoredOvertimeTiers = settings.overtime.tiers.map((tier: OvertimeTier) => ({
       ...tier,
@@ -1016,6 +1026,7 @@ export default function TimeCardCalculator({
 
   useEffect(() => {
     if (!routeCardId) {
+      if (skipNewResetRef.current) { skipNewResetRef.current = false; setSavedCardLoadState("idle"); return; }
       resetToNewCalculator();
       setSavedCardLoadState("idle");
       return;
@@ -1088,6 +1099,7 @@ export default function TimeCardCalculator({
   useEffect(() => { if (resumeReady) { setResumeReady(false); void saveCard(); } }, [resumeReady]);
 
   const updateDay = (index: number, field: keyof DayEntry, value: string) => {
+    setMonthlyPrefilled(false);
     setDays((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], [field]: value };
@@ -1096,6 +1108,7 @@ export default function TimeCardCalculator({
   };
 
   const updateDayLunch = (index: number, value: string) => {
+    setMonthlyPrefilled(false);
     setDays((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], lunch: value };
@@ -1104,6 +1117,7 @@ export default function TimeCardCalculator({
   };
 
   const updateDayBreak = (dayIndex: number, breakIndex: number, value: string) => {
+    setMonthlyPrefilled(false);
     setDays((prev) => {
       const next = [...prev];
       const row = { ...next[dayIndex], breaks: [...next[dayIndex].breaks] };
@@ -1114,6 +1128,7 @@ export default function TimeCardCalculator({
   };
 
   const removeDayData = (index: number) => {
+    setMonthlyPrefilled(false);
     setDays((prev) => {
       const next = [...prev];
       const existing = next[index];
@@ -1151,6 +1166,7 @@ export default function TimeCardCalculator({
   };
 
   const clearAll = () => {
+    setMonthlyPrefilled(false);
     setDays((prev) =>
       prev.map((day) => ({
         ...day,
@@ -1507,13 +1523,15 @@ export default function TimeCardCalculator({
                 </Button>
               </div>
             )}
-            {monthly && <MonthlyTimeCardControls year={calendarYear} month={calendarMonth} onMonthChange={(year, month) => {
+            {monthly && <MonthlyTimeCardControls prefilled={monthlyPrefilled} year={calendarYear} month={calendarMonth} onMonthChange={(year, month) => {
               if (year === calendarYear && month === calendarMonth) return;
               if ((days.some(day => day.from || day.to || day.breakDeduction || day.lunch || day.breaks.some(Boolean)) || reportHeader || reportNotes) && !window.confirm(tm("changeMonthConfirm"))) return;
+              setMonthlyPrefilled(false);
               setCalendarYear(year); setCalendarMonth(month); setDays(makeMonthlyDays(year, month));
               setSavedCardId(null); setSavedTitle(""); setSavedSnapshotKey(null); setSaveMessage(""); setReportHeader(""); setReportNotes("");
-              if (routeCardId) setCardLocation(null);
+              if (routeCardId) { skipNewResetRef.current = true; setCardLocation(null); }
             }} onFill={(weekdays, start, end, breakMinutes) => {
+              setMonthlyPrefilled(false);
               setDays(previous => previous.map(day => day.workDate && weekdays.includes(dateFromISO(day.workDate).getUTCDay()) && !day.from && !day.to
                 ? { ...day, from: start, to: end, breakDeduction: formatDurationMinutes(breakMinutes), breaks: Array.from({ length: breakColumns }, (_, index) => index === 0 ? formatDurationMinutes(breakMinutes) : ""), lunch: showLunchColumn ? "" : undefined } : day));
             }} />}

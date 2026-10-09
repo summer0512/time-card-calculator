@@ -428,6 +428,7 @@
     "open": "Abrir"
   },
   "MonthlyCalculator": {
+    "defaultHoursHint": "Os horários padrão foram preenchidos. Ajuste-os conforme seus turnos reais.",
     "year": "Ano",
     "previousYear": "Ano anterior",
     "nextYear": "Próximo ano",

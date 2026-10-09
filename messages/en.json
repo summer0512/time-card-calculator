@@ -428,6 +428,7 @@
     "open": "Open"
   },
   "MonthlyCalculator": {
+    "defaultHoursHint": "Default work hours have been filled in. Adjust them to match your actual shifts.",
     "year": "Year",
     "previousYear": "Previous year",
     "nextYear": "Next year",
