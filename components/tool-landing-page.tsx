@@ -37,6 +37,7 @@ export default function ToolLandingPage({ locale, config }: ToolLandingPageProps
   const relatedPages = config.relatedSlugs
     .map((slug) => slug === "biweekly-time-card-calculator" && locale !== "en" && isToolAvailableInLocale("monthly-time-card-calculator", locale) ? "monthly-time-card-calculator" as const : slug)
     .filter((slug) => slug !== config.slug && isToolAvailableInLocale(slug, locale))
+    .sort((a, b) => Number(a === "monthly-time-card-calculator") - Number(b === "monthly-time-card-calculator"))
     .map((slug) => toolCalculatorMap[slug])
     .slice(0, 5);
 

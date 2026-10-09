@@ -79,38 +79,6 @@ export interface ToolCalculatorConfig {
 
 export const toolCalculators: ToolCalculatorConfig[] = [
   {
-    slug: "monthly-time-card-calculator",
-    title: "Monthly Timesheet Calculator",
-    metaTitle: "Monthly Timesheet & Time Card Calculator",
-    metaDescription: "Calculate a full month of work hours with daily clock-in and clock-out times, unpaid breaks, weekly subtotals, and decimal hours. Save or print your timesheet.",
-    h1: "Monthly Timesheet Calculator",
-    subtitle: "Choose a month, enter your daily work times, and get a complete monthly time card with breaks and weekly subtotals.",
-    intro: "Use this monthly time card calculator to record actual working hours for every date in a calendar month. It is useful for personal records, client billing, and reviewing a month of shift entries. Calculate and print without signing in; sign in to save a record or share a read-only view. A separate weekly-to-monthly converter estimates average monthly hours without changing your dated timesheet.",
-    howToSteps: [
-      "Select the year and month to generate all 28–31 calendar dates.",
-      "Fill empty working days with regular shift times, or enter each day's clock-in, clock-out, and unpaid breaks individually.",
-      "Leave days off, holidays, and absences empty. Review daily net hours, calendar-week subtotals, and the monthly total.",
-      "Print your monthly timesheet, or sign in to save, reopen, and share it."
-    ],
-    example: {
-      title: "Example: 20 recorded workdays",
-      calculation: "9:00 AM to 5:00 PM, minus a 30-minute unpaid break, gives 7:30 per day. For 20 matching days: 20 × 7:30.",
-      result: "Monthly total = 150:00, or 150.00 decimal hours."
-    },
-    faqs: [
-      { question: "How do I calculate hours worked in a month?", answer: "Select the calendar month and enter each workday's start time, end time, and unpaid breaks. The calculator adds the daily net durations and shows the monthly total in hours:minutes and decimal hours." },
-      { question: "Does the calculator use the actual number of days in the month?", answer: "Yes. It generates the selected month's real dates, including 28 or 29 days in February and 30 or 31 days in other months. Weekends remain available for shifts." },
-      { question: "Can I use AM/PM or 24-hour times?", answer: "Yes. Daily entries accept times such as 9:00 AM and 5:00 PM, or 09:00 and 17:00. When an end time is earlier than the start time, the shift crosses midnight and is assigned to its start date." },
-      { question: "How many hours per month is a 40-hour workweek?", answer: "The average conversion is 40 × 52 ÷ 12, or approximately 173.33 hours per month. It is an annual average, not the actual total for a particular calendar month. Use the separate average-hours module for this estimate." },
-      { question: "Does a monthly timesheet calculate overtime?", answer: "This monthly view records actual hours and optional base-rate pay. It does not calculate overtime premiums. Weekly subtotals run Monday–Sunday and include only dates in the selected month; they are not complete employer-defined workweeks when a week crosses the month boundary." },
-      { question: "Are holidays and paid leave calculated automatically?", answer: "No. Leave non-working dates empty or clear their times after bulk filling. This version does not calculate regional holidays, paid leave entitlement, or holiday pay." },
-      { question: "Can I save, share, or print my monthly time card?", answer: "You can calculate and print without an account, including saving the print output as PDF through your browser. Sign in to save, reopen, or share a read-only record. Use Export CSV to download the current entries and totals for a spreadsheet." },
-      { question: "How is a monthly time card different from biweekly or semi-monthly?", answer: "A monthly time card covers one full calendar month. Biweekly covers a 14-day period. Semi-monthly divides a month into two periods, often the 1st–15th and the 16th–last day. This page uses the full calendar month." }
-    ],
-    relatedSlugs: ["time-card-calculator-with-lunch", "biweekly-time-card-calculator", "timesheet-calculator-with-lunch", "time-card-calculator-with-breaks"],
-    calculatorProps: { periodMode: "monthly", timeFormat: "24h", defaultBreakMinutes: 0, showBreakDeduction: true, showLunchBreak: false, showBiweekly: false, showOvertime: false, showPrintableTimesheet: true, paymentDefaults: { enabled: false, overtime: { enabled: false } } },
-  },
-  {
     slug: "time-card-calculator-with-lunch",
     title: "Free Time Card Calculator with Lunch Breaks",
     metaTitle: "Free Time Card Calculator with Lunch Breaks",
@@ -1091,6 +1059,38 @@ export const toolCalculators: ToolCalculatorConfig[] = [
         }
       }
     }
+  },
+  {
+    slug: "monthly-time-card-calculator",
+    title: "Monthly Timesheet Calculator",
+    metaTitle: "Monthly Timesheet & Time Card Calculator",
+    metaDescription: "Calculate a full month of work hours with daily clock-in and clock-out times, unpaid breaks, weekly subtotals, and decimal hours. Save or print your timesheet.",
+    h1: "Monthly Timesheet Calculator",
+    subtitle: "Choose a month, enter your daily work times, and get a complete monthly time card with breaks and weekly subtotals.",
+    intro: "Use this monthly time card calculator to record actual working hours for every date in a calendar month. It is useful for personal records, client billing, and reviewing a month of shift entries. Calculate and print without signing in; sign in to save a record or share a read-only view. A separate weekly-to-monthly converter estimates average monthly hours without changing your dated timesheet.",
+    howToSteps: [
+      "Select the year and month to generate all 28–31 calendar dates.",
+      "Fill empty working days with regular shift times, or enter each day's clock-in, clock-out, and unpaid breaks individually.",
+      "Leave days off, holidays, and absences empty. Review daily net hours, calendar-week subtotals, and the monthly total.",
+      "Print your monthly timesheet, or sign in to save, reopen, and share it."
+    ],
+    example: {
+      title: "Example: 20 recorded workdays",
+      calculation: "9:00 AM to 5:00 PM, minus a 30-minute unpaid break, gives 7:30 per day. For 20 matching days: 20 × 7:30.",
+      result: "Monthly total = 150:00, or 150.00 decimal hours."
+    },
+    faqs: [
+      { question: "How do I calculate hours worked in a month?", answer: "Select the calendar month and enter each workday's start time, end time, and unpaid breaks. The calculator adds the daily net durations and shows the monthly total in hours:minutes and decimal hours." },
+      { question: "Does the calculator use the actual number of days in the month?", answer: "Yes. It generates the selected month's real dates, including 28 or 29 days in February and 30 or 31 days in other months. Weekends remain available for shifts." },
+      { question: "Can I use AM/PM or 24-hour times?", answer: "Yes. Daily entries accept times such as 9:00 AM and 5:00 PM, or 09:00 and 17:00. When an end time is earlier than the start time, the shift crosses midnight and is assigned to its start date." },
+      { question: "How many hours per month is a 40-hour workweek?", answer: "The average conversion is 40 × 52 ÷ 12, or approximately 173.33 hours per month. It is an annual average, not the actual total for a particular calendar month. Use the separate average-hours module for this estimate." },
+      { question: "Does a monthly timesheet calculate overtime?", answer: "This monthly view records actual hours and optional base-rate pay. It does not calculate overtime premiums. Weekly subtotals run Monday–Sunday and include only dates in the selected month; they are not complete employer-defined workweeks when a week crosses the month boundary." },
+      { question: "Are holidays and paid leave calculated automatically?", answer: "No. Leave non-working dates empty or clear their times after bulk filling. This version does not calculate regional holidays, paid leave entitlement, or holiday pay." },
+      { question: "Can I save, share, or print my monthly time card?", answer: "You can calculate and print without an account, including saving the print output as PDF through your browser. Sign in to save, reopen, or share a read-only record. Use Export CSV to download the current entries and totals for a spreadsheet." },
+      { question: "How is a monthly time card different from biweekly or semi-monthly?", answer: "A monthly time card covers one full calendar month. Biweekly covers a 14-day period. Semi-monthly divides a month into two periods, often the 1st–15th and the 16th–last day. This page uses the full calendar month." }
+    ],
+    relatedSlugs: ["time-card-calculator-with-lunch", "biweekly-time-card-calculator", "timesheet-calculator-with-lunch", "time-card-calculator-with-breaks"],
+    calculatorProps: { periodMode: "monthly", timeFormat: "24h", defaultBreakMinutes: 0, showBreakDeduction: true, showLunchBreak: false, showBiweekly: false, showOvertime: false, showPrintableTimesheet: true, paymentDefaults: { enabled: false, overtime: { enabled: false } } },
   }
 
 ];
