@@ -1536,8 +1536,8 @@ export default function TimeCardCalculator({
                 ? { ...day, from: start, to: end, breakDeduction: formatDurationMinutes(breakMinutes), breaks: Array.from({ length: breakColumns }, (_, index) => index === 0 ? formatDurationMinutes(breakMinutes) : ""), lunch: showLunchColumn ? "" : undefined } : day));
             }} />}
             {periodMode === "monthly" && !monthly && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm">{tm("legacyNotice")}</p>}
-            <div className="flex flex-wrap items-center justify-between gap-2" data-calculator-toolbar>
-              <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2" data-calculator-edit-actions>
+            <div className="flex flex-wrap items-center justify-between gap-1 [&_button]:px-2" data-calculator-toolbar>
+              <div className="flex max-w-full shrink-0 flex-wrap items-center gap-1" data-calculator-edit-actions>
                 <Button variant="outline" onClick={clearAll} size="sm">
                   <RotateCcw className="h-4 w-4 mr-1" />
                   {t.clearAll}
@@ -1620,7 +1620,7 @@ export default function TimeCardCalculator({
                 )}
 
               </div>
-              <div className="ml-auto flex w-full max-w-full shrink-0 flex-wrap items-center justify-end gap-2 border-t border-blue-100 pt-2 sm:w-auto sm:border-0 sm:pt-0" data-calculator-result-actions>
+              <div className="ml-auto flex w-full max-w-full shrink-0 flex-wrap items-center justify-end gap-1 border-t border-blue-100 pt-2 sm:w-auto sm:border-0 sm:pt-0" data-calculator-result-actions>
                 {saveMessage === "✓" && !hasUnsavedChanges ? (
                   <span className="flex items-center gap-1 text-sm font-medium text-green-700" role="status">
                     <Check className="h-4 w-4" />
