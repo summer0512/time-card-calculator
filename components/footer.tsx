@@ -39,7 +39,8 @@ export default function Footer() {
     "biweekly-time-card-calculator",
     "timesheet-calculator-with-lunch",
     "lunch-break-calculator",
-    "time-punch-calculator"
+    "time-punch-calculator",
+    "monthly-time-card-calculator"
   ].filter((slug) => isLocalizedToolEnabled(locale as SupportedLocale, slug as keyof typeof toolCalculatorMap)).map((slug) => {
     const canonicalSlug = slug as keyof typeof toolCalculatorMap;
     const localizedSlug = getLocalizedToolSlug(locale as SupportedLocale, canonicalSlug)!;

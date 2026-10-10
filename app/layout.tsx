@@ -1,4 +1,4 @@
-﻿import {ReactNode} from 'react';
+import {ReactNode} from 'react';
 import Script from 'next/script';
 
 type Props = {
@@ -33,6 +33,8 @@ export default function RootLayout({children}: Props) {
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
                 gtag('config', 'G-C3W52QVV6K');
+                (window.timeCardGaQueue || []).forEach(function(event) { gtag.apply(null, event); });
+                window.timeCardGaQueue = [];
               `,
             }}
           />

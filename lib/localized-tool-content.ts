@@ -1,3 +1,4 @@
+import csvExportContent from "@/content/calculators/export.json";
 import deCalculatorContent from "@/content/calculators/de.json";
 import ptBrCalculatorContent from "@/content/calculators/pt-br.json";
 import frCalculatorContent from "@/content/calculators/fr.json";
@@ -81,6 +82,7 @@ export const getLocalizedToolView = (
   fallbackSlug: string
 ): LocalizedToolView => {
   const overrides = localeContent[locale]?.[config.slug];
+  const exportCopy = csvExportContent[locale];
 
   return {
     slug: overrides?.slug ?? fallbackSlug,
@@ -89,10 +91,16 @@ export const getLocalizedToolView = (
     metaDescription: overrides?.metaDescription ?? config.metaDescription,
     h1: overrides?.h1 ?? config.h1,
     subtitle: overrides?.subtitle ?? config.subtitle,
-    intro: overrides?.intro ?? config.intro,
+    intro: `${overrides?.intro ?? config.intro} ${exportCopy.intro}`,
     keywords: overrides?.keywords ?? defaultKeywords(config),
-    howToSteps: overrides?.howToSteps ?? config.howToSteps,
+    howToSteps: [...(overrides?.howToSteps ?? config.howToSteps), exportCopy.step],
     example: overrides?.example ?? config.example,
-    faqs: overrides?.faqs ?? config.faqs,
+    faqs: [
+      ...(overrides?.faqs ?? config.faqs),
+      {
+        question: exportCopy.question,
+        answer: config.slug === "monthly-time-card-calculator" ? exportCopy.monthlyAnswer : exportCopy.answer,
+      },
+    ],
   };
 };

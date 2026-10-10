@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { monthDates } from "./monthly.ts";
 
 export const punchSchema = z.object({
   start: z.string().max(16),
@@ -60,7 +61,7 @@ export const timeCardInputSchema = z.object({
     (path) => !path.startsWith("//") && !path.includes("?") && !path.includes("#"),
     "Invalid source path",
   ),
-  periodType: z.enum(["weekly", "biweekly", "single", "split_shift", "custom"]),
+  periodType: z.enum(["weekly", "biweekly", "single", "split_shift", "custom", "monthly"]),
   periodStart: z.string().date().nullable().optional(),
   periodEnd: z.string().date().nullable().optional(),
   paymentEnabled: z.boolean(),
@@ -70,6 +71,14 @@ export const timeCardInputSchema = z.object({
   cachedTotalMinutes: z.number().int().nonnegative(),
   cachedTotalPay: z.number().nonnegative().nullable(),
   rows: z.array(savedRowSchema).min(1).max(100),
+}).superRefine((card, context) => {
+  if (card.periodType !== "monthly") return;
+  const [year, month] = (card.periodStart ?? "").split("-").map(Number);
+  let dates: string[] = [];
+  try { dates = monthDates(year, month); } catch { /* report invalid period below */ }
+  if (!dates.length || card.periodStart !== dates[0] || card.periodEnd !== dates.at(-1) || card.rows.length !== dates.length || card.rows.some((row, index) => row.workDate !== dates[index] || row.position !== index)) {
+    context.addIssue({ code: z.ZodIssueCode.custom, path: ["rows"], message: "Monthly records require every date in the selected calendar month, in order." });
+  }
 });
 
 export type TimeCardInput = z.infer<typeof timeCardInputSchema>;

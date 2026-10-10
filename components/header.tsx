@@ -4,7 +4,7 @@ import type { SupportedLocale } from "@/i18n/config";
 
 import { cn } from "@/lib/utils";
 import { Link, usePathname } from "@/i18n/routing";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Clock,
   ChevronDown,
@@ -12,7 +12,8 @@ import {
   UserCircle,
   LoaderCircle
 } from "lucide-react";
-import { authClient } from "@/lib/auth-client";
+import { analyticsContext, completeLogin } from "@/lib/analytics";
+import { authClient, signInWithGoogle } from "@/lib/auth-client";
 import MobileMenuButton from "./mobile-menu-button";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -34,6 +35,7 @@ export default function Header() {
   const myTimeCards = useTranslations("MyTimeCards");
   const pathname = usePathname();
   const { data: session, isPending: isSessionPending } = authClient.useSession();
+  useEffect(() => { if (session?.user) completeLogin(); }, [session?.user]);
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const menuItems = [
@@ -63,10 +65,7 @@ export default function Header() {
     setIsSigningIn(true);
 
     try {
-      await authClient.signIn.social({
-        provider: "google",
-        callbackURL: window.location.href
-      });
+      await signInWithGoogle(window.location.href, analyticsContext(locale), "header");
     } catch {
       setIsSigningIn(false);
     }

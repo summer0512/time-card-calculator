@@ -1,3 +1,4 @@
+import { calendarWeekId } from "@/lib/time-cards/monthly";
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { timeCard, timeCardRow } from "@/db/schema";
 import type { Database } from "@/lib/server/database";
@@ -23,8 +24,8 @@ function summaries(input: TimeCardInput) {
   }
 
   const workPeriods: WorkPeriod[] = rowMinutes.map((workedMinutes, index) => ({
-    dayId: input.settings.mode === "split-shift" ? "split-day" : String(index % 7),
-    weekId: input.settings.mode === "hours"
+    dayId: input.periodType === "monthly" ? input.rows[index].workDate! : input.settings.mode === "split-shift" ? "split-day" : String(index % 7),
+    weekId: input.periodType === "monthly" ? calendarWeekId(input.rows[index].workDate!) : input.settings.mode === "hours"
       ? "shift"
       : input.settings.mode === "split-shift"
         ? "week-1"

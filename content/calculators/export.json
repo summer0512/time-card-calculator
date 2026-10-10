@@ -1,0 +1,37 @@
+{
+  "en": {
+    "intro": "Export the current entries and totals as CSV without signing in, then import the file into Excel or another spreadsheet.",
+    "step": "Use Export CSV to download the current entries and totals for a spreadsheet; no account or saved record is required.",
+    "question": "Can I export the results as CSV for Excel?",
+    "answer": "Yes. Export CSV downloads the current start/end times, deducted breaks, net hours in HH:MM and decimal hours, applicable weekly subtotals, and the overall total. A valid payment summary is included when payment is enabled. No account or saved record is required to export. Sign in to save or share a record. The download is a CSV file that you can import into Excel or another spreadsheet, not an XLSX workbook.",
+    "monthlyAnswer": "Yes. Export CSV downloads the selected month's real dates, daily start/end times, deducted breaks, net hours in HH:MM and decimal hours, calendar-week subtotals, and the monthly total. A valid payment summary is included when payment is enabled. Exporting requires neither an account nor a saved record; saving and sharing require sign-in. Import the CSV into Excel or another spreadsheet. The file is not an XLSX workbook."
+  },
+  "de": {
+    "intro": "Exportiere die aktuellen Einträge und Summen ohne Anmeldung als CSV und importiere die Datei in Excel oder ein anderes Tabellenprogramm.",
+    "step": "Lade mit CSV exportieren die aktuellen Einträge und Summen für ein Tabellenprogramm herunter. Eine Anmeldung oder ein gespeicherter Stundenzettel ist nicht nötig.",
+    "question": "Kann ich die Ergebnisse als CSV für Excel exportieren?",
+    "answer": "Ja. Der CSV-Export enthält Beginn und Ende, abgezogene Pausen, Nettoarbeitszeit in HH:MM und Dezimalstunden, gegebenenfalls Wochensummen sowie die Gesamtsumme. Bei aktivierter Lohnberechnung wird eine gültige Lohnübersicht ergänzt. Der Export funktioniert ohne Anmeldung und ohne vorheriges Speichern. Zum Speichern und Teilen ist eine Anmeldung nötig. Du kannst die CSV-Datei in Excel oder ein anderes Tabellenprogramm importieren; sie ist keine XLSX-Arbeitsmappe.",
+    "monthlyAnswer": "Ja. Die CSV-Datei enthält die tatsächlichen Daten des gewählten Monats, tägliche Beginn- und Endzeiten, abgezogene Pausen, Nettoarbeitszeit in HH:MM und Dezimalstunden, Kalenderwochensummen und die Monatssumme. Bei aktivierter Lohnberechnung wird eine gültige Lohnübersicht ergänzt. Der Export erfordert weder Anmeldung noch vorheriges Speichern; zum Speichern und Teilen ist eine Anmeldung nötig. Importiere die CSV-Datei in Excel oder ein anderes Tabellenprogramm. Es handelt sich nicht um eine XLSX-Arbeitsmappe."
+  },
+  "fr": {
+    "intro": "Exportez les saisies et les totaux actuels en CSV sans connexion, puis importez le fichier dans Excel ou un autre tableur.",
+    "step": "Utilisez Exporter CSV pour télécharger les saisies et les totaux actuels dans un tableur, sans compte ni sauvegarde préalable.",
+    "question": "Puis-je exporter les résultats en CSV pour Excel ?",
+    "answer": "Oui. Le CSV contient les heures de début et de fin, les pauses déduites, le temps net en HH:MM et en heures décimales, les sous-totaux hebdomadaires applicables et le total général. Un récapitulatif de rémunération valide est inclus si cette option est activée. Aucun compte ni sauvegarde préalable n'est nécessaire pour exporter. La sauvegarde et le partage nécessitent une connexion. Le fichier CSV peut être importé dans Excel ou un autre tableur ; ce n'est pas un classeur XLSX.",
+    "monthlyAnswer": "Oui. Le CSV contient les dates réelles du mois choisi, les heures de début et de fin de chaque jour, les pauses déduites, le temps net en HH:MM et en heures décimales, les sous-totaux par semaine calendaire et le total mensuel. Un récapitulatif de rémunération valide est inclus si cette option est activée. L'export ne nécessite ni compte ni sauvegarde préalable ; la sauvegarde et le partage nécessitent une connexion. Importez le CSV dans Excel ou un autre tableur. Ce n'est pas un classeur XLSX."
+  },
+  "es": {
+    "intro": "Exporta las entradas y los totales actuales en CSV sin iniciar sesión e importa el archivo en Excel u otra hoja de cálculo.",
+    "step": "Usa Exportar CSV para descargar las entradas y los totales actuales en una hoja de cálculo, sin cuenta ni guardado previo.",
+    "question": "¿Puedo exportar los resultados en CSV para Excel?",
+    "answer": "Sí. El CSV incluye las horas de entrada y salida, los descansos descontados, las horas netas en HH:MM y formato decimal, los subtotales semanales cuando corresponda y el total general. Incluye un resumen de pago válido si el cálculo de pago está activado. No necesitas una cuenta ni guardar el registro para exportar. Para guardar y compartir debes iniciar sesión. Puedes importar el CSV en Excel u otra hoja de cálculo; no es un archivo XLSX.",
+    "monthlyAnswer": "El CSV de una hoja mensual incluye las fechas reales, las horas diarias, los descansos, los subtotales semanales y el total mensual."
+  },
+  "pt-br": {
+    "intro": "Exporte os registros e totais atuais em CSV sem fazer login e importe o arquivo no Excel ou em outro programa de planilhas.",
+    "step": "Use Exportar CSV para baixar os registros e totais atuais para uma planilha, sem conta nem salvamento prévio.",
+    "question": "Posso exportar os resultados em CSV para o Excel?",
+    "answer": "Sim. O CSV inclui entrada e saída, pausas descontadas, horas líquidas em HH:MM e formato decimal, subtotais semanais quando aplicáveis e o total geral. Um resumo de pagamento válido é incluído quando o cálculo de pagamento está ativado. Não é preciso criar uma conta nem salvar o registro para exportar. Para salvar e compartilhar, faça login. Importe o CSV no Excel ou em outro programa de planilhas; o arquivo não é uma pasta de trabalho XLSX.",
+    "monthlyAnswer": "O CSV de uma folha mensal inclui as datas reais, horas diárias, pausas, subtotais semanais e total mensal."
+  }
+}
