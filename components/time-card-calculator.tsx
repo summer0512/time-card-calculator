@@ -1536,89 +1536,91 @@ export default function TimeCardCalculator({
                 ? { ...day, from: start, to: end, breakDeduction: formatDurationMinutes(breakMinutes), breaks: Array.from({ length: breakColumns }, (_, index) => index === 0 ? formatDurationMinutes(breakMinutes) : ""), lunch: showLunchColumn ? "" : undefined } : day));
             }} />}
             {periodMode === "monthly" && !monthly && <p className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm">{tm("legacyNotice")}</p>}
-            <div className="flex flex-wrap items-center gap-2">
-              <Button variant="outline" onClick={clearAll} size="sm">
-                <RotateCcw className="h-4 w-4 mr-1" />
-                {t.clearAll}
-              </Button>
-
-              {mode === "time-card" && !monthly && (
-                <Button variant="outline" onClick={copyFirstRowDown} size="sm">
-                  <Copy className="h-4 w-4 mr-1" />
-                  {t.copyFirstRow}
+            <div className="flex flex-wrap items-center justify-between gap-2" data-calculator-toolbar>
+              <div className="flex max-w-full shrink-0 flex-wrap items-center gap-2" data-calculator-edit-actions>
+                <Button variant="outline" onClick={clearAll} size="sm">
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  {t.clearAll}
                 </Button>
-              )}
 
-              {mode !== "split-shift" && !showLunchColumn && (
-                <Button variant="outline" onClick={addLunchColumn} size="sm">
-                  <Plus className="h-4 w-4 mr-1" />
-                  {t.withLunch}
-                </Button>
-              )}
+                {mode === "time-card" && !monthly && (
+                  <Button variant="outline" onClick={copyFirstRowDown} size="sm" title={t.copyFirstRow} aria-label={t.copyFirstRow}>
+                    <Copy className="h-4 w-4 mr-1" />
+                    {tCalculator("copyFirstRowButton")}
+                  </Button>
+                )}
 
-              {mode === "time-card" && showBreakDeduction && (
-                <Button variant="outline" onClick={addBreakColumn} size="sm" disabled={breakColumns >= 3}>
-                  <Plus className="h-4 w-4 mr-1" />
-                  {t.withBreak}
-                </Button>
-              )}
+                {mode !== "split-shift" && !showLunchColumn && (
+                  <Button variant="outline" onClick={addLunchColumn} size="sm">
+                    <Plus className="h-4 w-4 mr-1" />
+                    {t.withLunch}
+                  </Button>
+                )}
 
-              {mode === "split-shift" && (
-                <Button variant="outline" onClick={addWorkSegment} size="sm">
-                  <Plus className="mr-1 h-4 w-4" />
-                  {t.addWorkSegment}
-                </Button>
-              )}
+                {mode === "time-card" && showBreakDeduction && (
+                  <Button variant="outline" onClick={addBreakColumn} size="sm" disabled={breakColumns >= 3}>
+                    <Plus className="h-4 w-4 mr-1" />
+                    {t.withBreak}
+                  </Button>
+                )}
 
-              {paymentPresentation === "popover" && (
-                <Popover defaultOpen={paymentSettingsDefaultOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
-                    >
-                      <CreditCard className="mr-1 h-4 w-4" />
-                      {t.payment} ({currency} {basePay || "—"}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
-                      <ChevronDown className="ml-1 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="max-h-[80vh] w-[22rem] overflow-y-auto" align="end">
-                    {paymentSettings}
-                  </PopoverContent>
-                </Popover>
-              )}
+                {mode === "split-shift" && (
+                  <Button variant="outline" onClick={addWorkSegment} size="sm">
+                    <Plus className="mr-1 h-4 w-4" />
+                    {t.addWorkSegment}
+                  </Button>
+                )}
 
-              {mode === "time-card" && (
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
-                    >
-                      {t.settings}
-                      <ChevronDown className="ml-1 h-4 w-4" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80" align="end">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="biweekly"
-                          checked={isBiweekly}
-                          onCheckedChange={(checked) => setIsBiweekly(checked === true)}
-                        />
-                        <Label htmlFor="biweekly" className="text-blue-600 font-semibold">
-                          {t.biweeklyToggle}
-                        </Label>
+                {paymentPresentation === "popover" && (
+                  <Popover defaultOpen={paymentSettingsDefaultOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                      >
+                        <CreditCard className="mr-1 h-4 w-4" />
+                        {t.payment} ({currency} {basePay || "—"}{hourlyRateUnitLabel ?? t.hourlyRateUnitLabel})
+                        <ChevronDown className="ml-1 h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="max-h-[80vh] w-[22rem] overflow-y-auto" align="end">
+                      {paymentSettings}
+                    </PopoverContent>
+                  </Popover>
+                )}
+
+                {mode === "time-card" && (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="data-[state=open]:border-blue-400 data-[state=open]:bg-blue-100 data-[state=open]:text-blue-700 data-[state=open]:shadow-sm"
+                      >
+                        {t.settings}
+                        <ChevronDown className="ml-1 h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80" align="end">
+                      <div className="space-y-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="biweekly"
+                            checked={isBiweekly}
+                            onCheckedChange={(checked) => setIsBiweekly(checked === true)}
+                          />
+                          <Label htmlFor="biweekly" className="text-blue-600 font-semibold">
+                            {t.biweeklyToggle}
+                          </Label>
+                        </div>
                       </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              )}
+                    </PopoverContent>
+                  </Popover>
+                )}
 
-              <div className="flex w-full flex-wrap items-center justify-end gap-2 border-t border-blue-100 pt-2 sm:ml-auto sm:w-auto sm:border-0 sm:pt-0">
+              </div>
+              <div className="ml-auto flex w-full max-w-full shrink-0 flex-wrap items-center justify-end gap-2 border-t border-blue-100 pt-2 sm:w-auto sm:border-0 sm:pt-0" data-calculator-result-actions>
                 {saveMessage === "✓" && !hasUnsavedChanges ? (
                   <span className="flex items-center gap-1 text-sm font-medium text-green-700" role="status">
                     <Check className="h-4 w-4" />
@@ -1635,7 +1637,7 @@ export default function TimeCardCalculator({
                   aria-label={`${savedCardId ? t.saveChanges : t.saveTimeCard}. ${t.saveTooltip}`}
                 >
                   <Save className="mr-1 h-4 w-4" />
-                  {isSaving ? t.saving : savedCardId ? t.saveChanges : t.saveTimeCard}
+                  {isSaving ? t.saving : tCalculator("saveButton")}
                 </Button>
                 <Button type="button" variant="outline" size="sm" onClick={shareCard} disabled={isSaving}>
                   <Share2 className="mr-1 h-4 w-4" />{tShare("share")}
