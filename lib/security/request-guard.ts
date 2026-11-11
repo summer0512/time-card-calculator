@@ -2,8 +2,7 @@ import {NextResponse, type NextRequest} from 'next/server';
 
 /**
  * Reject common automated vulnerability-scanner probes before next-intl
- * and the application router do any work. Keep this list narrow: do not
- * block ordinary JSON, XML, or extension-bearing application routes.
+ * and the application router do any work. Keep this list narrow.
  */
 const SENSITIVE_EXACT_PATHS = new Set([
   '/.env',
@@ -25,17 +24,17 @@ const SENSITIVE_EXACT_PATHS = new Set([
 ]);
 
 const SENSITIVE_PATH_PATTERNS = [
-  /(?:^|\\/)\\.env(?:\\.|$)/i,
-  /(?:^|\\/)\\.git(?:\\/|$)/i,
-  /\\.php$/i,
-  /(?:^|\\/)(?:wp-admin|wp-includes|wp-content)(?:\\/|$)/i,
-  /(?:^|\\/)(?:phpinfo|xmlrpc)\\.php$/i,
-  /(?:^|\\/)(?:firebase-adminsdk[^/]*\\.json)$/i,
+  /(?:^|\/)\.env(?:\.|$)/i,
+  /(?:^|\/)\.git(?:\/|$)/i,
+  /\.php$/i,
+  /(?:^|\/)(?:wp-admin|wp-includes|wp-content)(?:\/|$)/i,
+  /(?:^|\/)(?:phpinfo|xmlrpc)\.php$/i,
+  /(?:^|\/)(?:firebase-adminsdk[^/]*\.json)$/i,
 ];
 
 export function rejectCommonScannerProbe(request: NextRequest): NextResponse | null {
   const path = request.nextUrl.pathname.toLowerCase();
-  const normalized = path.length > 1 ? path.replace(/\\/+$/, '') : path;
+  const normalized = path.length > 1 ? path.replace(/\/+$/, '') : path;
 
   if (
     SENSITIVE_EXACT_PATHS.has(normalized) ||
@@ -52,11 +51,3 @@ export function rejectCommonScannerProbe(request: NextRequest): NextResponse | n
 
   return null;
 }
-
-/**
- * Match extension-bearing probe paths too, while leaving framework internals
- * and common public assets to Cloudflare's static asset handling.
- */
-export const securityMiddlewareMatcher = [
-  '/((?!api|_next|_vercel|.*\\.(?:avif|bmp|css|gif|ico|jpe?g|js|map|mjs|mp3|mp4|pdf|png|svg|txt|webp|woff2?)$).*)',
-];
