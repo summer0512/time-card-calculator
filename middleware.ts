@@ -2,10 +2,14 @@ import createMiddleware from 'next-intl/middleware';
 import {routing} from './i18n/routing';
 import {NextResponse, type NextRequest} from 'next/server';
 import {isAuxiliaryPage} from './lib/auxiliary-pages';
+import {rejectCommonScannerProbe} from './lib/security/request-guard';
 
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
+  const rejected = rejectCommonScannerProbe(request);
+  if (rejected) return rejected;
+
   const segments = request.nextUrl.pathname.split('/').filter(Boolean);
   const [locale, page] = segments;
   if (
@@ -23,6 +27,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Match all pathnames except API routes, Next.js internals, and static files
-  matcher: ['/((?!api|_next|.*\\..*).*)'],
+  matcher: ['/((?!api|_next|_vercel|.*\\.(?:avif|bmp|css|gif|ico|jpe?g|js|map|mjs|mp3|mp4|pdf|png|svg|txt|webp|woff2?)$).*)'],
 };
